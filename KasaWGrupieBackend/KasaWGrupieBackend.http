@@ -1,0 +1,6 @@
+@KasaWGrupieBackend_HostAddress = http://localhost:5121
+
+GET {{KasaWGrupieBackend_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
