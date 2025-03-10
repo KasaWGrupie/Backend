@@ -1,0 +1,2066 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "KasaWGrupieAPI",
+    "description": "API for managing KasaWGrupie",
+    "version": "1.0.0"
+  },
+  "components": {
+    "schemas": {
+      "User": {
+        "type": "object",
+        "required": [
+          "id",
+          "name",
+          "email"
+        ],
+        "properties": {
+          "id": {
+            "type": "integer",
+            "description": "Unique identifier for the user"
+          },
+          "name": {
+            "type": "string",
+            "description": "Name of the user"
+          },
+          "email": {
+            "type": "string",
+            "format": "email",
+            "description": "Email address of the user"
+          },
+          "profilePictureUrl": {
+            "type": "string",
+            "format": "uri",
+            "description": "URL of the user's profile picture"
+          }
+        }
+      },
+      "CreateUserRequest": {
+        "type": "object",
+        "required": [
+          "name",
+          "email",
+          "password"
+        ],
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Name of the user"
+          },
+          "email": {
+            "type": "string",
+            "format": "email",
+            "description": "Email address of the user"
+          },
+          "password": {
+            "type": "string",
+            "description": "Password of the user"
+          },
+          "profilePicture": {
+            "type": "string",
+            "format": "binary",
+            "description": "Profile picture of the user"
+          }
+        }
+      },
+      "AuthenticateRequest": {
+        "type": "object",
+        "required": [
+          "email",
+          "password"
+        ],
+        "properties": {
+          "email": {
+            "type": "string",
+            "format": "email",
+            "description": "Email address of the user"
+          },
+          "password": {
+            "type": "string",
+            "description": "Password of the user"
+          }
+        }
+      },
+      "ChangeNameRequest": {
+        "type": "object",
+        "required": [
+          "name"
+        ],
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "The new name of the user"
+          }
+        }
+      },
+      "ChangeProfilePictureRequest": {
+        "type": "object",
+        "properties": {
+          "profilePicture": {
+            "type": "string",
+            "format": "binary",
+            "description": "The new profile picture of the user"
+          }
+        }
+      },
+      "MoneyRequest": {
+        "type": "object",
+        "required": [
+          "senderId",
+          "recipientId",
+          "moneyValue",
+          "status"
+        ],
+        "properties": {
+          "senderId": {
+            "type": "integer",
+            "format": "int64",
+            "description": "Identifier of the sender"
+          },
+          "recipientId": {
+            "type": "integer",
+            "format": "int64",
+            "description": "Identifier of the recipient"
+          },
+          "moneyValue": {
+            "type": "string",
+            "description": "Value of the money being requested"
+          },
+          "gropus": {
+            "type": "array",
+            "items": {
+              "type": "integer",
+              "format": "int64"
+            }
+          },
+          "status": {
+            "$ref": "#/components/schemas/RequestStatus"
+          }
+        }
+      },
+      "RequestStatus": {
+        "type": "string",
+        "enum": [
+          "pending",
+          "cancelled",
+          "paid",
+          "closed"
+        ]
+      },
+      "Expense": {
+        "type": "object",
+        "required": [
+          "groupId",
+          "description",
+          "totalAmount",
+          "splitType",
+          "participants"
+        ],
+        "properties": {
+          "groupId": {
+            "type": "integer",
+            "format": "int64",
+            "description": "Identifier of the group where the expense occurred"
+          },
+          "description": {
+            "type": "string",
+            "description": "Description of the expense"
+          },
+          "totalAmount": {
+            "type": "number",
+            "format": "float",
+            "description": "Total amount of the expense"
+          },
+          "splitType": {
+            "type": "string",
+            "enum": [
+              "equal",
+              "percentage",
+              "exact"
+            ],
+            "description": "The method of splitting the expense"
+          },
+          "participants": {
+            "type": "array",
+            "description": "Details of participants based on the split type",
+            "items": {
+              "type": "object",
+              "oneOf": [
+                {
+                  "description": "For equal split, include user IDs only",
+                  "required": [
+                    "userId"
+                  ],
+                  "properties": {
+                    "userId": {
+                      "type": "integer",
+                      "format": "int64",
+                      "description": "ID of the user participating in the split"
+                    }
+                  }
+                },
+                {
+                  "description": "For percentage split, include user ID and percentage",
+                  "required": [
+                    "userId",
+                    "percentage"
+                  ],
+                  "properties": {
+                    "userId": {
+                      "type": "integer",
+                      "format": "int64",
+                      "description": "ID of the user"
+                    },
+                    "percentage": {
+                      "type": "number",
+                      "format": "float",
+                      "description": "Percentage of the total amount owed by the user"
+                    }
+                  }
+                },
+                {
+                  "description": "For exact split, include user ID and exact amount",
+                  "required": [
+                    "userId",
+                    "amount"
+                  ],
+                  "properties": {
+                    "userId": {
+                      "type": "integer",
+                      "format": "int64",
+                      "description": "ID of the user"
+                    },
+                    "amount": {
+                      "type": "number",
+                      "format": "float",
+                      "description": "Exact amount owed by the user"
+                    }
+                  }
+                }
+              ]
+            }
+          },
+          "photo": {
+            "type": "string",
+            "format": "binary",
+            "description": "Optional photo associated with the expense (e.g., receipt)"
+          }
+        }
+      },
+      "MoneyTransfer": {
+        "type": "object",
+        "required": [
+          "senderId",
+          "recipientId",
+          "amount",
+          "groupId"
+        ],
+        "properties": {
+          "senderId": {
+            "type": "integer",
+            "format": "int64",
+            "description": "ID of the sender"
+          },
+          "recipientId": {
+            "type": "integer",
+            "format": "int64",
+            "description": "ID of the recipient"
+          },
+          "amount": {
+            "type": "number",
+            "format": "float",
+            "description": "Amount of money being transferred"
+          },
+          "groupId": {
+            "type": "integer",
+            "format": "int64",
+            "description": "ID of the group associated with the transfer"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "pending",
+              "confirmed",
+              "rejected"
+            ],
+            "default": "pending",
+            "description": "Status of the money transfer (default is `pending`)"
+          }
+        }
+      },
+      "FriendRequest": {
+        "type": "object",
+        "required": [
+          "senderId",
+          "receiverId",
+          "status"
+        ],
+        "properties": {
+          "senderId": {
+            "type": "integer",
+            "description": "ID of the user who sent the request"
+          },
+          "receiverId": {
+            "type": "integer",
+            "description": "ID of the user who receives the request"
+          },
+          "status": {
+            "$ref": "#/components/schemas/InviteRequestStatus"
+          }
+        }
+      },
+      "Group": {
+        "type": "object",
+        "required": [
+          "name",
+          "currency",
+          "adminId",
+          "status",
+          "members"
+        ],
+        "properties": {
+          "id": {
+            "type": "integer",
+            "description": "Unique identifier for the group"
+          },
+          "name": {
+            "type": "string",
+            "description": "Name of the group"
+          },
+          "currency": {
+            "type": "string",
+            "description": "Currency in which all monetary values in this group are"
+          },
+          "adminId": {
+            "type": "integer",
+            "description": "ID of the user who is the admin of this group"
+          },
+          "status": {
+            "$ref": "#/components/schemas/GroupStatus"
+          },
+          "members": {
+            "type": "array",
+            "items": {
+              "type": "integer"
+            },
+            "description": "IDs of all group members"
+          }
+        }
+      },
+      "GroupStatus": {
+        "type": "string",
+        "enum": [
+          "open",
+          "closing",
+          "closed"
+        ]
+      },
+      "GroupInvite": {
+        "type": "object",
+        "required": [
+          "groupId",
+          "userId"
+        ],
+        "properties": {
+          "groupId": {
+            "type": "integer",
+            "description": "ID of the group user is invited to"
+          },
+          "userId": {
+            "type": "integer",
+            "description": "ID of the invited user"
+          }
+        }
+      },
+      "GroupJoinRequest": {
+        "type": "object",
+        "required": [
+          "userId",
+          "groupId",
+          "status"
+        ],
+        "properties": {
+          "userId": {
+            "type": "integer",
+            "description": "ID of the user wanting to join the group"
+          },
+          "groupId": {
+            "type": "integer",
+            "description": "ID of the group user wants to join"
+          },
+          "status": {
+            "$ref": "#/components/schemas/InviteRequestStatus"
+          }
+        }
+      },
+      "InviteRequestStatus": {
+        "type": "string",
+        "enum": [
+          "sent",
+          "accepted",
+          "rejected"
+        ]
+      }
+    },
+    "responses": {
+      "UserCreated": {
+        "description": "User created successfully",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/User"
+            }
+          }
+        }
+      },
+      "UserDetails": {
+        "description": "Successfully retrieved user details",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/User"
+            }
+          }
+        }
+      },
+      "AuthenticationSuccess": {
+        "description": "Authentication successful",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "token": {
+                  "type": "string",
+                  "description": "The authentication token (if applicable)"
+                }
+              }
+            }
+          }
+        }
+      },
+      "UserDeleted": {
+        "description": "User deleted successfully"
+      }
+    }
+  },
+  "paths": {
+    "/users": {
+      "post": {
+        "tags": [
+          "users"
+        ],
+        "summary": "Create a new user",
+        "description": "Create a new user with the provided details (name, email, and password).",
+        "operationId": "createUser",
+        "requestBody": {
+          "description": "User data to create a new user",
+          "required": true,
+          "content": {
+            "multipart/form-data:": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateUserRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "$ref": "#/components/responses/UserCreated"
+          },
+          "400": {
+            "description": "Bad request (validation failed)"
+          },
+          "409": {
+            "description": "User with this email address already exists"
+          }
+        }
+      }
+    },
+    "/users/{userId}": {
+      "get": {
+        "tags": [
+          "users"
+        ],
+        "summary": "Get user by ID",
+        "description": "Get a user’s details by their unique ID.",
+        "operationId": "getUserById",
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "path",
+            "required": true,
+            "description": "The ID of the user to retrieve",
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/UserDetails"
+          },
+          "404": {
+            "description": "User not found"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "users"
+        ],
+        "summary": "Delete a user",
+        "description": "Delete the user by their unique ID.",
+        "operationId": "deleteUser",
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "path",
+            "required": true,
+            "description": "The ID of the user to delete",
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/UserDeleted"
+          },
+          "404": {
+            "description": "User not found"
+          }
+        }
+      }
+    },
+    "/users/name/{userId}": {
+      "put": {
+        "tags": [
+          "users"
+        ],
+        "summary": "Update user’s name",
+        "description": "Update the user's name with the provided new name.",
+        "operationId": "changeUserName",
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "path",
+            "required": true,
+            "description": "The ID of the user whose name is to be updated",
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "New name for the user",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ChangeNameRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Name updated successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/User"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request (validation failed)"
+          },
+          "404": {
+            "description": "User not found"
+          }
+        }
+      }
+    },
+    "/users/profilePicture/{userId}": {
+      "put": {
+        "tags": [
+          "users"
+        ],
+        "summary": "Update user’s profile picture",
+        "description": "Update the user's profile picture with the provided new picture.",
+        "operationId": "changeProfilePicture",
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "path",
+            "required": true,
+            "description": "The ID of the user whose profile picture is to be updated",
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "New profile picture for the user",
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "$ref": "#/components/schemas/ChangeProfilePictureRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Name updated successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/User"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request (validation failed)"
+          },
+          "404": {
+            "description": "User not found"
+          }
+        }
+      }
+    },
+    "/users/authenticate": {
+      "post": {
+        "tags": [
+          "users"
+        ],
+        "summary": "Authenticate a user",
+        "description": "Authenticate a user using email and password, and return a token.",
+        "operationId": "authenticateUser",
+        "requestBody": {
+          "description": "Email and password of the user for authentication",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AuthenticateRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/AuthenticationSuccess"
+          },
+          "400": {
+            "description": "Bad request (missing fields)"
+          },
+          "401": {
+            "description": "Unauthorized (invalid credentials)"
+          }
+        }
+      }
+    },
+    "/users/friends/{userId}": {
+      "get": {
+        "tags": [
+          "users"
+        ],
+        "summary": "Get user's friends",
+        "description": "Retrieve a list of friends for the specified user by their ID.",
+        "operationId": "getUsersFriends",
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "path",
+            "required": true,
+            "description": "The ID of the user whose friends are to be retrieved",
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful retrieval of friends list",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/User"
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "User not found"
+          }
+        }
+      }
+    },
+    "/users/{userId}/friendRequests": {
+      "get": {
+        "tags": [
+          "friends"
+        ],
+        "summary": "Get friend requests sent to user",
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "path",
+            "required": true,
+            "description": "User ID",
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully retrieved list of friend requests",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/FriendRequest"
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "User not found"
+          }
+        }
+      }
+    },
+    "/users/{userId}/friendRequests/{requestId}": {
+      "put": {
+        "tags": [
+          "friends"
+        ],
+        "summary": "Accept or reject a friend request",
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "path",
+            "required": true,
+            "description": "User ID",
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "requestId",
+            "in": "path",
+            "required": true,
+            "description": "ID of the friend request",
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RequestStatus"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successfully changed request status"
+          },
+          "400": {
+            "description": "Bad request (invalid request status)"
+          },
+          "404": {
+            "description": "Request not found"
+          }
+        }
+      }
+    },
+    "/users/friendRequests": {
+      "post": {
+        "tags": [
+          "friends"
+        ],
+        "summary": "Create a new friend request",
+        "description": "Send a request to become friends with another user",
+        "requestBody": {
+          "required": true,
+          "description": "Friend",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/FriendRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successfully sent request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FriendRequest"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Request already exists"
+          },
+          "422": {
+            "description": "Validation failed"
+          }
+        }
+      }
+    },
+    "/users/email/{email}": {
+      "get": {
+        "tags": [
+          "users"
+        ],
+        "summary": "Get user by email",
+        "description": "Get a user’s details by their email.",
+        "operationId": "getUserByEmail",
+        "parameters": [
+          {
+            "name": "email",
+            "in": "path",
+            "required": true,
+            "description": "The email of the user to retrieve",
+            "schema": {
+              "type": "string",
+              "format": "email"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/UserDetails"
+          },
+          "404": {
+            "description": "User not found"
+          }
+        }
+      }
+    },
+    "/groups/{groupId}/expenses": {
+      "get": {
+        "tags": [
+          "groups"
+        ],
+        "summary": "Fetch all expenses for a specific group",
+        "description": "Returns a list of all expenses within a group, including details about participants and cost division.",
+        "parameters": [
+          {
+            "name": "groupId",
+            "in": "path",
+            "description": "ID of the group to fetch expenses for",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "A list of expenses for the group",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "expenseId": {
+                        "type": "string",
+                        "description": "The unique identifier for the expense"
+                      },
+                      "description": {
+                        "type": "string",
+                        "description": "Description of the expense"
+                      },
+                      "amount": {
+                        "type": "number",
+                        "format": "float",
+                        "description": "The total amount of the expense"
+                      },
+                      "date": {
+                        "type": "string",
+                        "format": "date",
+                        "description": "The date the expense was added"
+                      },
+                      "participants": {
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        },
+                        "description": "List of participants in the expense"
+                      },
+                      "divisionMethod": {
+                        "type": "string",
+                        "enum": [
+                          "equal",
+                          "percentage",
+                          "exact"
+                        ],
+                        "description": "Method of dividing the expense among participants"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Group not found"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/users/{userId}/groups": {
+      "get": {
+        "tags": [
+          "users"
+        ],
+        "summary": "Fetch all groups a user is a member of",
+        "description": "Returns a list of groups that a user is a member of, along with group balances and members.",
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "path",
+            "description": "ID of the user to fetch groups for",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "A list of groups the user is a member of",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "groupId": {
+                        "type": "string",
+                        "description": "The unique identifier for the group"
+                      },
+                      "groupName": {
+                        "type": "string",
+                        "description": "The name of the group"
+                      },
+                      "members": {
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        },
+                        "description": "List of user IDs of group members"
+                      },
+                      "groupBalance": {
+                        "type": "number",
+                        "format": "float",
+                        "description": "The balance of the group (could be positive or negative)"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "User not found"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/moneyRequest": {
+      "post": {
+        "tags": [
+          "money request"
+        ],
+        "summary": "Add new request",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/MoneyRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MoneyRequest"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid ID supplied"
+          },
+          "404": {
+            "description": "Request not found"
+          },
+          "422": {
+            "description": "Validation exception"
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "money request"
+        ],
+        "summary": "Update existing request",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/MoneyRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MoneyRequest"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid ID supplied"
+          },
+          "404": {
+            "description": "Request not found"
+          },
+          "422": {
+            "description": "Validation exception"
+          }
+        }
+      }
+    },
+    "/moneyRequest/{requestId}": {
+      "put": {
+        "tags": [
+          "money request"
+        ],
+        "summary": "Update request status",
+        "parameters": [
+          {
+            "name": "requestId",
+            "in": "path",
+            "required": true,
+            "description": "ID of the request to update",
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RequestStatus"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successfully updated request state",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MoneyRequest"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid ID supplied"
+          },
+          "404": {
+            "description": "Request not found"
+          },
+          "422": {
+            "description": "Validation exception"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "money request"
+        ],
+        "summary": "Delete an existing request",
+        "parameters": [
+          {
+            "name": "requestId",
+            "in": "path",
+            "required": true,
+            "description": "ID of the request to delete",
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "404": {
+            "description": "Request not found"
+          }
+        }
+      }
+    },
+    "/moneyRequest/findBySender": {
+      "get": {
+        "tags": [
+          "money request"
+        ],
+        "summary": "Get all requests sent by a given user",
+        "parameters": [
+          {
+            "name": "senderId",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            },
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/MoneyRequest"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid ID supplied"
+          }
+        }
+      }
+    },
+    "/moneyRequest/findByRecipient": {
+      "get": {
+        "tags": [
+          "money request"
+        ],
+        "summary": "Get all requests received by a given user",
+        "parameters": [
+          {
+            "name": "recipientId",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            },
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/MoneyRequest"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid ID supplied"
+          }
+        }
+      }
+    },
+    "/receipt": {
+      "post": {
+        "tags": [
+          "receipt"
+        ],
+        "summary": "Upload a receipt image to extract product information.",
+        "description": "Accepts an image file of a receipt, processes it, and returns a list of products with their prices.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "file": {
+                    "type": "string",
+                    "format": "binary",
+                    "description": "The receipt image file to be uploaded."
+                  }
+                },
+                "required": [
+                  "file"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successfully extracted product information.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "products": {
+                      "type": "array",
+                      "description": "List of products with their prices.",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "name": {
+                            "type": "string",
+                            "description": "The name of the product."
+                          },
+                          "price": {
+                            "type": "number",
+                            "format": "float",
+                            "description": "The price of the product."
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request due to missing or invalid file.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "description": "Error message explaining the issue."
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error during processing.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "description": "Error message explaining the issue."
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/expense": {
+      "post": {
+        "tags": [
+          "expense"
+        ],
+        "summary": "Add a new expense",
+        "description": "Create a new expense entry in a group and distribute it among participants based on the split type.",
+        "operationId": "addExpense",
+        "requestBody": {
+          "description": "Expense details to add a new expense",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Expense"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Expense created successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Expense"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request (validation failed)"
+          },
+          "404": {
+            "description": "Group or user not found"
+          },
+          "422": {
+            "description": "Validation exception"
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "expense"
+        ],
+        "summary": "Edit an existing expense",
+        "description": "Update the details of an existing expense, including its description, amount, or participants.",
+        "operationId": "editExpense",
+        "requestBody": {
+          "description": "Updated expense details",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Expense"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Expense updated successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Expense"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request (validation failed)"
+          },
+          "404": {
+            "description": "Expense or group not found"
+          },
+          "422": {
+            "description": "Validation exception"
+          }
+        }
+      }
+    },
+    "/groups/{groupId}/balances": {
+      "get": {
+        "tags": [
+          "groups"
+        ],
+        "summary": "Get balances for a group",
+        "description": "Retrieve a breakdown of who owes how much money to whom within a specified group.",
+        "operationId": "getGroupBalances",
+        "parameters": [
+          {
+            "name": "groupId",
+            "in": "path",
+            "required": true,
+            "description": "ID of the group for which balances are calculated",
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully retrieved balances",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "groupId": {
+                      "type": "integer",
+                      "format": "int64",
+                      "description": "The ID of the group"
+                    },
+                    "balances": {
+                      "type": "array",
+                      "description": "List of debts between participants",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "fromUserId": {
+                            "type": "integer",
+                            "format": "int64",
+                            "description": "ID of the user who owes money"
+                          },
+                          "toUserId": {
+                            "type": "integer",
+                            "format": "int64",
+                            "description": "ID of the user who is owed money"
+                          },
+                          "amount": {
+                            "type": "number",
+                            "format": "float",
+                            "description": "Amount of money owed"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Group not found"
+          },
+          "422": {
+            "description": "Validation exception"
+          }
+        }
+      }
+    },
+    "/users/{userId}/balances": {
+      "get": {
+        "tags": [
+          "users"
+        ],
+        "summary": "Fetch balances for a user across all groups",
+        "description": "Retrieve a summary of how much the user owes to others and how much others owe to the user across all groups.",
+        "operationId": "getUserBalances",
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "path",
+            "required": true,
+            "description": "The ID of the user for whom balances are calculated",
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully retrieved user balances",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "userId": {
+                      "type": "integer",
+                      "format": "int64",
+                      "description": "The ID of the user"
+                    },
+                    "owedByOthers": {
+                      "type": "array",
+                      "description": "List of people and amounts they owe the user",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "userId": {
+                            "type": "integer",
+                            "format": "int64",
+                            "description": "ID of the user who owes money to the specified user"
+                          },
+                          "amount": {
+                            "type": "number",
+                            "format": "float",
+                            "description": "Amount of money owed by the user"
+                          }
+                        }
+                      }
+                    },
+                    "owesToOthers": {
+                      "type": "array",
+                      "description": "List of people the user owes money to",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "userId": {
+                            "type": "integer",
+                            "format": "int64",
+                            "description": "ID of the user to whom money is owed"
+                          },
+                          "amount": {
+                            "type": "number",
+                            "format": "float",
+                            "description": "Amount of money owed to the user"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "User not found"
+          },
+          "422": {
+            "description": "Validation exception"
+          }
+        }
+      }
+    },
+    "/moneyTransfer": {
+      "post": {
+        "tags": [
+          "money transfer"
+        ],
+        "summary": "Create a new money transfer",
+        "description": "Initiates a money transfer between users within a group. The status defaults to `pending`.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "senderId": {
+                    "type": "integer",
+                    "format": "int64",
+                    "description": "ID of the sender"
+                  },
+                  "recipientId": {
+                    "type": "integer",
+                    "format": "int64",
+                    "description": "ID of the recipient"
+                  },
+                  "amount": {
+                    "type": "number",
+                    "format": "float",
+                    "description": "Amount of money being transferred"
+                  },
+                  "groupId": {
+                    "type": "integer",
+                    "format": "int64",
+                    "description": "ID of the group associated with the transfer"
+                  }
+                },
+                "required": [
+                  "senderId",
+                  "recipientId",
+                  "amount",
+                  "groupId"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Money transfer created successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MoneyTransfer"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request (validation failed)"
+          },
+          "404": {
+            "description": "User or group not found"
+          },
+          "422": {
+            "description": "Validation exception"
+          }
+        }
+      }
+    },
+    "/moneyTransfer/{transferId}/status": {
+      "put": {
+        "tags": [
+          "money transfer"
+        ],
+        "summary": "Update the status of a money transfer",
+        "description": "Changes the status of a money transfer to either `confirmed` or `rejected`.",
+        "parameters": [
+          {
+            "name": "transferId",
+            "in": "path",
+            "required": true,
+            "description": "ID of the money transfer",
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "status": {
+                    "type": "string",
+                    "enum": [
+                      "confirmed",
+                      "rejected"
+                    ],
+                    "description": "New status of the money transfer"
+                  }
+                },
+                "required": [
+                  "status"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Money transfer status updated successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MoneyTransfer"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid ID or status"
+          },
+          "404": {
+            "description": "Money transfer not found"
+          }
+        }
+      }
+    },
+    "/groups/{groupId}": {
+      "get": {
+        "tags": [
+          "groups"
+        ],
+        "summary": "Get group by ID",
+        "parameters": [
+          {
+            "name": "groupId",
+            "in": "path",
+            "required": true,
+            "description": "ID of the group",
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully retrieved group",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Group"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Group not found"
+          }
+        }
+      }
+    },
+    "/groups": {
+      "post": {
+        "tags": [
+          "groups"
+        ],
+        "summary": "Add new group",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Group"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successfully inserted new group",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Group"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation exception"
+          }
+        }
+      }
+    },
+    "/groups/{groupId}/status": {
+      "put": {
+        "tags": [
+          "groups"
+        ],
+        "summary": "Update group status",
+        "parameters": [
+          {
+            "name": "groupId",
+            "in": "path",
+            "required": true,
+            "description": "ID of group",
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/GroupStatus"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "400": {
+            "description": "Bad request (invalid group status)"
+          },
+          "404": {
+            "description": "Group not found"
+          }
+        }
+      }
+    },
+    "/groups/{groupId}/joinRequests": {
+      "get": {
+        "tags": [
+          "groups"
+        ],
+        "summary": "Get pending requests to join the group",
+        "parameters": [
+          {
+            "name": "groupId",
+            "in": "path",
+            "required": true,
+            "description": "ID of the group",
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully retrieved requests list",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/GroupJoinRequest"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/groups/{groupId}/joinRequests/{requestId}": {
+      "put": {
+        "tags": [
+          "groups"
+        ],
+        "summary": "Accept or reject the request",
+        "parameters": [
+          {
+            "name": "groupId",
+            "in": "path",
+            "required": true,
+            "description": "ID of the group",
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "requestId",
+            "in": "path",
+            "required": true,
+            "description": "ID of the group join request",
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RequestStatus"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successfully changed request status"
+          },
+          "400": {
+            "description": "Bad request (invalid request status)"
+          },
+          "404": {
+            "description": "Request not found"
+          }
+        }
+      }
+    },
+    "/users/{userId}/groupInvites": {
+      "get": {
+        "tags": [
+          "groups"
+        ],
+        "summary": "Retrieve pending group invites for the user",
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "path",
+            "required": true,
+            "description": "ID of the user",
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Invitation sent successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/GroupInvite"
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "User not found"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "groups"
+        ],
+        "summary": "Invite the user to the group",
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "path",
+            "required": true,
+            "description": "ID of the invited user",
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/GroupInvite"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Invite sent successfully"
+          },
+          "404": {
+            "description": "User not found"
+          },
+          "422": {
+            "description": "Validation failed"
+          }
+        }
+      }
+    },
+    "/users/{userId}/groupInvites/{invitationId}": {
+      "put": {
+        "tags": [
+          "groups"
+        ],
+        "summary": "Accept or reject the group invitation",
+        "description": "Change invitation status from 'sent' to 'accepted' or 'rejected'",
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "path",
+            "required": true,
+            "description": "ID of the user",
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "invitationId",
+            "in": "path",
+            "required": true,
+            "description": "ID of the invite",
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RequestStatus"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successfully changed invitation status"
+          },
+          "400": {
+            "description": "Bad request (invalid request status)"
+          },
+          "404": {
+            "description": "Invitation not found"
+          }
+        }
+      }
+    },
+    "/groups/{groupId}/inviteCode": {
+      "get": {
+        "tags": [
+          "groups"
+        ],
+        "summary": "Get an invite code for the group",
+        "description": "Retrieve or generate new code that can be used by other users to join this group",
+        "parameters": [
+          {
+            "name": "groupId",
+            "in": "path",
+            "required": true,
+            "description": "ID of the group to retrieve invite code for",
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string",
+                  "description": "Invitation code"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Group not found"
+          }
+        }
+      }
+    },
+    "/groups/inviteCode": {
+      "put": {
+        "tags": [
+          "groups"
+        ],
+        "summary": "Request to join the group referenced by the invitation code",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "string",
+                "description": "Invitation code"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "400": {
+            "description": "Invalid invitation code"
+          }
+        }
+      }
+    }
+  }
+}
