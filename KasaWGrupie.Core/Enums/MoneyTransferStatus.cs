@@ -1,6 +1,6 @@
 ﻿namespace KasaWGrupie.Core.Enums;
 
-enum MoneyTransferStatus
+public enum MoneyTransferStatus
 {
 	Unconfirmed,
 	Confirmed,

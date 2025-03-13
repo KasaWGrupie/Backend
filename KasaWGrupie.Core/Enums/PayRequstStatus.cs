@@ -1,6 +1,6 @@
 ﻿namespace KasaWGrupie.Core.Enums;
 
-enum PayRequstStatus
+public enum PayRequstStatus
 {
 	Pending,
 	Done

@@ -1,6 +1,6 @@
 ﻿namespace KasaWGrupie.Core.Enums;
 
-enum FriendRequestStatus
+public enum FriendRequestStatus
 {
 	Unconfirmed,
 	Confirmed,

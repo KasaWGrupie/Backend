@@ -1,6 +1,6 @@
 ﻿namespace KasaWGrupie.Core.Enums;
 
-enum GroupStatus
+public enum GroupStatus
 {
 	Active,
 	Closing,

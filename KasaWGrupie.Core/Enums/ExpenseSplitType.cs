@@ -1,6 +1,6 @@
 ﻿namespace KasaWGrupie.Core.Enums;
 
-enum ExpenseSplitType
+public enum ExpenseSplitType
 {
 	Equally,
 	ByPercent,

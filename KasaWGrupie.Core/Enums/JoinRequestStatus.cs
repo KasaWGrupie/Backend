@@ -1,6 +1,6 @@
 ﻿namespace KasaWGrupie.Core.Enums;
 
-enum JoinRequestStatus
+public enum JoinRequestStatus
 {
 	Unconfirmed,
 	Rejected,

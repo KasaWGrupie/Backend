@@ -2,8 +2,9 @@
 
 namespace KasaWGrupie.Core.Entities;
 
-class ExpenseSplit : EntityBase
+public class ExpenseSplit : EntityBase
 {
+	public int ExpenseId { get; set; }
 	public required Expense Expense { get; set; }
 	public ExpenseSplitType Type { get; set; }
 	public ICollection<ExpenseSplitRecord> SplitRecords { get; set; } = [];
