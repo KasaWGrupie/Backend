@@ -1,0 +1,8 @@
+services:
+  kasawgrupie.api:
+    image: ${DOCKER_REGISTRY-}kasawgrupieapi
+    build:
+      context: .
+      dockerfile: KasaWGrupieBackend/Dockerfile
+    env_file:
+        - .env
