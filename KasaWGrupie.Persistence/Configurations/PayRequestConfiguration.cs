@@ -24,12 +24,12 @@ public class PayRequestConfiguration : IEntityTypeConfiguration<PayRequest>
 			.IsRequired();
 
 		builder.HasOne(pr => pr.Sender)
-			.WithMany()
+			.WithMany(u => u.SentPayRequests)
 			.HasForeignKey(pr => pr.SenderId)
 			.OnDelete(DeleteBehavior.Cascade);
 
 		builder.HasOne(pr => pr.Receiver)
-			.WithMany()
+			.WithMany(u => u.RecievedPayRequests)
 			.HasForeignKey(pr => pr.ReceiverId)
 			.OnDelete(DeleteBehavior.Cascade);
 
