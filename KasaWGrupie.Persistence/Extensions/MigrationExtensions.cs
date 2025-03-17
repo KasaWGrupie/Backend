@@ -11,6 +11,6 @@ public static class MigrationExtensions
 		using IServiceScope scope = serviceProvider.CreateScope();
 		var dbContext = scope.ServiceProvider.GetRequiredService<KasaWGrupieDbContext>();
 
-		dbContext.Database.Migrate();
+		//dbContext.Database.Migrate();
 	}
 }
