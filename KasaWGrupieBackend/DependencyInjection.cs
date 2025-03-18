@@ -15,7 +15,6 @@ public static class DependencyInjection
 	{
 		services.AddDbContext<KasaWGrupieDbContext>(
 			options => options.UseNpgsql(configuration["ConnectionString:DbConnection"]));
-		Console.WriteLine(configuration["ConnectionString:DbConnection"]);
 		return services;
 	}
 
