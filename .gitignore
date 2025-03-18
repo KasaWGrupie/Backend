@@ -364,3 +364,6 @@ FodyWeavers.xsd
 
 #secrets
 .env
+
+#container data
+.containers

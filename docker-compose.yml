@@ -7,6 +7,8 @@ services:
       dockerfile: KasaWGrupieBackend/Dockerfile
     env_file:
         - .env
+    depends_on: 
+        - kasawgrupie.database
   kasawgrupie.database:
     image: postgres:latest
     container_name: kasawgrupie.database
@@ -18,6 +20,3 @@ services:
         - ./.containers/kasawgrupie-db:/var/lib/postgresql/data
     ports:
         - 5432:5432
-
-
-  

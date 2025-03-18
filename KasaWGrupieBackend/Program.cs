@@ -1,6 +1,5 @@
 using DotNetEnv;
 using KasaWGrupie.Persistence.Extensions;
-using Microsoft.Extensions.Hosting;
 
 namespace KasaWGrupie.API;
 
