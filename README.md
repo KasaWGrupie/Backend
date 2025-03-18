@@ -4,6 +4,9 @@
 - Install [Visual Studio](https://visualstudio.microsoft.com/) with the **ASP.NET and web development** workload.
 - Install [Docker Desktop](https://www.docker.com/products/docker-desktop/) and ensure it is running.
 
+## Add secrets
+Add .env file in the same directory, as docker-compose
+
 ## Running the Application in Docker
 1. **Open the Project**: Launch Visual Studio and open the ASP.NET Web API project.
 2. **Set Docker as Startup Project**:
