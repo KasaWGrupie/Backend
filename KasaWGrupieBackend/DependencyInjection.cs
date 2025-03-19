@@ -50,4 +50,11 @@ public static class DependencyInjection
 
 		return services;
 	}
+	public static IServiceCollection ConfigureDbContext(this IServiceCollection services, IConfiguration configuration)
+	{
+		services.AddDbContext<KasaWGrupieDbContext>(
+			options => options.UseNpgsql(configuration["ConnectionString:DbConnection"]));
+		return services;
+	}
+
 }
