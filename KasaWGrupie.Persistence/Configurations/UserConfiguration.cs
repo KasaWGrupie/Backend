@@ -37,22 +37,22 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
 		builder.HasMany(u => u.SentPayRequests)
 			.WithOne(pr => pr.Sender)
 			.HasForeignKey(pr => pr.SenderId)
-			.OnDelete(DeleteBehavior.Restrict);
+			.OnDelete(DeleteBehavior.Cascade);
 
 		builder.HasMany(u => u.RecievedPayRequests)
 			.WithOne(pr => pr.Receiver)
 			.HasForeignKey(pr => pr.ReceiverId)
-			.OnDelete(DeleteBehavior.Restrict);
+			.OnDelete(DeleteBehavior.Cascade);
 
 		builder.HasMany(u => u.SentFriendRequests)
 			.WithOne(fr => fr.Sender)
 			.HasForeignKey(fr => fr.SenderId)
-			.OnDelete(DeleteBehavior.Restrict);
+			.OnDelete(DeleteBehavior.Cascade);
 
 		builder.HasMany(u => u.RecievedFriendRequests)
 			.WithOne(fr => fr.Receiver)
 			.HasForeignKey(fr => fr.ReceiverId)
-			.OnDelete(DeleteBehavior.Restrict);
+			.OnDelete(DeleteBehavior.Cascade);
 	}
 }
 

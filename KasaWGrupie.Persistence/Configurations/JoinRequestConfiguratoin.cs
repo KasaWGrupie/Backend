@@ -25,7 +25,7 @@ public class JoinRequestConfiguration : IEntityTypeConfiguration<JoinRequest>
 			.OnDelete(DeleteBehavior.Cascade);
 
 		builder.HasOne(jr => jr.Group)
-			.WithMany()
+			.WithMany(g => g.JoinRequests)
 			.HasForeignKey(jr => jr.GroupId)
 			.OnDelete(DeleteBehavior.Cascade);
 	}

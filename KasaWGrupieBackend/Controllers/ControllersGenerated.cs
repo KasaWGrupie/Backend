@@ -20,1925 +20,1925 @@
 
 namespace KasaWGrupieBackend.Controllers
 {
-    using System = global::System;
+	using System = global::System;
 
-    [System.CodeDom.Compiler.GeneratedCode("NSwag", "14.2.0.0 (NJsonSchema v11.1.0.0 (Newtonsoft.Json v13.0.0.0))")]
-    public interface IController
-    {
+	[System.CodeDom.Compiler.GeneratedCode("NSwag", "14.2.0.0 (NJsonSchema v11.1.0.0 (Newtonsoft.Json v13.0.0.0))")]
+	public interface IController
+	{
 
-        /// <summary>
-        /// Create a new user
-        /// </summary>
+		/// <summary>
+		/// Create a new user
+		/// </summary>
 
-        /// <remarks>
-        /// Create a new user with the provided details (name, email, and password).
-        /// </remarks>
+		/// <remarks>
+		/// Create a new user with the provided details (name, email, and password).
+		/// </remarks>
 
-        /// <param name="body">User data to create a new user</param>
+		/// <param name="body">User data to create a new user</param>
 
-        /// <returns>User created successfully</returns>
+		/// <returns>User created successfully</returns>
 
-        System.Threading.Tasks.Task<User> CreateUserAsync(CreateUserRequest body);
+		System.Threading.Tasks.Task<User> CreateUserAsync(CreateUserRequest body);
 
-        /// <summary>
-        /// Get user by ID
-        /// </summary>
+		/// <summary>
+		/// Get user by ID
+		/// </summary>
 
-        /// <remarks>
-        /// Get a user’s details by their unique ID.
-        /// </remarks>
+		/// <remarks>
+		/// Get a user’s details by their unique ID.
+		/// </remarks>
 
-        /// <param name="userId">The ID of the user to retrieve</param>
+		/// <param name="userId">The ID of the user to retrieve</param>
 
-        /// <returns>Successfully retrieved user details</returns>
+		/// <returns>Successfully retrieved user details</returns>
 
-        System.Threading.Tasks.Task<User> GetUserByIdAsync(int userId);
+		System.Threading.Tasks.Task<User> GetUserByIdAsync(int userId);
 
-        /// <summary>
-        /// Delete a user
-        /// </summary>
+		/// <summary>
+		/// Delete a user
+		/// </summary>
 
-        /// <remarks>
-        /// Delete the user by their unique ID.
-        /// </remarks>
+		/// <remarks>
+		/// Delete the user by their unique ID.
+		/// </remarks>
 
-        /// <param name="userId">The ID of the user to delete</param>
+		/// <param name="userId">The ID of the user to delete</param>
 
-        /// <returns>User deleted successfully</returns>
+		/// <returns>User deleted successfully</returns>
 
-        System.Threading.Tasks.Task DeleteUserAsync(int userId);
+		System.Threading.Tasks.Task DeleteUserAsync(int userId);
 
-        /// <summary>
-        /// Update user’s name
-        /// </summary>
+		/// <summary>
+		/// Update user’s name
+		/// </summary>
 
-        /// <remarks>
-        /// Update the user's name with the provided new name.
-        /// </remarks>
+		/// <remarks>
+		/// Update the user's name with the provided new name.
+		/// </remarks>
 
-        /// <param name="userId">The ID of the user whose name is to be updated</param>
+		/// <param name="userId">The ID of the user whose name is to be updated</param>
 
-        /// <param name="body">New name for the user</param>
+		/// <param name="body">New name for the user</param>
 
-        /// <returns>Name updated successfully</returns>
+		/// <returns>Name updated successfully</returns>
 
-        System.Threading.Tasks.Task<User> ChangeUserNameAsync(int userId, ChangeNameRequest body);
+		System.Threading.Tasks.Task<User> ChangeUserNameAsync(int userId, ChangeNameRequest body);
 
-        /// <summary>
-        /// Update user’s profile picture
-        /// </summary>
+		/// <summary>
+		/// Update user’s profile picture
+		/// </summary>
 
-        /// <remarks>
-        /// Update the user's profile picture with the provided new picture.
-        /// </remarks>
+		/// <remarks>
+		/// Update the user's profile picture with the provided new picture.
+		/// </remarks>
 
-        /// <param name="userId">The ID of the user whose profile picture is to be updated</param>
+		/// <param name="userId">The ID of the user whose profile picture is to be updated</param>
 
-        /// <param name="profilePicture">The new profile picture of the user</param>
+		/// <param name="profilePicture">The new profile picture of the user</param>
 
-        /// <returns>Name updated successfully</returns>
+		/// <returns>Name updated successfully</returns>
 
-        System.Threading.Tasks.Task<User> ChangeProfilePictureAsync(int userId, FileParameter profilePicture);
+		System.Threading.Tasks.Task<User> ChangeProfilePictureAsync(int userId, FileParameter profilePicture);
 
-        /// <summary>
-        /// Authenticate a user
-        /// </summary>
+		/// <summary>
+		/// Authenticate a user
+		/// </summary>
 
-        /// <remarks>
-        /// Authenticate a user using email and password, and return a token.
-        /// </remarks>
+		/// <remarks>
+		/// Authenticate a user using email and password, and return a token.
+		/// </remarks>
 
-        /// <param name="body">Email and password of the user for authentication</param>
+		/// <param name="body">Email and password of the user for authentication</param>
 
-        /// <returns>Authentication successful</returns>
+		/// <returns>Authentication successful</returns>
 
-        System.Threading.Tasks.Task<Response> AuthenticateUserAsync(AuthenticateRequest body);
+		System.Threading.Tasks.Task<Response> AuthenticateUserAsync(AuthenticateRequest body);
 
-        /// <summary>
-        /// Get user's friends
-        /// </summary>
+		/// <summary>
+		/// Get user's friends
+		/// </summary>
 
-        /// <remarks>
-        /// Retrieve a list of friends for the specified user by their ID.
-        /// </remarks>
+		/// <remarks>
+		/// Retrieve a list of friends for the specified user by their ID.
+		/// </remarks>
 
-        /// <param name="userId">The ID of the user whose friends are to be retrieved</param>
+		/// <param name="userId">The ID of the user whose friends are to be retrieved</param>
 
-        /// <returns>Successful retrieval of friends list</returns>
+		/// <returns>Successful retrieval of friends list</returns>
 
-        System.Threading.Tasks.Task<System.Collections.Generic.ICollection<User>> GetUsersFriendsAsync(int userId);
+		System.Threading.Tasks.Task<System.Collections.Generic.ICollection<User>> GetUsersFriendsAsync(int userId);
 
-        /// <summary>
-        /// Get friend requests sent to user
-        /// </summary>
+		/// <summary>
+		/// Get friend requests sent to user
+		/// </summary>
 
-        /// <param name="userId">User ID</param>
+		/// <param name="userId">User ID</param>
 
-        /// <returns>Successfully retrieved list of friend requests</returns>
+		/// <returns>Successfully retrieved list of friend requests</returns>
 
-        System.Threading.Tasks.Task<System.Collections.Generic.ICollection<FriendRequest>> FriendRequestsAllAsync(int userId);
+		System.Threading.Tasks.Task<System.Collections.Generic.ICollection<FriendRequest>> FriendRequestsAllAsync(int userId);
 
-        /// <summary>
-        /// Accept or reject a friend request
-        /// </summary>
+		/// <summary>
+		/// Accept or reject a friend request
+		/// </summary>
 
-        /// <param name="userId">User ID</param>
+		/// <param name="userId">User ID</param>
 
-        /// <param name="requestId">ID of the friend request</param>
+		/// <param name="requestId">ID of the friend request</param>
 
 
-        /// <returns>Successfully changed request status</returns>
+		/// <returns>Successfully changed request status</returns>
 
-        System.Threading.Tasks.Task FriendRequestsPUTAsync(int userId, int requestId, RequestStatus body);
+		System.Threading.Tasks.Task FriendRequestsPUTAsync(int userId, int requestId, RequestStatus body);
 
-        /// <summary>
-        /// Create a new friend request
-        /// </summary>
+		/// <summary>
+		/// Create a new friend request
+		/// </summary>
 
-        /// <remarks>
-        /// Send a request to become friends with another user
-        /// </remarks>
+		/// <remarks>
+		/// Send a request to become friends with another user
+		/// </remarks>
 
-        /// <param name="body">Friend</param>
+		/// <param name="body">Friend</param>
 
-        /// <returns>Successfully sent request</returns>
+		/// <returns>Successfully sent request</returns>
 
-        System.Threading.Tasks.Task<FriendRequest> FriendRequestsPOSTAsync(FriendRequest body);
+		System.Threading.Tasks.Task<FriendRequest> FriendRequestsPOSTAsync(FriendRequest body);
 
-        /// <summary>
-        /// Get user by email
-        /// </summary>
+		/// <summary>
+		/// Get user by email
+		/// </summary>
 
-        /// <remarks>
-        /// Get a user’s details by their email.
-        /// </remarks>
+		/// <remarks>
+		/// Get a user’s details by their email.
+		/// </remarks>
 
-        /// <param name="email">The email of the user to retrieve</param>
+		/// <param name="email">The email of the user to retrieve</param>
 
-        /// <returns>Successfully retrieved user details</returns>
+		/// <returns>Successfully retrieved user details</returns>
 
-        System.Threading.Tasks.Task<User> GetUserByEmailAsync(string email);
+		System.Threading.Tasks.Task<User> GetUserByEmailAsync(string email);
 
-        /// <summary>
-        /// Fetch all expenses for a specific group
-        /// </summary>
+		/// <summary>
+		/// Fetch all expenses for a specific group
+		/// </summary>
 
-        /// <remarks>
-        /// Returns a list of all expenses within a group, including details about participants and cost division.
-        /// </remarks>
+		/// <remarks>
+		/// Returns a list of all expenses within a group, including details about participants and cost division.
+		/// </remarks>
 
-        /// <param name="groupId">ID of the group to fetch expenses for</param>
+		/// <param name="groupId">ID of the group to fetch expenses for</param>
 
-        /// <returns>A list of expenses for the group</returns>
+		/// <returns>A list of expenses for the group</returns>
 
-        System.Threading.Tasks.Task<System.Collections.Generic.ICollection<Anonymous>> ExpensesAsync(string groupId);
+		System.Threading.Tasks.Task<System.Collections.Generic.ICollection<Anonymous>> ExpensesAsync(string groupId);
 
-        /// <summary>
-        /// Fetch all groups a user is a member of
-        /// </summary>
+		/// <summary>
+		/// Fetch all groups a user is a member of
+		/// </summary>
 
-        /// <remarks>
-        /// Returns a list of groups that a user is a member of, along with group balances and members.
-        /// </remarks>
+		/// <remarks>
+		/// Returns a list of groups that a user is a member of, along with group balances and members.
+		/// </remarks>
 
-        /// <param name="userId">ID of the user to fetch groups for</param>
+		/// <param name="userId">ID of the user to fetch groups for</param>
 
-        /// <returns>A list of groups the user is a member of</returns>
+		/// <returns>A list of groups the user is a member of</returns>
 
-        System.Threading.Tasks.Task<System.Collections.Generic.ICollection<Anonymous2>> GroupsAllAsync(string userId);
+		System.Threading.Tasks.Task<System.Collections.Generic.ICollection<Anonymous2>> GroupsAllAsync(string userId);
 
-        /// <summary>
-        /// Add new request
-        /// </summary>
+		/// <summary>
+		/// Add new request
+		/// </summary>
 
 
-        /// <returns>Success</returns>
+		/// <returns>Success</returns>
 
-        System.Threading.Tasks.Task<MoneyRequest> MoneyRequestPOSTAsync(MoneyRequest body);
+		System.Threading.Tasks.Task<MoneyRequest> MoneyRequestPOSTAsync(MoneyRequest body);
 
-        /// <summary>
-        /// Update existing request
-        /// </summary>
+		/// <summary>
+		/// Update existing request
+		/// </summary>
 
 
-        /// <returns>Success</returns>
+		/// <returns>Success</returns>
 
-        System.Threading.Tasks.Task<MoneyRequest> MoneyRequestPUTAsync(MoneyRequest body);
+		System.Threading.Tasks.Task<MoneyRequest> MoneyRequestPUTAsync(MoneyRequest body);
 
-        /// <summary>
-        /// Update request status
-        /// </summary>
+		/// <summary>
+		/// Update request status
+		/// </summary>
 
-        /// <param name="requestId">ID of the request to update</param>
+		/// <param name="requestId">ID of the request to update</param>
 
 
-        /// <returns>Successfully updated request state</returns>
+		/// <returns>Successfully updated request state</returns>
 
-        System.Threading.Tasks.Task<MoneyRequest> MoneyRequestPUT2Async(long requestId, RequestStatus body);
+		System.Threading.Tasks.Task<MoneyRequest> MoneyRequestPUT2Async(long requestId, RequestStatus body);
 
-        /// <summary>
-        /// Delete an existing request
-        /// </summary>
+		/// <summary>
+		/// Delete an existing request
+		/// </summary>
 
-        /// <param name="requestId">ID of the request to delete</param>
+		/// <param name="requestId">ID of the request to delete</param>
 
-        /// <returns>Success</returns>
+		/// <returns>Success</returns>
 
-        System.Threading.Tasks.Task MoneyRequestDELETEAsync(long requestId);
+		System.Threading.Tasks.Task MoneyRequestDELETEAsync(long requestId);
 
-        /// <summary>
-        /// Get all requests sent by a given user
-        /// </summary>
+		/// <summary>
+		/// Get all requests sent by a given user
+		/// </summary>
 
 
-        /// <returns>Success</returns>
+		/// <returns>Success</returns>
 
-        System.Threading.Tasks.Task<System.Collections.Generic.ICollection<MoneyRequest>> FindBySenderAsync(long senderId);
+		System.Threading.Tasks.Task<System.Collections.Generic.ICollection<MoneyRequest>> FindBySenderAsync(long senderId);
 
-        /// <summary>
-        /// Get all requests received by a given user
-        /// </summary>
+		/// <summary>
+		/// Get all requests received by a given user
+		/// </summary>
 
 
-        /// <returns>Success</returns>
+		/// <returns>Success</returns>
 
-        System.Threading.Tasks.Task<System.Collections.Generic.ICollection<MoneyRequest>> FindByRecipientAsync(long recipientId);
+		System.Threading.Tasks.Task<System.Collections.Generic.ICollection<MoneyRequest>> FindByRecipientAsync(long recipientId);
 
-        /// <summary>
-        /// Upload a receipt image to extract product information.
-        /// </summary>
+		/// <summary>
+		/// Upload a receipt image to extract product information.
+		/// </summary>
 
-        /// <remarks>
-        /// Accepts an image file of a receipt, processes it, and returns a list of products with their prices.
-        /// </remarks>
+		/// <remarks>
+		/// Accepts an image file of a receipt, processes it, and returns a list of products with their prices.
+		/// </remarks>
 
-        /// <param name="file">The receipt image file to be uploaded.</param>
+		/// <param name="file">The receipt image file to be uploaded.</param>
 
-        /// <returns>Successfully extracted product information.</returns>
+		/// <returns>Successfully extracted product information.</returns>
 
-        System.Threading.Tasks.Task<Response2> ReceiptAsync(FileParameter file);
+		System.Threading.Tasks.Task<Response2> ReceiptAsync(FileParameter file);
 
-        /// <summary>
-        /// Add a new expense
-        /// </summary>
+		/// <summary>
+		/// Add a new expense
+		/// </summary>
 
-        /// <remarks>
-        /// Create a new expense entry in a group and distribute it among participants based on the split type.
-        /// </remarks>
+		/// <remarks>
+		/// Create a new expense entry in a group and distribute it among participants based on the split type.
+		/// </remarks>
 
-        /// <param name="body">Expense details to add a new expense</param>
+		/// <param name="body">Expense details to add a new expense</param>
 
-        /// <returns>Expense created successfully</returns>
+		/// <returns>Expense created successfully</returns>
 
-        System.Threading.Tasks.Task<Expense> AddExpenseAsync(Expense body);
+		System.Threading.Tasks.Task<Expense> AddExpenseAsync(Expense body);
 
-        /// <summary>
-        /// Edit an existing expense
-        /// </summary>
+		/// <summary>
+		/// Edit an existing expense
+		/// </summary>
 
-        /// <remarks>
-        /// Update the details of an existing expense, including its description, amount, or participants.
-        /// </remarks>
+		/// <remarks>
+		/// Update the details of an existing expense, including its description, amount, or participants.
+		/// </remarks>
 
-        /// <param name="body">Updated expense details</param>
+		/// <param name="body">Updated expense details</param>
 
-        /// <returns>Expense updated successfully</returns>
+		/// <returns>Expense updated successfully</returns>
 
-        System.Threading.Tasks.Task<Expense> EditExpenseAsync(Expense body);
+		System.Threading.Tasks.Task<Expense> EditExpenseAsync(Expense body);
 
-        /// <summary>
-        /// Get balances for a group
-        /// </summary>
+		/// <summary>
+		/// Get balances for a group
+		/// </summary>
 
-        /// <remarks>
-        /// Retrieve a breakdown of who owes how much money to whom within a specified group.
-        /// </remarks>
+		/// <remarks>
+		/// Retrieve a breakdown of who owes how much money to whom within a specified group.
+		/// </remarks>
 
-        /// <param name="groupId">ID of the group for which balances are calculated</param>
+		/// <param name="groupId">ID of the group for which balances are calculated</param>
 
-        /// <returns>Successfully retrieved balances</returns>
+		/// <returns>Successfully retrieved balances</returns>
 
-        System.Threading.Tasks.Task<Response3> GetGroupBalancesAsync(long groupId);
+		System.Threading.Tasks.Task<Response3> GetGroupBalancesAsync(long groupId);
 
-        /// <summary>
-        /// Fetch balances for a user across all groups
-        /// </summary>
+		/// <summary>
+		/// Fetch balances for a user across all groups
+		/// </summary>
 
-        /// <remarks>
-        /// Retrieve a summary of how much the user owes to others and how much others owe to the user across all groups.
-        /// </remarks>
+		/// <remarks>
+		/// Retrieve a summary of how much the user owes to others and how much others owe to the user across all groups.
+		/// </remarks>
 
-        /// <param name="userId">The ID of the user for whom balances are calculated</param>
+		/// <param name="userId">The ID of the user for whom balances are calculated</param>
 
-        /// <returns>Successfully retrieved user balances</returns>
+		/// <returns>Successfully retrieved user balances</returns>
 
-        System.Threading.Tasks.Task<Response4> GetUserBalancesAsync(long userId);
+		System.Threading.Tasks.Task<Response4> GetUserBalancesAsync(long userId);
 
-        /// <summary>
-        /// Create a new money transfer
-        /// </summary>
+		/// <summary>
+		/// Create a new money transfer
+		/// </summary>
 
-        /// <remarks>
-        /// Initiates a money transfer between users within a group. The status defaults to `pending`.
-        /// </remarks>
+		/// <remarks>
+		/// Initiates a money transfer between users within a group. The status defaults to `pending`.
+		/// </remarks>
 
-        /// <returns>Money transfer created successfully</returns>
+		/// <returns>Money transfer created successfully</returns>
 
-        System.Threading.Tasks.Task<MoneyTransfer> MoneyTransferAsync(Body body);
+		System.Threading.Tasks.Task<MoneyTransfer> MoneyTransferAsync(Body body);
 
-        /// <summary>
-        /// Update the status of a money transfer
-        /// </summary>
+		/// <summary>
+		/// Update the status of a money transfer
+		/// </summary>
 
-        /// <remarks>
-        /// Changes the status of a money transfer to either `confirmed` or `rejected`.
-        /// </remarks>
+		/// <remarks>
+		/// Changes the status of a money transfer to either `confirmed` or `rejected`.
+		/// </remarks>
 
-        /// <param name="transferId">ID of the money transfer</param>
+		/// <param name="transferId">ID of the money transfer</param>
 
 
-        /// <returns>Money transfer status updated successfully</returns>
+		/// <returns>Money transfer status updated successfully</returns>
 
-        System.Threading.Tasks.Task<MoneyTransfer> StatusAsync(long transferId, Body2 body);
+		System.Threading.Tasks.Task<MoneyTransfer> StatusAsync(long transferId, Body2 body);
 
-        /// <summary>
-        /// Get group by ID
-        /// </summary>
+		/// <summary>
+		/// Get group by ID
+		/// </summary>
 
-        /// <param name="groupId">ID of the group</param>
+		/// <param name="groupId">ID of the group</param>
 
-        /// <returns>Successfully retrieved group</returns>
+		/// <returns>Successfully retrieved group</returns>
 
-        System.Threading.Tasks.Task<Group> GroupsGETAsync(int groupId);
+		System.Threading.Tasks.Task<Group> GroupsGETAsync(int groupId);
 
-        /// <summary>
-        /// Add new group
-        /// </summary>
+		/// <summary>
+		/// Add new group
+		/// </summary>
 
 
-        /// <returns>Successfully inserted new group</returns>
+		/// <returns>Successfully inserted new group</returns>
 
-        System.Threading.Tasks.Task<Group> GroupsPOSTAsync(Group body);
+		System.Threading.Tasks.Task<Group> GroupsPOSTAsync(Group body);
 
-        /// <summary>
-        /// Update group status
-        /// </summary>
+		/// <summary>
+		/// Update group status
+		/// </summary>
 
-        /// <param name="groupId">ID of group</param>
+		/// <param name="groupId">ID of group</param>
 
 
-        /// <returns>Success</returns>
+		/// <returns>Success</returns>
 
-        System.Threading.Tasks.Task Status2Async(int groupId, GroupStatus body);
+		System.Threading.Tasks.Task Status2Async(int groupId, GroupStatus body);
 
-        /// <summary>
-        /// Get pending requests to join the group
-        /// </summary>
+		/// <summary>
+		/// Get pending requests to join the group
+		/// </summary>
 
-        /// <param name="groupId">ID of the group</param>
+		/// <param name="groupId">ID of the group</param>
 
-        /// <returns>Successfully retrieved requests list</returns>
+		/// <returns>Successfully retrieved requests list</returns>
 
-        System.Threading.Tasks.Task<System.Collections.Generic.ICollection<GroupJoinRequest>> JoinRequestsAllAsync(int groupId);
+		System.Threading.Tasks.Task<System.Collections.Generic.ICollection<GroupJoinRequest>> JoinRequestsAllAsync(int groupId);
 
-        /// <summary>
-        /// Accept or reject the request
-        /// </summary>
+		/// <summary>
+		/// Accept or reject the request
+		/// </summary>
 
-        /// <param name="groupId">ID of the group</param>
+		/// <param name="groupId">ID of the group</param>
 
-        /// <param name="requestId">ID of the group join request</param>
+		/// <param name="requestId">ID of the group join request</param>
 
 
-        /// <returns>Successfully changed request status</returns>
+		/// <returns>Successfully changed request status</returns>
 
-        System.Threading.Tasks.Task JoinRequestsAsync(int groupId, int requestId, RequestStatus body);
+		System.Threading.Tasks.Task JoinRequestsAsync(int groupId, int requestId, RequestStatus body);
 
-        /// <summary>
-        /// Retrieve pending group invites for the user
-        /// </summary>
+		/// <summary>
+		/// Retrieve pending group invites for the user
+		/// </summary>
 
-        /// <param name="userId">ID of the user</param>
+		/// <param name="userId">ID of the user</param>
 
-        /// <returns>Invitation sent successfully</returns>
+		/// <returns>Invitation sent successfully</returns>
 
-        System.Threading.Tasks.Task<System.Collections.Generic.ICollection<GroupInvite>> GroupInvitesAllAsync(int userId);
+		System.Threading.Tasks.Task<System.Collections.Generic.ICollection<GroupInvite>> GroupInvitesAllAsync(int userId);
 
-        /// <summary>
-        /// Invite the user to the group
-        /// </summary>
+		/// <summary>
+		/// Invite the user to the group
+		/// </summary>
 
-        /// <param name="userId">ID of the invited user</param>
+		/// <param name="userId">ID of the invited user</param>
 
 
-        /// <returns>Invite sent successfully</returns>
+		/// <returns>Invite sent successfully</returns>
 
-        System.Threading.Tasks.Task GroupInvitesPOSTAsync(int userId, GroupInvite body);
+		System.Threading.Tasks.Task GroupInvitesPOSTAsync(int userId, GroupInvite body);
 
-        /// <summary>
-        /// Accept or reject the group invitation
-        /// </summary>
+		/// <summary>
+		/// Accept or reject the group invitation
+		/// </summary>
 
-        /// <remarks>
-        /// Change invitation status from 'sent' to 'accepted' or 'rejected'
-        /// </remarks>
+		/// <remarks>
+		/// Change invitation status from 'sent' to 'accepted' or 'rejected'
+		/// </remarks>
 
-        /// <param name="userId">ID of the user</param>
+		/// <param name="userId">ID of the user</param>
 
-        /// <param name="invitationId">ID of the invite</param>
+		/// <param name="invitationId">ID of the invite</param>
 
 
-        /// <returns>Successfully changed invitation status</returns>
+		/// <returns>Successfully changed invitation status</returns>
 
-        System.Threading.Tasks.Task GroupInvitesPUTAsync(int userId, int invitationId, RequestStatus body);
+		System.Threading.Tasks.Task GroupInvitesPUTAsync(int userId, int invitationId, RequestStatus body);
 
-        /// <summary>
-        /// Get an invite code for the group
-        /// </summary>
+		/// <summary>
+		/// Get an invite code for the group
+		/// </summary>
 
-        /// <remarks>
-        /// Retrieve or generate new code that can be used by other users to join this group
-        /// </remarks>
+		/// <remarks>
+		/// Retrieve or generate new code that can be used by other users to join this group
+		/// </remarks>
 
-        /// <param name="groupId">ID of the group to retrieve invite code for</param>
+		/// <param name="groupId">ID of the group to retrieve invite code for</param>
 
-        /// <returns>Success</returns>
+		/// <returns>Success</returns>
 
-        System.Threading.Tasks.Task<string> InviteCodeGETAsync(int groupId);
+		System.Threading.Tasks.Task<string> InviteCodeGETAsync(int groupId);
 
-        /// <summary>
-        /// Request to join the group referenced by the invitation code
-        /// </summary>
+		/// <summary>
+		/// Request to join the group referenced by the invitation code
+		/// </summary>
 
 
-        /// <returns>Success</returns>
+		/// <returns>Success</returns>
 
-        System.Threading.Tasks.Task InviteCodePUTAsync(string body);
+		System.Threading.Tasks.Task InviteCodePUTAsync(string body);
 
-    }
+	}
 
-    [System.CodeDom.Compiler.GeneratedCode("NSwag", "14.2.0.0 (NJsonSchema v11.1.0.0 (Newtonsoft.Json v13.0.0.0))")]
+	[System.CodeDom.Compiler.GeneratedCode("NSwag", "14.2.0.0 (NJsonSchema v11.1.0.0 (Newtonsoft.Json v13.0.0.0))")]
 
-    public partial class Controller : Microsoft.AspNetCore.Mvc.ControllerBase
-    {
-        private IController _implementation;
+	public partial class Controller : Microsoft.AspNetCore.Mvc.ControllerBase
+	{
+		private IController _implementation;
 
-        public Controller(IController implementation)
-        {
-            _implementation = implementation;
-        }
+		public Controller(IController implementation)
+		{
+			_implementation = implementation;
+		}
 
-        /// <summary>
-        /// Create a new user
-        /// </summary>
-        /// <remarks>
-        /// Create a new user with the provided details (name, email, and password).
-        /// </remarks>
-        /// <param name="body">User data to create a new user</param>
-        /// <returns>User created successfully</returns>
-        [Microsoft.AspNetCore.Mvc.HttpPost, Microsoft.AspNetCore.Mvc.Route("users")]
-        public System.Threading.Tasks.Task<User> CreateUser([Microsoft.AspNetCore.Mvc.FromBody] CreateUserRequest body)
-        {
+		/// <summary>
+		/// Create a new user
+		/// </summary>
+		/// <remarks>
+		/// Create a new user with the provided details (name, email, and password).
+		/// </remarks>
+		/// <param name="body">User data to create a new user</param>
+		/// <returns>User created successfully</returns>
+		[Microsoft.AspNetCore.Mvc.HttpPost, Microsoft.AspNetCore.Mvc.Route("users")]
+		public System.Threading.Tasks.Task<User> CreateUser([Microsoft.AspNetCore.Mvc.FromBody] CreateUserRequest body)
+		{
 
-            return _implementation.CreateUserAsync(body);
-        }
+			return _implementation.CreateUserAsync(body);
+		}
 
-        /// <summary>
-        /// Get user by ID
-        /// </summary>
-        /// <remarks>
-        /// Get a user’s details by their unique ID.
-        /// </remarks>
-        /// <param name="userId">The ID of the user to retrieve</param>
-        /// <returns>Successfully retrieved user details</returns>
-        [Microsoft.AspNetCore.Mvc.HttpGet, Microsoft.AspNetCore.Mvc.Route("users/{userId}")]
-        public System.Threading.Tasks.Task<User> GetUserById(int userId)
-        {
+		/// <summary>
+		/// Get user by ID
+		/// </summary>
+		/// <remarks>
+		/// Get a user’s details by their unique ID.
+		/// </remarks>
+		/// <param name="userId">The ID of the user to retrieve</param>
+		/// <returns>Successfully retrieved user details</returns>
+		[Microsoft.AspNetCore.Mvc.HttpGet, Microsoft.AspNetCore.Mvc.Route("users/{userId}")]
+		public System.Threading.Tasks.Task<User> GetUserById(int userId)
+		{
 
-            return _implementation.GetUserByIdAsync(userId);
-        }
+			return _implementation.GetUserByIdAsync(userId);
+		}
 
-        /// <summary>
-        /// Delete a user
-        /// </summary>
-        /// <remarks>
-        /// Delete the user by their unique ID.
-        /// </remarks>
-        /// <param name="userId">The ID of the user to delete</param>
-        /// <returns>User deleted successfully</returns>
-        [Microsoft.AspNetCore.Mvc.HttpDelete, Microsoft.AspNetCore.Mvc.Route("users/{userId}")]
-        public System.Threading.Tasks.Task DeleteUser(int userId)
-        {
+		/// <summary>
+		/// Delete a user
+		/// </summary>
+		/// <remarks>
+		/// Delete the user by their unique ID.
+		/// </remarks>
+		/// <param name="userId">The ID of the user to delete</param>
+		/// <returns>User deleted successfully</returns>
+		[Microsoft.AspNetCore.Mvc.HttpDelete, Microsoft.AspNetCore.Mvc.Route("users/{userId}")]
+		public System.Threading.Tasks.Task DeleteUser(int userId)
+		{
 
-            return _implementation.DeleteUserAsync(userId);
-        }
+			return _implementation.DeleteUserAsync(userId);
+		}
 
-        /// <summary>
-        /// Update user’s name
-        /// </summary>
-        /// <remarks>
-        /// Update the user's name with the provided new name.
-        /// </remarks>
-        /// <param name="userId">The ID of the user whose name is to be updated</param>
-        /// <param name="body">New name for the user</param>
-        /// <returns>Name updated successfully</returns>
-        [Microsoft.AspNetCore.Mvc.HttpPut, Microsoft.AspNetCore.Mvc.Route("users/name/{userId}")]
-        public System.Threading.Tasks.Task<User> ChangeUserName(int userId, [Microsoft.AspNetCore.Mvc.FromBody] ChangeNameRequest body)
-        {
+		/// <summary>
+		/// Update user’s name
+		/// </summary>
+		/// <remarks>
+		/// Update the user's name with the provided new name.
+		/// </remarks>
+		/// <param name="userId">The ID of the user whose name is to be updated</param>
+		/// <param name="body">New name for the user</param>
+		/// <returns>Name updated successfully</returns>
+		[Microsoft.AspNetCore.Mvc.HttpPut, Microsoft.AspNetCore.Mvc.Route("users/name/{userId}")]
+		public System.Threading.Tasks.Task<User> ChangeUserName(int userId, [Microsoft.AspNetCore.Mvc.FromBody] ChangeNameRequest body)
+		{
 
-            return _implementation.ChangeUserNameAsync(userId, body);
-        }
+			return _implementation.ChangeUserNameAsync(userId, body);
+		}
 
-        /// <summary>
-        /// Update user’s profile picture
-        /// </summary>
-        /// <remarks>
-        /// Update the user's profile picture with the provided new picture.
-        /// </remarks>
-        /// <param name="userId">The ID of the user whose profile picture is to be updated</param>
-        /// <param name="profilePicture">The new profile picture of the user</param>
-        /// <returns>Name updated successfully</returns>
-        [Microsoft.AspNetCore.Mvc.HttpPut, Microsoft.AspNetCore.Mvc.Route("users/profilePicture/{userId}")]
-        public System.Threading.Tasks.Task<User> ChangeProfilePicture(int userId, FileParameter profilePicture)
-        {
+		/// <summary>
+		/// Update user’s profile picture
+		/// </summary>
+		/// <remarks>
+		/// Update the user's profile picture with the provided new picture.
+		/// </remarks>
+		/// <param name="userId">The ID of the user whose profile picture is to be updated</param>
+		/// <param name="profilePicture">The new profile picture of the user</param>
+		/// <returns>Name updated successfully</returns>
+		[Microsoft.AspNetCore.Mvc.HttpPut, Microsoft.AspNetCore.Mvc.Route("users/profilePicture/{userId}")]
+		public System.Threading.Tasks.Task<User> ChangeProfilePicture(int userId, FileParameter profilePicture)
+		{
 
-            return _implementation.ChangeProfilePictureAsync(userId, profilePicture);
-        }
+			return _implementation.ChangeProfilePictureAsync(userId, profilePicture);
+		}
 
-        /// <summary>
-        /// Authenticate a user
-        /// </summary>
-        /// <remarks>
-        /// Authenticate a user using email and password, and return a token.
-        /// </remarks>
-        /// <param name="body">Email and password of the user for authentication</param>
-        /// <returns>Authentication successful</returns>
-        [Microsoft.AspNetCore.Mvc.HttpPost, Microsoft.AspNetCore.Mvc.Route("users/authenticate")]
-        public System.Threading.Tasks.Task<Response> AuthenticateUser([Microsoft.AspNetCore.Mvc.FromBody] AuthenticateRequest body)
-        {
+		/// <summary>
+		/// Authenticate a user
+		/// </summary>
+		/// <remarks>
+		/// Authenticate a user using email and password, and return a token.
+		/// </remarks>
+		/// <param name="body">Email and password of the user for authentication</param>
+		/// <returns>Authentication successful</returns>
+		[Microsoft.AspNetCore.Mvc.HttpPost, Microsoft.AspNetCore.Mvc.Route("users/authenticate")]
+		public System.Threading.Tasks.Task<Response> AuthenticateUser([Microsoft.AspNetCore.Mvc.FromBody] AuthenticateRequest body)
+		{
 
-            return _implementation.AuthenticateUserAsync(body);
-        }
+			return _implementation.AuthenticateUserAsync(body);
+		}
 
-        /// <summary>
-        /// Get user's friends
-        /// </summary>
-        /// <remarks>
-        /// Retrieve a list of friends for the specified user by their ID.
-        /// </remarks>
-        /// <param name="userId">The ID of the user whose friends are to be retrieved</param>
-        /// <returns>Successful retrieval of friends list</returns>
-        [Microsoft.AspNetCore.Mvc.HttpGet, Microsoft.AspNetCore.Mvc.Route("users/friends/{userId}")]
-        public System.Threading.Tasks.Task<System.Collections.Generic.ICollection<User>> GetUsersFriends(int userId)
-        {
+		/// <summary>
+		/// Get user's friends
+		/// </summary>
+		/// <remarks>
+		/// Retrieve a list of friends for the specified user by their ID.
+		/// </remarks>
+		/// <param name="userId">The ID of the user whose friends are to be retrieved</param>
+		/// <returns>Successful retrieval of friends list</returns>
+		[Microsoft.AspNetCore.Mvc.HttpGet, Microsoft.AspNetCore.Mvc.Route("users/friends/{userId}")]
+		public System.Threading.Tasks.Task<System.Collections.Generic.ICollection<User>> GetUsersFriends(int userId)
+		{
 
-            return _implementation.GetUsersFriendsAsync(userId);
-        }
+			return _implementation.GetUsersFriendsAsync(userId);
+		}
 
-        /// <summary>
-        /// Get friend requests sent to user
-        /// </summary>
-        /// <param name="userId">User ID</param>
-        /// <returns>Successfully retrieved list of friend requests</returns>
-        [Microsoft.AspNetCore.Mvc.HttpGet, Microsoft.AspNetCore.Mvc.Route("users/{userId}/friendRequests")]
-        public System.Threading.Tasks.Task<System.Collections.Generic.ICollection<FriendRequest>> FriendRequestsAll(int userId)
-        {
+		/// <summary>
+		/// Get friend requests sent to user
+		/// </summary>
+		/// <param name="userId">User ID</param>
+		/// <returns>Successfully retrieved list of friend requests</returns>
+		[Microsoft.AspNetCore.Mvc.HttpGet, Microsoft.AspNetCore.Mvc.Route("users/{userId}/friendRequests")]
+		public System.Threading.Tasks.Task<System.Collections.Generic.ICollection<FriendRequest>> FriendRequestsAll(int userId)
+		{
 
-            return _implementation.FriendRequestsAllAsync(userId);
-        }
+			return _implementation.FriendRequestsAllAsync(userId);
+		}
 
-        /// <summary>
-        /// Accept or reject a friend request
-        /// </summary>
-        /// <param name="userId">User ID</param>
-        /// <param name="requestId">ID of the friend request</param>
-        /// <returns>Successfully changed request status</returns>
-        [Microsoft.AspNetCore.Mvc.HttpPut, Microsoft.AspNetCore.Mvc.Route("users/{userId}/friendRequests/{requestId}")]
-        public System.Threading.Tasks.Task FriendRequestsPUT(int userId, int requestId, [Microsoft.AspNetCore.Mvc.FromBody] RequestStatus body)
-        {
+		/// <summary>
+		/// Accept or reject a friend request
+		/// </summary>
+		/// <param name="userId">User ID</param>
+		/// <param name="requestId">ID of the friend request</param>
+		/// <returns>Successfully changed request status</returns>
+		[Microsoft.AspNetCore.Mvc.HttpPut, Microsoft.AspNetCore.Mvc.Route("users/{userId}/friendRequests/{requestId}")]
+		public System.Threading.Tasks.Task FriendRequestsPUT(int userId, int requestId, [Microsoft.AspNetCore.Mvc.FromBody] RequestStatus body)
+		{
 
-            return _implementation.FriendRequestsPUTAsync(userId, requestId, body);
-        }
+			return _implementation.FriendRequestsPUTAsync(userId, requestId, body);
+		}
 
-        /// <summary>
-        /// Create a new friend request
-        /// </summary>
-        /// <remarks>
-        /// Send a request to become friends with another user
-        /// </remarks>
-        /// <param name="body">Friend</param>
-        /// <returns>Successfully sent request</returns>
-        [Microsoft.AspNetCore.Mvc.HttpPost, Microsoft.AspNetCore.Mvc.Route("users/friendRequests")]
-        public System.Threading.Tasks.Task<FriendRequest> FriendRequestsPOST([Microsoft.AspNetCore.Mvc.FromBody] FriendRequest body)
-        {
+		/// <summary>
+		/// Create a new friend request
+		/// </summary>
+		/// <remarks>
+		/// Send a request to become friends with another user
+		/// </remarks>
+		/// <param name="body">Friend</param>
+		/// <returns>Successfully sent request</returns>
+		[Microsoft.AspNetCore.Mvc.HttpPost, Microsoft.AspNetCore.Mvc.Route("users/friendRequests")]
+		public System.Threading.Tasks.Task<FriendRequest> FriendRequestsPOST([Microsoft.AspNetCore.Mvc.FromBody] FriendRequest body)
+		{
 
-            return _implementation.FriendRequestsPOSTAsync(body);
-        }
+			return _implementation.FriendRequestsPOSTAsync(body);
+		}
 
-        /// <summary>
-        /// Get user by email
-        /// </summary>
-        /// <remarks>
-        /// Get a user’s details by their email.
-        /// </remarks>
-        /// <param name="email">The email of the user to retrieve</param>
-        /// <returns>Successfully retrieved user details</returns>
-        [Microsoft.AspNetCore.Mvc.HttpGet, Microsoft.AspNetCore.Mvc.Route("users/email/{email}")]
-        public System.Threading.Tasks.Task<User> GetUserByEmail(string email)
-        {
+		/// <summary>
+		/// Get user by email
+		/// </summary>
+		/// <remarks>
+		/// Get a user’s details by their email.
+		/// </remarks>
+		/// <param name="email">The email of the user to retrieve</param>
+		/// <returns>Successfully retrieved user details</returns>
+		[Microsoft.AspNetCore.Mvc.HttpGet, Microsoft.AspNetCore.Mvc.Route("users/email/{email}")]
+		public System.Threading.Tasks.Task<User> GetUserByEmail(string email)
+		{
 
-            return _implementation.GetUserByEmailAsync(email);
-        }
+			return _implementation.GetUserByEmailAsync(email);
+		}
 
-        /// <summary>
-        /// Fetch all expenses for a specific group
-        /// </summary>
-        /// <remarks>
-        /// Returns a list of all expenses within a group, including details about participants and cost division.
-        /// </remarks>
-        /// <param name="groupId">ID of the group to fetch expenses for</param>
-        /// <returns>A list of expenses for the group</returns>
-        [Microsoft.AspNetCore.Mvc.HttpGet, Microsoft.AspNetCore.Mvc.Route("groups/{groupId}/expenses")]
-        public System.Threading.Tasks.Task<System.Collections.Generic.ICollection<Anonymous>> Expenses(string groupId)
-        {
+		/// <summary>
+		/// Fetch all expenses for a specific group
+		/// </summary>
+		/// <remarks>
+		/// Returns a list of all expenses within a group, including details about participants and cost division.
+		/// </remarks>
+		/// <param name="groupId">ID of the group to fetch expenses for</param>
+		/// <returns>A list of expenses for the group</returns>
+		[Microsoft.AspNetCore.Mvc.HttpGet, Microsoft.AspNetCore.Mvc.Route("groups/{groupId}/expenses")]
+		public System.Threading.Tasks.Task<System.Collections.Generic.ICollection<Anonymous>> Expenses(string groupId)
+		{
 
-            return _implementation.ExpensesAsync(groupId);
-        }
+			return _implementation.ExpensesAsync(groupId);
+		}
 
-        /// <summary>
-        /// Fetch all groups a user is a member of
-        /// </summary>
-        /// <remarks>
-        /// Returns a list of groups that a user is a member of, along with group balances and members.
-        /// </remarks>
-        /// <param name="userId">ID of the user to fetch groups for</param>
-        /// <returns>A list of groups the user is a member of</returns>
-        [Microsoft.AspNetCore.Mvc.HttpGet, Microsoft.AspNetCore.Mvc.Route("users/{userId}/groups")]
-        public System.Threading.Tasks.Task<System.Collections.Generic.ICollection<Anonymous2>> GroupsAll(string userId)
-        {
+		/// <summary>
+		/// Fetch all groups a user is a member of
+		/// </summary>
+		/// <remarks>
+		/// Returns a list of groups that a user is a member of, along with group balances and members.
+		/// </remarks>
+		/// <param name="userId">ID of the user to fetch groups for</param>
+		/// <returns>A list of groups the user is a member of</returns>
+		[Microsoft.AspNetCore.Mvc.HttpGet, Microsoft.AspNetCore.Mvc.Route("users/{userId}/groups")]
+		public System.Threading.Tasks.Task<System.Collections.Generic.ICollection<Anonymous2>> GroupsAll(string userId)
+		{
 
-            return _implementation.GroupsAllAsync(userId);
-        }
+			return _implementation.GroupsAllAsync(userId);
+		}
 
-        /// <summary>
-        /// Add new request
-        /// </summary>
-        /// <returns>Success</returns>
-        [Microsoft.AspNetCore.Mvc.HttpPost, Microsoft.AspNetCore.Mvc.Route("moneyRequest")]
-        public System.Threading.Tasks.Task<MoneyRequest> MoneyRequestPOST([Microsoft.AspNetCore.Mvc.FromBody] MoneyRequest body)
-        {
+		/// <summary>
+		/// Add new request
+		/// </summary>
+		/// <returns>Success</returns>
+		[Microsoft.AspNetCore.Mvc.HttpPost, Microsoft.AspNetCore.Mvc.Route("moneyRequest")]
+		public System.Threading.Tasks.Task<MoneyRequest> MoneyRequestPOST([Microsoft.AspNetCore.Mvc.FromBody] MoneyRequest body)
+		{
 
-            return _implementation.MoneyRequestPOSTAsync(body);
-        }
+			return _implementation.MoneyRequestPOSTAsync(body);
+		}
 
-        /// <summary>
-        /// Update existing request
-        /// </summary>
-        /// <returns>Success</returns>
-        [Microsoft.AspNetCore.Mvc.HttpPut, Microsoft.AspNetCore.Mvc.Route("moneyRequest")]
-        public System.Threading.Tasks.Task<MoneyRequest> MoneyRequestPUT([Microsoft.AspNetCore.Mvc.FromBody] MoneyRequest body)
-        {
+		/// <summary>
+		/// Update existing request
+		/// </summary>
+		/// <returns>Success</returns>
+		[Microsoft.AspNetCore.Mvc.HttpPut, Microsoft.AspNetCore.Mvc.Route("moneyRequest")]
+		public System.Threading.Tasks.Task<MoneyRequest> MoneyRequestPUT([Microsoft.AspNetCore.Mvc.FromBody] MoneyRequest body)
+		{
 
-            return _implementation.MoneyRequestPUTAsync(body);
-        }
+			return _implementation.MoneyRequestPUTAsync(body);
+		}
 
-        /// <summary>
-        /// Update request status
-        /// </summary>
-        /// <param name="requestId">ID of the request to update</param>
-        /// <returns>Successfully updated request state</returns>
-        [Microsoft.AspNetCore.Mvc.HttpPut, Microsoft.AspNetCore.Mvc.Route("moneyRequest/{requestId}")]
-        public System.Threading.Tasks.Task<MoneyRequest> MoneyRequestPUT2(long requestId, [Microsoft.AspNetCore.Mvc.FromBody] RequestStatus body)
-        {
+		/// <summary>
+		/// Update request status
+		/// </summary>
+		/// <param name="requestId">ID of the request to update</param>
+		/// <returns>Successfully updated request state</returns>
+		[Microsoft.AspNetCore.Mvc.HttpPut, Microsoft.AspNetCore.Mvc.Route("moneyRequest/{requestId}")]
+		public System.Threading.Tasks.Task<MoneyRequest> MoneyRequestPUT2(long requestId, [Microsoft.AspNetCore.Mvc.FromBody] RequestStatus body)
+		{
 
-            return _implementation.MoneyRequestPUT2Async(requestId, body);
-        }
+			return _implementation.MoneyRequestPUT2Async(requestId, body);
+		}
 
-        /// <summary>
-        /// Delete an existing request
-        /// </summary>
-        /// <param name="requestId">ID of the request to delete</param>
-        /// <returns>Success</returns>
-        [Microsoft.AspNetCore.Mvc.HttpDelete, Microsoft.AspNetCore.Mvc.Route("moneyRequest/{requestId}")]
-        public System.Threading.Tasks.Task MoneyRequestDELETE(long requestId)
-        {
+		/// <summary>
+		/// Delete an existing request
+		/// </summary>
+		/// <param name="requestId">ID of the request to delete</param>
+		/// <returns>Success</returns>
+		[Microsoft.AspNetCore.Mvc.HttpDelete, Microsoft.AspNetCore.Mvc.Route("moneyRequest/{requestId}")]
+		public System.Threading.Tasks.Task MoneyRequestDELETE(long requestId)
+		{
 
-            return _implementation.MoneyRequestDELETEAsync(requestId);
-        }
+			return _implementation.MoneyRequestDELETEAsync(requestId);
+		}
 
-        /// <summary>
-        /// Get all requests sent by a given user
-        /// </summary>
-        /// <returns>Success</returns>
-        [Microsoft.AspNetCore.Mvc.HttpGet, Microsoft.AspNetCore.Mvc.Route("moneyRequest/findBySender")]
-        public System.Threading.Tasks.Task<System.Collections.Generic.ICollection<MoneyRequest>> FindBySender([Microsoft.AspNetCore.Mvc.FromQuery] long senderId)
-        {
+		/// <summary>
+		/// Get all requests sent by a given user
+		/// </summary>
+		/// <returns>Success</returns>
+		[Microsoft.AspNetCore.Mvc.HttpGet, Microsoft.AspNetCore.Mvc.Route("moneyRequest/findBySender")]
+		public System.Threading.Tasks.Task<System.Collections.Generic.ICollection<MoneyRequest>> FindBySender([Microsoft.AspNetCore.Mvc.FromQuery] long senderId)
+		{
 
-            return _implementation.FindBySenderAsync(senderId);
-        }
+			return _implementation.FindBySenderAsync(senderId);
+		}
 
-        /// <summary>
-        /// Get all requests received by a given user
-        /// </summary>
-        /// <returns>Success</returns>
-        [Microsoft.AspNetCore.Mvc.HttpGet, Microsoft.AspNetCore.Mvc.Route("moneyRequest/findByRecipient")]
-        public System.Threading.Tasks.Task<System.Collections.Generic.ICollection<MoneyRequest>> FindByRecipient([Microsoft.AspNetCore.Mvc.FromQuery] long recipientId)
-        {
+		/// <summary>
+		/// Get all requests received by a given user
+		/// </summary>
+		/// <returns>Success</returns>
+		[Microsoft.AspNetCore.Mvc.HttpGet, Microsoft.AspNetCore.Mvc.Route("moneyRequest/findByRecipient")]
+		public System.Threading.Tasks.Task<System.Collections.Generic.ICollection<MoneyRequest>> FindByRecipient([Microsoft.AspNetCore.Mvc.FromQuery] long recipientId)
+		{
 
-            return _implementation.FindByRecipientAsync(recipientId);
-        }
+			return _implementation.FindByRecipientAsync(recipientId);
+		}
 
-        /// <summary>
-        /// Upload a receipt image to extract product information.
-        /// </summary>
-        /// <remarks>
-        /// Accepts an image file of a receipt, processes it, and returns a list of products with their prices.
-        /// </remarks>
-        /// <param name="file">The receipt image file to be uploaded.</param>
-        /// <returns>Successfully extracted product information.</returns>
-        [Microsoft.AspNetCore.Mvc.HttpPost, Microsoft.AspNetCore.Mvc.Route("receipt")]
-        public System.Threading.Tasks.Task<Response2> Receipt(FileParameter file)
-        {
+		/// <summary>
+		/// Upload a receipt image to extract product information.
+		/// </summary>
+		/// <remarks>
+		/// Accepts an image file of a receipt, processes it, and returns a list of products with their prices.
+		/// </remarks>
+		/// <param name="file">The receipt image file to be uploaded.</param>
+		/// <returns>Successfully extracted product information.</returns>
+		[Microsoft.AspNetCore.Mvc.HttpPost, Microsoft.AspNetCore.Mvc.Route("receipt")]
+		public System.Threading.Tasks.Task<Response2> Receipt(FileParameter file)
+		{
 
-            return _implementation.ReceiptAsync(file);
-        }
+			return _implementation.ReceiptAsync(file);
+		}
 
-        /// <summary>
-        /// Add a new expense
-        /// </summary>
-        /// <remarks>
-        /// Create a new expense entry in a group and distribute it among participants based on the split type.
-        /// </remarks>
-        /// <param name="body">Expense details to add a new expense</param>
-        /// <returns>Expense created successfully</returns>
-        [Microsoft.AspNetCore.Mvc.HttpPost, Microsoft.AspNetCore.Mvc.Route("expense")]
-        public System.Threading.Tasks.Task<Expense> AddExpense([Microsoft.AspNetCore.Mvc.FromBody] Expense body)
-        {
+		/// <summary>
+		/// Add a new expense
+		/// </summary>
+		/// <remarks>
+		/// Create a new expense entry in a group and distribute it among participants based on the split type.
+		/// </remarks>
+		/// <param name="body">Expense details to add a new expense</param>
+		/// <returns>Expense created successfully</returns>
+		[Microsoft.AspNetCore.Mvc.HttpPost, Microsoft.AspNetCore.Mvc.Route("expense")]
+		public System.Threading.Tasks.Task<Expense> AddExpense([Microsoft.AspNetCore.Mvc.FromBody] Expense body)
+		{
 
-            return _implementation.AddExpenseAsync(body);
-        }
+			return _implementation.AddExpenseAsync(body);
+		}
 
-        /// <summary>
-        /// Edit an existing expense
-        /// </summary>
-        /// <remarks>
-        /// Update the details of an existing expense, including its description, amount, or participants.
-        /// </remarks>
-        /// <param name="body">Updated expense details</param>
-        /// <returns>Expense updated successfully</returns>
-        [Microsoft.AspNetCore.Mvc.HttpPut, Microsoft.AspNetCore.Mvc.Route("expense")]
-        public System.Threading.Tasks.Task<Expense> EditExpense([Microsoft.AspNetCore.Mvc.FromBody] Expense body)
-        {
+		/// <summary>
+		/// Edit an existing expense
+		/// </summary>
+		/// <remarks>
+		/// Update the details of an existing expense, including its description, amount, or participants.
+		/// </remarks>
+		/// <param name="body">Updated expense details</param>
+		/// <returns>Expense updated successfully</returns>
+		[Microsoft.AspNetCore.Mvc.HttpPut, Microsoft.AspNetCore.Mvc.Route("expense")]
+		public System.Threading.Tasks.Task<Expense> EditExpense([Microsoft.AspNetCore.Mvc.FromBody] Expense body)
+		{
 
-            return _implementation.EditExpenseAsync(body);
-        }
+			return _implementation.EditExpenseAsync(body);
+		}
 
-        /// <summary>
-        /// Get balances for a group
-        /// </summary>
-        /// <remarks>
-        /// Retrieve a breakdown of who owes how much money to whom within a specified group.
-        /// </remarks>
-        /// <param name="groupId">ID of the group for which balances are calculated</param>
-        /// <returns>Successfully retrieved balances</returns>
-        [Microsoft.AspNetCore.Mvc.HttpGet, Microsoft.AspNetCore.Mvc.Route("groups/{groupId}/balances")]
-        public System.Threading.Tasks.Task<Response3> GetGroupBalances(long groupId)
-        {
+		/// <summary>
+		/// Get balances for a group
+		/// </summary>
+		/// <remarks>
+		/// Retrieve a breakdown of who owes how much money to whom within a specified group.
+		/// </remarks>
+		/// <param name="groupId">ID of the group for which balances are calculated</param>
+		/// <returns>Successfully retrieved balances</returns>
+		[Microsoft.AspNetCore.Mvc.HttpGet, Microsoft.AspNetCore.Mvc.Route("groups/{groupId}/balances")]
+		public System.Threading.Tasks.Task<Response3> GetGroupBalances(long groupId)
+		{
 
-            return _implementation.GetGroupBalancesAsync(groupId);
-        }
+			return _implementation.GetGroupBalancesAsync(groupId);
+		}
 
-        /// <summary>
-        /// Fetch balances for a user across all groups
-        /// </summary>
-        /// <remarks>
-        /// Retrieve a summary of how much the user owes to others and how much others owe to the user across all groups.
-        /// </remarks>
-        /// <param name="userId">The ID of the user for whom balances are calculated</param>
-        /// <returns>Successfully retrieved user balances</returns>
-        [Microsoft.AspNetCore.Mvc.HttpGet, Microsoft.AspNetCore.Mvc.Route("users/{userId}/balances")]
-        public System.Threading.Tasks.Task<Response4> GetUserBalances(long userId)
-        {
+		/// <summary>
+		/// Fetch balances for a user across all groups
+		/// </summary>
+		/// <remarks>
+		/// Retrieve a summary of how much the user owes to others and how much others owe to the user across all groups.
+		/// </remarks>
+		/// <param name="userId">The ID of the user for whom balances are calculated</param>
+		/// <returns>Successfully retrieved user balances</returns>
+		[Microsoft.AspNetCore.Mvc.HttpGet, Microsoft.AspNetCore.Mvc.Route("users/{userId}/balances")]
+		public System.Threading.Tasks.Task<Response4> GetUserBalances(long userId)
+		{
 
-            return _implementation.GetUserBalancesAsync(userId);
-        }
+			return _implementation.GetUserBalancesAsync(userId);
+		}
 
-        /// <summary>
-        /// Create a new money transfer
-        /// </summary>
-        /// <remarks>
-        /// Initiates a money transfer between users within a group. The status defaults to `pending`.
-        /// </remarks>
-        /// <returns>Money transfer created successfully</returns>
-        [Microsoft.AspNetCore.Mvc.HttpPost, Microsoft.AspNetCore.Mvc.Route("moneyTransfer")]
-        public System.Threading.Tasks.Task<MoneyTransfer> MoneyTransfer([Microsoft.AspNetCore.Mvc.FromBody] Body body)
-        {
+		/// <summary>
+		/// Create a new money transfer
+		/// </summary>
+		/// <remarks>
+		/// Initiates a money transfer between users within a group. The status defaults to `pending`.
+		/// </remarks>
+		/// <returns>Money transfer created successfully</returns>
+		[Microsoft.AspNetCore.Mvc.HttpPost, Microsoft.AspNetCore.Mvc.Route("moneyTransfer")]
+		public System.Threading.Tasks.Task<MoneyTransfer> MoneyTransfer([Microsoft.AspNetCore.Mvc.FromBody] Body body)
+		{
 
-            return _implementation.MoneyTransferAsync(body);
-        }
+			return _implementation.MoneyTransferAsync(body);
+		}
 
-        /// <summary>
-        /// Update the status of a money transfer
-        /// </summary>
-        /// <remarks>
-        /// Changes the status of a money transfer to either `confirmed` or `rejected`.
-        /// </remarks>
-        /// <param name="transferId">ID of the money transfer</param>
-        /// <returns>Money transfer status updated successfully</returns>
-        [Microsoft.AspNetCore.Mvc.HttpPut, Microsoft.AspNetCore.Mvc.Route("moneyTransfer/{transferId}/status")]
-        public System.Threading.Tasks.Task<MoneyTransfer> Status(long transferId, [Microsoft.AspNetCore.Mvc.FromBody] Body2 body)
-        {
+		/// <summary>
+		/// Update the status of a money transfer
+		/// </summary>
+		/// <remarks>
+		/// Changes the status of a money transfer to either `confirmed` or `rejected`.
+		/// </remarks>
+		/// <param name="transferId">ID of the money transfer</param>
+		/// <returns>Money transfer status updated successfully</returns>
+		[Microsoft.AspNetCore.Mvc.HttpPut, Microsoft.AspNetCore.Mvc.Route("moneyTransfer/{transferId}/status")]
+		public System.Threading.Tasks.Task<MoneyTransfer> Status(long transferId, [Microsoft.AspNetCore.Mvc.FromBody] Body2 body)
+		{
 
-            return _implementation.StatusAsync(transferId, body);
-        }
+			return _implementation.StatusAsync(transferId, body);
+		}
 
-        /// <summary>
-        /// Get group by ID
-        /// </summary>
-        /// <param name="groupId">ID of the group</param>
-        /// <returns>Successfully retrieved group</returns>
-        [Microsoft.AspNetCore.Mvc.HttpGet, Microsoft.AspNetCore.Mvc.Route("groups/{groupId}")]
-        public System.Threading.Tasks.Task<Group> GroupsGET(int groupId)
-        {
+		/// <summary>
+		/// Get group by ID
+		/// </summary>
+		/// <param name="groupId">ID of the group</param>
+		/// <returns>Successfully retrieved group</returns>
+		[Microsoft.AspNetCore.Mvc.HttpGet, Microsoft.AspNetCore.Mvc.Route("groups/{groupId}")]
+		public System.Threading.Tasks.Task<Group> GroupsGET(int groupId)
+		{
 
-            return _implementation.GroupsGETAsync(groupId);
-        }
+			return _implementation.GroupsGETAsync(groupId);
+		}
 
-        /// <summary>
-        /// Add new group
-        /// </summary>
-        /// <returns>Successfully inserted new group</returns>
-        [Microsoft.AspNetCore.Mvc.HttpPost, Microsoft.AspNetCore.Mvc.Route("groups")]
-        public System.Threading.Tasks.Task<Group> GroupsPOST([Microsoft.AspNetCore.Mvc.FromBody] Group body)
-        {
+		/// <summary>
+		/// Add new group
+		/// </summary>
+		/// <returns>Successfully inserted new group</returns>
+		[Microsoft.AspNetCore.Mvc.HttpPost, Microsoft.AspNetCore.Mvc.Route("groups")]
+		public System.Threading.Tasks.Task<Group> GroupsPOST([Microsoft.AspNetCore.Mvc.FromBody] Group body)
+		{
 
-            return _implementation.GroupsPOSTAsync(body);
-        }
+			return _implementation.GroupsPOSTAsync(body);
+		}
 
-        /// <summary>
-        /// Update group status
-        /// </summary>
-        /// <param name="groupId">ID of group</param>
-        /// <returns>Success</returns>
-        [Microsoft.AspNetCore.Mvc.HttpPut, Microsoft.AspNetCore.Mvc.Route("groups/{groupId}/status")]
-        public System.Threading.Tasks.Task Status2(int groupId, [Microsoft.AspNetCore.Mvc.FromBody] GroupStatus body)
-        {
+		/// <summary>
+		/// Update group status
+		/// </summary>
+		/// <param name="groupId">ID of group</param>
+		/// <returns>Success</returns>
+		[Microsoft.AspNetCore.Mvc.HttpPut, Microsoft.AspNetCore.Mvc.Route("groups/{groupId}/status")]
+		public System.Threading.Tasks.Task Status2(int groupId, [Microsoft.AspNetCore.Mvc.FromBody] GroupStatus body)
+		{
 
-            return _implementation.Status2Async(groupId, body);
-        }
+			return _implementation.Status2Async(groupId, body);
+		}
 
-        /// <summary>
-        /// Get pending requests to join the group
-        /// </summary>
-        /// <param name="groupId">ID of the group</param>
-        /// <returns>Successfully retrieved requests list</returns>
-        [Microsoft.AspNetCore.Mvc.HttpGet, Microsoft.AspNetCore.Mvc.Route("groups/{groupId}/joinRequests")]
-        public System.Threading.Tasks.Task<System.Collections.Generic.ICollection<GroupJoinRequest>> JoinRequestsAll(int groupId)
-        {
+		/// <summary>
+		/// Get pending requests to join the group
+		/// </summary>
+		/// <param name="groupId">ID of the group</param>
+		/// <returns>Successfully retrieved requests list</returns>
+		[Microsoft.AspNetCore.Mvc.HttpGet, Microsoft.AspNetCore.Mvc.Route("groups/{groupId}/joinRequests")]
+		public System.Threading.Tasks.Task<System.Collections.Generic.ICollection<GroupJoinRequest>> JoinRequestsAll(int groupId)
+		{
 
-            return _implementation.JoinRequestsAllAsync(groupId);
-        }
+			return _implementation.JoinRequestsAllAsync(groupId);
+		}
 
-        /// <summary>
-        /// Accept or reject the request
-        /// </summary>
-        /// <param name="groupId">ID of the group</param>
-        /// <param name="requestId">ID of the group join request</param>
-        /// <returns>Successfully changed request status</returns>
-        [Microsoft.AspNetCore.Mvc.HttpPut, Microsoft.AspNetCore.Mvc.Route("groups/{groupId}/joinRequests/{requestId}")]
-        public System.Threading.Tasks.Task JoinRequests(int groupId, int requestId, [Microsoft.AspNetCore.Mvc.FromBody] RequestStatus body)
-        {
+		/// <summary>
+		/// Accept or reject the request
+		/// </summary>
+		/// <param name="groupId">ID of the group</param>
+		/// <param name="requestId">ID of the group join request</param>
+		/// <returns>Successfully changed request status</returns>
+		[Microsoft.AspNetCore.Mvc.HttpPut, Microsoft.AspNetCore.Mvc.Route("groups/{groupId}/joinRequests/{requestId}")]
+		public System.Threading.Tasks.Task JoinRequests(int groupId, int requestId, [Microsoft.AspNetCore.Mvc.FromBody] RequestStatus body)
+		{
 
-            return _implementation.JoinRequestsAsync(groupId, requestId, body);
-        }
+			return _implementation.JoinRequestsAsync(groupId, requestId, body);
+		}
 
-        /// <summary>
-        /// Retrieve pending group invites for the user
-        /// </summary>
-        /// <param name="userId">ID of the user</param>
-        /// <returns>Invitation sent successfully</returns>
-        [Microsoft.AspNetCore.Mvc.HttpGet, Microsoft.AspNetCore.Mvc.Route("users/{userId}/groupInvites")]
-        public System.Threading.Tasks.Task<System.Collections.Generic.ICollection<GroupInvite>> GroupInvitesAll(int userId)
-        {
+		/// <summary>
+		/// Retrieve pending group invites for the user
+		/// </summary>
+		/// <param name="userId">ID of the user</param>
+		/// <returns>Invitation sent successfully</returns>
+		[Microsoft.AspNetCore.Mvc.HttpGet, Microsoft.AspNetCore.Mvc.Route("users/{userId}/groupInvites")]
+		public System.Threading.Tasks.Task<System.Collections.Generic.ICollection<GroupInvite>> GroupInvitesAll(int userId)
+		{
 
-            return _implementation.GroupInvitesAllAsync(userId);
-        }
+			return _implementation.GroupInvitesAllAsync(userId);
+		}
 
-        /// <summary>
-        /// Invite the user to the group
-        /// </summary>
-        /// <param name="userId">ID of the invited user</param>
-        /// <returns>Invite sent successfully</returns>
-        [Microsoft.AspNetCore.Mvc.HttpPost, Microsoft.AspNetCore.Mvc.Route("users/{userId}/groupInvites")]
-        public System.Threading.Tasks.Task GroupInvitesPOST(int userId, [Microsoft.AspNetCore.Mvc.FromBody] GroupInvite body)
-        {
-
-            return _implementation.GroupInvitesPOSTAsync(userId, body);
-        }
-
-        /// <summary>
-        /// Accept or reject the group invitation
-        /// </summary>
-        /// <remarks>
-        /// Change invitation status from 'sent' to 'accepted' or 'rejected'
-        /// </remarks>
-        /// <param name="userId">ID of the user</param>
-        /// <param name="invitationId">ID of the invite</param>
-        /// <returns>Successfully changed invitation status</returns>
-        [Microsoft.AspNetCore.Mvc.HttpPut, Microsoft.AspNetCore.Mvc.Route("users/{userId}/groupInvites/{invitationId}")]
-        public System.Threading.Tasks.Task GroupInvitesPUT(int userId, int invitationId, [Microsoft.AspNetCore.Mvc.FromBody] RequestStatus body)
-        {
-
-            return _implementation.GroupInvitesPUTAsync(userId, invitationId, body);
-        }
-
-        /// <summary>
-        /// Get an invite code for the group
-        /// </summary>
-        /// <remarks>
-        /// Retrieve or generate new code that can be used by other users to join this group
-        /// </remarks>
-        /// <param name="groupId">ID of the group to retrieve invite code for</param>
-        /// <returns>Success</returns>
-        [Microsoft.AspNetCore.Mvc.HttpGet, Microsoft.AspNetCore.Mvc.Route("groups/{groupId}/inviteCode")]
-        public System.Threading.Tasks.Task<string> InviteCodeGET(int groupId)
-        {
-
-            return _implementation.InviteCodeGETAsync(groupId);
-        }
-
-        /// <summary>
-        /// Request to join the group referenced by the invitation code
-        /// </summary>
-        /// <returns>Success</returns>
-        [Microsoft.AspNetCore.Mvc.HttpPut, Microsoft.AspNetCore.Mvc.Route("groups/inviteCode")]
-        public System.Threading.Tasks.Task InviteCodePUT([Microsoft.AspNetCore.Mvc.FromBody] string body)
-        {
-
-            return _implementation.InviteCodePUTAsync(body);
-        }
-
-    }
-
-    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.2.0.0 (NJsonSchema v11.1.0.0 (Newtonsoft.Json v13.0.0.0))")]
-    public partial class User
-    {
-        /// <summary>
-        /// Unique identifier for the user
-        /// </summary>
-        [Newtonsoft.Json.JsonProperty("id", Required = Newtonsoft.Json.Required.Always)]
-        public int Id { get; set; }
-
-        /// <summary>
-        /// Name of the user
-        /// </summary>
-        [Newtonsoft.Json.JsonProperty("name", Required = Newtonsoft.Json.Required.Always)]
-        [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
-        public string Name { get; set; }
-
-        /// <summary>
-        /// Email address of the user
-        /// </summary>
-        [Newtonsoft.Json.JsonProperty("email", Required = Newtonsoft.Json.Required.Always)]
-        [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
-        public string Email { get; set; }
-
-        /// <summary>
-        /// URL of the user's profile picture
-        /// </summary>
-        [Newtonsoft.Json.JsonProperty("profilePictureUrl", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public System.Uri ProfilePictureUrl { get; set; }
-
-        private System.Collections.Generic.IDictionary<string, object> _additionalProperties;
-
-        [Newtonsoft.Json.JsonExtensionData]
-        public System.Collections.Generic.IDictionary<string, object> AdditionalProperties
-        {
-            get { return _additionalProperties ?? (_additionalProperties = new System.Collections.Generic.Dictionary<string, object>()); }
-            set { _additionalProperties = value; }
-        }
-
-    }
-
-    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.2.0.0 (NJsonSchema v11.1.0.0 (Newtonsoft.Json v13.0.0.0))")]
-    public partial class CreateUserRequest
-    {
-        /// <summary>
-        /// Name of the user
-        /// </summary>
-        [Newtonsoft.Json.JsonProperty("name", Required = Newtonsoft.Json.Required.Always)]
-        [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
-        public string Name { get; set; }
-
-        /// <summary>
-        /// Email address of the user
-        /// </summary>
-        [Newtonsoft.Json.JsonProperty("email", Required = Newtonsoft.Json.Required.Always)]
-        [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
-        public string Email { get; set; }
-
-        /// <summary>
-        /// Password of the user
-        /// </summary>
-        [Newtonsoft.Json.JsonProperty("password", Required = Newtonsoft.Json.Required.Always)]
-        [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
-        public string Password { get; set; }
-
-        /// <summary>
-        /// Profile picture of the user
-        /// </summary>
-        [Newtonsoft.Json.JsonProperty("profilePicture", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public byte[] ProfilePicture { get; set; }
-
-        private System.Collections.Generic.IDictionary<string, object> _additionalProperties;
-
-        [Newtonsoft.Json.JsonExtensionData]
-        public System.Collections.Generic.IDictionary<string, object> AdditionalProperties
-        {
-            get { return _additionalProperties ?? (_additionalProperties = new System.Collections.Generic.Dictionary<string, object>()); }
-            set { _additionalProperties = value; }
-        }
-
-    }
-
-    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.2.0.0 (NJsonSchema v11.1.0.0 (Newtonsoft.Json v13.0.0.0))")]
-    public partial class AuthenticateRequest
-    {
-        /// <summary>
-        /// Email address of the user
-        /// </summary>
-        [Newtonsoft.Json.JsonProperty("email", Required = Newtonsoft.Json.Required.Always)]
-        [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
-        public string Email { get; set; }
-
-        /// <summary>
-        /// Password of the user
-        /// </summary>
-        [Newtonsoft.Json.JsonProperty("password", Required = Newtonsoft.Json.Required.Always)]
-        [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
-        public string Password { get; set; }
-
-        private System.Collections.Generic.IDictionary<string, object> _additionalProperties;
-
-        [Newtonsoft.Json.JsonExtensionData]
-        public System.Collections.Generic.IDictionary<string, object> AdditionalProperties
-        {
-            get { return _additionalProperties ?? (_additionalProperties = new System.Collections.Generic.Dictionary<string, object>()); }
-            set { _additionalProperties = value; }
-        }
-
-    }
-
-    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.2.0.0 (NJsonSchema v11.1.0.0 (Newtonsoft.Json v13.0.0.0))")]
-    public partial class ChangeNameRequest
-    {
-        /// <summary>
-        /// The new name of the user
-        /// </summary>
-        [Newtonsoft.Json.JsonProperty("name", Required = Newtonsoft.Json.Required.Always)]
-        [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
-        public string Name { get; set; }
-
-        private System.Collections.Generic.IDictionary<string, object> _additionalProperties;
-
-        [Newtonsoft.Json.JsonExtensionData]
-        public System.Collections.Generic.IDictionary<string, object> AdditionalProperties
-        {
-            get { return _additionalProperties ?? (_additionalProperties = new System.Collections.Generic.Dictionary<string, object>()); }
-            set { _additionalProperties = value; }
-        }
-
-    }
-
-    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.2.0.0 (NJsonSchema v11.1.0.0 (Newtonsoft.Json v13.0.0.0))")]
-    public partial class ChangeProfilePictureRequest
-    {
-        /// <summary>
-        /// The new profile picture of the user
-        /// </summary>
-        [Newtonsoft.Json.JsonProperty("profilePicture", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public byte[] ProfilePicture { get; set; }
-
-        private System.Collections.Generic.IDictionary<string, object> _additionalProperties;
-
-        [Newtonsoft.Json.JsonExtensionData]
-        public System.Collections.Generic.IDictionary<string, object> AdditionalProperties
-        {
-            get { return _additionalProperties ?? (_additionalProperties = new System.Collections.Generic.Dictionary<string, object>()); }
-            set { _additionalProperties = value; }
-        }
-
-    }
-
-    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.2.0.0 (NJsonSchema v11.1.0.0 (Newtonsoft.Json v13.0.0.0))")]
-    public partial class MoneyRequest
-    {
-        /// <summary>
-        /// Identifier of the sender
-        /// </summary>
-        [Newtonsoft.Json.JsonProperty("senderId", Required = Newtonsoft.Json.Required.Always)]
-        public long SenderId { get; set; }
-
-        /// <summary>
-        /// Identifier of the recipient
-        /// </summary>
-        [Newtonsoft.Json.JsonProperty("recipientId", Required = Newtonsoft.Json.Required.Always)]
-        public long RecipientId { get; set; }
-
-        /// <summary>
-        /// Value of the money being requested
-        /// </summary>
-        [Newtonsoft.Json.JsonProperty("moneyValue", Required = Newtonsoft.Json.Required.Always)]
-        [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
-        public string MoneyValue { get; set; }
-
-        [Newtonsoft.Json.JsonProperty("gropus", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public System.Collections.Generic.List<long> Gropus { get; set; }
-
-        [Newtonsoft.Json.JsonProperty("status", Required = Newtonsoft.Json.Required.Always)]
-        [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
-        [Newtonsoft.Json.JsonConverter(typeof(Newtonsoft.Json.Converters.StringEnumConverter))]
-        public RequestStatus Status { get; set; }
-
-        private System.Collections.Generic.IDictionary<string, object> _additionalProperties;
-
-        [Newtonsoft.Json.JsonExtensionData]
-        public System.Collections.Generic.IDictionary<string, object> AdditionalProperties
-        {
-            get { return _additionalProperties ?? (_additionalProperties = new System.Collections.Generic.Dictionary<string, object>()); }
-            set { _additionalProperties = value; }
-        }
-
-    }
-
-    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.2.0.0 (NJsonSchema v11.1.0.0 (Newtonsoft.Json v13.0.0.0))")]
-    public enum RequestStatus
-    {
-
-        [System.Runtime.Serialization.EnumMember(Value = @"pending")]
-        Pending = 0,
-
-        [System.Runtime.Serialization.EnumMember(Value = @"cancelled")]
-        Cancelled = 1,
-
-        [System.Runtime.Serialization.EnumMember(Value = @"paid")]
-        Paid = 2,
-
-        [System.Runtime.Serialization.EnumMember(Value = @"closed")]
-        Closed = 3,
-
-    }
-
-    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.2.0.0 (NJsonSchema v11.1.0.0 (Newtonsoft.Json v13.0.0.0))")]
-    public partial class Expense
-    {
-        /// <summary>
-        /// Identifier of the group where the expense occurred
-        /// </summary>
-        [Newtonsoft.Json.JsonProperty("groupId", Required = Newtonsoft.Json.Required.Always)]
-        public long GroupId { get; set; }
-
-        /// <summary>
-        /// Description of the expense
-        /// </summary>
-        [Newtonsoft.Json.JsonProperty("description", Required = Newtonsoft.Json.Required.Always)]
-        [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
-        public string Description { get; set; }
-
-        /// <summary>
-        /// Total amount of the expense
-        /// </summary>
-        [Newtonsoft.Json.JsonProperty("totalAmount", Required = Newtonsoft.Json.Required.Always)]
-        public float TotalAmount { get; set; }
-
-        /// <summary>
-        /// The method of splitting the expense
-        /// </summary>
-        [Newtonsoft.Json.JsonProperty("splitType", Required = Newtonsoft.Json.Required.Always)]
-        [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
-        [Newtonsoft.Json.JsonConverter(typeof(Newtonsoft.Json.Converters.StringEnumConverter))]
-        public ExpenseSplitType SplitType { get; set; }
-
-        /// <summary>
-        /// Details of participants based on the split type
-        /// </summary>
-        [Newtonsoft.Json.JsonProperty("participants", Required = Newtonsoft.Json.Required.Always)]
-        [System.ComponentModel.DataAnnotations.Required]
-        public System.Collections.Generic.List<Participants> Participants { get; set; } = new System.Collections.Generic.List<Participants>();
-
-        /// <summary>
-        /// Optional photo associated with the expense (e.g., receipt)
-        /// </summary>
-        [Newtonsoft.Json.JsonProperty("photo", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public byte[] Photo { get; set; }
-
-        private System.Collections.Generic.IDictionary<string, object> _additionalProperties;
-
-        [Newtonsoft.Json.JsonExtensionData]
-        public System.Collections.Generic.IDictionary<string, object> AdditionalProperties
-        {
-            get { return _additionalProperties ?? (_additionalProperties = new System.Collections.Generic.Dictionary<string, object>()); }
-            set { _additionalProperties = value; }
-        }
-
-    }
-
-    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.2.0.0 (NJsonSchema v11.1.0.0 (Newtonsoft.Json v13.0.0.0))")]
-    public partial class MoneyTransfer
-    {
-        /// <summary>
-        /// ID of the sender
-        /// </summary>
-        [Newtonsoft.Json.JsonProperty("senderId", Required = Newtonsoft.Json.Required.Always)]
-        public long SenderId { get; set; }
-
-        /// <summary>
-        /// ID of the recipient
-        /// </summary>
-        [Newtonsoft.Json.JsonProperty("recipientId", Required = Newtonsoft.Json.Required.Always)]
-        public long RecipientId { get; set; }
-
-        /// <summary>
-        /// Amount of money being transferred
-        /// </summary>
-        [Newtonsoft.Json.JsonProperty("amount", Required = Newtonsoft.Json.Required.Always)]
-        public float Amount { get; set; }
-
-        /// <summary>
-        /// ID of the group associated with the transfer
-        /// </summary>
-        [Newtonsoft.Json.JsonProperty("groupId", Required = Newtonsoft.Json.Required.Always)]
-        public long GroupId { get; set; }
-
-        /// <summary>
-        /// Status of the money transfer (default is `pending`)
-        /// </summary>
-        [Newtonsoft.Json.JsonProperty("status", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        [Newtonsoft.Json.JsonConverter(typeof(Newtonsoft.Json.Converters.StringEnumConverter))]
-        public MoneyTransferStatus Status { get; set; } = KasaWGrupieBackend.Controllers.MoneyTransferStatus.Pending;
-
-        private System.Collections.Generic.IDictionary<string, object> _additionalProperties;
-
-        [Newtonsoft.Json.JsonExtensionData]
-        public System.Collections.Generic.IDictionary<string, object> AdditionalProperties
-        {
-            get { return _additionalProperties ?? (_additionalProperties = new System.Collections.Generic.Dictionary<string, object>()); }
-            set { _additionalProperties = value; }
-        }
-
-    }
-
-    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.2.0.0 (NJsonSchema v11.1.0.0 (Newtonsoft.Json v13.0.0.0))")]
-    public partial class FriendRequest
-    {
-        /// <summary>
-        /// ID of the user who sent the request
-        /// </summary>
-        [Newtonsoft.Json.JsonProperty("senderId", Required = Newtonsoft.Json.Required.Always)]
-        public int SenderId { get; set; }
-
-        /// <summary>
-        /// ID of the user who receives the request
-        /// </summary>
-        [Newtonsoft.Json.JsonProperty("receiverId", Required = Newtonsoft.Json.Required.Always)]
-        public int ReceiverId { get; set; }
-
-        [Newtonsoft.Json.JsonProperty("status", Required = Newtonsoft.Json.Required.Always)]
-        [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
-        [Newtonsoft.Json.JsonConverter(typeof(Newtonsoft.Json.Converters.StringEnumConverter))]
-        public InviteRequestStatus Status { get; set; }
-
-        private System.Collections.Generic.IDictionary<string, object> _additionalProperties;
-
-        [Newtonsoft.Json.JsonExtensionData]
-        public System.Collections.Generic.IDictionary<string, object> AdditionalProperties
-        {
-            get { return _additionalProperties ?? (_additionalProperties = new System.Collections.Generic.Dictionary<string, object>()); }
-            set { _additionalProperties = value; }
-        }
-
-    }
-
-    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.2.0.0 (NJsonSchema v11.1.0.0 (Newtonsoft.Json v13.0.0.0))")]
-    public partial class Group
-    {
-        /// <summary>
-        /// Unique identifier for the group
-        /// </summary>
-        [Newtonsoft.Json.JsonProperty("id", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public int Id { get; set; }
-
-        /// <summary>
-        /// Name of the group
-        /// </summary>
-        [Newtonsoft.Json.JsonProperty("name", Required = Newtonsoft.Json.Required.Always)]
-        [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
-        public string Name { get; set; }
-
-        /// <summary>
-        /// Currency in which all monetary values in this group are
-        /// </summary>
-        [Newtonsoft.Json.JsonProperty("currency", Required = Newtonsoft.Json.Required.Always)]
-        [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
-        public string Currency { get; set; }
-
-        /// <summary>
-        /// ID of the user who is the admin of this group
-        /// </summary>
-        [Newtonsoft.Json.JsonProperty("adminId", Required = Newtonsoft.Json.Required.Always)]
-        public int AdminId { get; set; }
-
-        [Newtonsoft.Json.JsonProperty("status", Required = Newtonsoft.Json.Required.Always)]
-        [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
-        [Newtonsoft.Json.JsonConverter(typeof(Newtonsoft.Json.Converters.StringEnumConverter))]
-        public GroupStatus Status { get; set; }
-
-        /// <summary>
-        /// IDs of all group members
-        /// </summary>
-        [Newtonsoft.Json.JsonProperty("members", Required = Newtonsoft.Json.Required.Always)]
-        [System.ComponentModel.DataAnnotations.Required]
-        public System.Collections.Generic.List<int> Members { get; set; } = new System.Collections.Generic.List<int>();
-
-        private System.Collections.Generic.IDictionary<string, object> _additionalProperties;
-
-        [Newtonsoft.Json.JsonExtensionData]
-        public System.Collections.Generic.IDictionary<string, object> AdditionalProperties
-        {
-            get { return _additionalProperties ?? (_additionalProperties = new System.Collections.Generic.Dictionary<string, object>()); }
-            set { _additionalProperties = value; }
-        }
-
-    }
-
-    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.2.0.0 (NJsonSchema v11.1.0.0 (Newtonsoft.Json v13.0.0.0))")]
-    public enum GroupStatus
-    {
-
-        [System.Runtime.Serialization.EnumMember(Value = @"open")]
-        Open = 0,
-
-        [System.Runtime.Serialization.EnumMember(Value = @"closing")]
-        Closing = 1,
-
-        [System.Runtime.Serialization.EnumMember(Value = @"closed")]
-        Closed = 2,
-
-    }
-
-    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.2.0.0 (NJsonSchema v11.1.0.0 (Newtonsoft.Json v13.0.0.0))")]
-    public partial class GroupInvite
-    {
-        /// <summary>
-        /// ID of the group user is invited to
-        /// </summary>
-        [Newtonsoft.Json.JsonProperty("groupId", Required = Newtonsoft.Json.Required.Always)]
-        public int GroupId { get; set; }
-
-        /// <summary>
-        /// ID of the invited user
-        /// </summary>
-        [Newtonsoft.Json.JsonProperty("userId", Required = Newtonsoft.Json.Required.Always)]
-        public int UserId { get; set; }
-
-        private System.Collections.Generic.IDictionary<string, object> _additionalProperties;
-
-        [Newtonsoft.Json.JsonExtensionData]
-        public System.Collections.Generic.IDictionary<string, object> AdditionalProperties
-        {
-            get { return _additionalProperties ?? (_additionalProperties = new System.Collections.Generic.Dictionary<string, object>()); }
-            set { _additionalProperties = value; }
-        }
-
-    }
-
-    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.2.0.0 (NJsonSchema v11.1.0.0 (Newtonsoft.Json v13.0.0.0))")]
-    public partial class GroupJoinRequest
-    {
-        /// <summary>
-        /// ID of the user wanting to join the group
-        /// </summary>
-        [Newtonsoft.Json.JsonProperty("userId", Required = Newtonsoft.Json.Required.Always)]
-        public int UserId { get; set; }
-
-        /// <summary>
-        /// ID of the group user wants to join
-        /// </summary>
-        [Newtonsoft.Json.JsonProperty("groupId", Required = Newtonsoft.Json.Required.Always)]
-        public int GroupId { get; set; }
-
-        [Newtonsoft.Json.JsonProperty("status", Required = Newtonsoft.Json.Required.Always)]
-        [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
-        [Newtonsoft.Json.JsonConverter(typeof(Newtonsoft.Json.Converters.StringEnumConverter))]
-        public InviteRequestStatus Status { get; set; }
-
-        private System.Collections.Generic.IDictionary<string, object> _additionalProperties;
-
-        [Newtonsoft.Json.JsonExtensionData]
-        public System.Collections.Generic.IDictionary<string, object> AdditionalProperties
-        {
-            get { return _additionalProperties ?? (_additionalProperties = new System.Collections.Generic.Dictionary<string, object>()); }
-            set { _additionalProperties = value; }
-        }
-
-    }
-
-    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.2.0.0 (NJsonSchema v11.1.0.0 (Newtonsoft.Json v13.0.0.0))")]
-    public enum InviteRequestStatus
-    {
-
-        [System.Runtime.Serialization.EnumMember(Value = @"sent")]
-        Sent = 0,
-
-        [System.Runtime.Serialization.EnumMember(Value = @"accepted")]
-        Accepted = 1,
-
-        [System.Runtime.Serialization.EnumMember(Value = @"rejected")]
-        Rejected = 2,
-
-    }
-
-    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.2.0.0 (NJsonSchema v11.1.0.0 (Newtonsoft.Json v13.0.0.0))")]
-    public partial class Body
-    {
-        /// <summary>
-        /// ID of the sender
-        /// </summary>
-        [Newtonsoft.Json.JsonProperty("senderId", Required = Newtonsoft.Json.Required.Always)]
-        public long SenderId { get; set; }
-
-        /// <summary>
-        /// ID of the recipient
-        /// </summary>
-        [Newtonsoft.Json.JsonProperty("recipientId", Required = Newtonsoft.Json.Required.Always)]
-        public long RecipientId { get; set; }
-
-        /// <summary>
-        /// Amount of money being transferred
-        /// </summary>
-        [Newtonsoft.Json.JsonProperty("amount", Required = Newtonsoft.Json.Required.Always)]
-        public float Amount { get; set; }
-
-        /// <summary>
-        /// ID of the group associated with the transfer
-        /// </summary>
-        [Newtonsoft.Json.JsonProperty("groupId", Required = Newtonsoft.Json.Required.Always)]
-        public long GroupId { get; set; }
-
-        private System.Collections.Generic.IDictionary<string, object> _additionalProperties;
-
-        [Newtonsoft.Json.JsonExtensionData]
-        public System.Collections.Generic.IDictionary<string, object> AdditionalProperties
-        {
-            get { return _additionalProperties ?? (_additionalProperties = new System.Collections.Generic.Dictionary<string, object>()); }
-            set { _additionalProperties = value; }
-        }
-
-    }
-
-    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.2.0.0 (NJsonSchema v11.1.0.0 (Newtonsoft.Json v13.0.0.0))")]
-    public partial class Body2
-    {
-        /// <summary>
-        /// New status of the money transfer
-        /// </summary>
-        [Newtonsoft.Json.JsonProperty("status", Required = Newtonsoft.Json.Required.Always)]
-        [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
-        [Newtonsoft.Json.JsonConverter(typeof(Newtonsoft.Json.Converters.StringEnumConverter))]
-        public Body2Status Status { get; set; }
-
-        private System.Collections.Generic.IDictionary<string, object> _additionalProperties;
-
-        [Newtonsoft.Json.JsonExtensionData]
-        public System.Collections.Generic.IDictionary<string, object> AdditionalProperties
-        {
-            get { return _additionalProperties ?? (_additionalProperties = new System.Collections.Generic.Dictionary<string, object>()); }
-            set { _additionalProperties = value; }
-        }
-
-    }
-
-    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.2.0.0 (NJsonSchema v11.1.0.0 (Newtonsoft.Json v13.0.0.0))")]
-    public partial class Response
-    {
-        /// <summary>
-        /// The authentication token (if applicable)
-        /// </summary>
-        [Newtonsoft.Json.JsonProperty("token", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public string Token { get; set; }
-
-        private System.Collections.Generic.IDictionary<string, object> _additionalProperties;
-
-        [Newtonsoft.Json.JsonExtensionData]
-        public System.Collections.Generic.IDictionary<string, object> AdditionalProperties
-        {
-            get { return _additionalProperties ?? (_additionalProperties = new System.Collections.Generic.Dictionary<string, object>()); }
-            set { _additionalProperties = value; }
-        }
-
-    }
-
-    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.2.0.0 (NJsonSchema v11.1.0.0 (Newtonsoft.Json v13.0.0.0))")]
-    public partial class Anonymous
-    {
-        /// <summary>
-        /// The unique identifier for the expense
-        /// </summary>
-        [Newtonsoft.Json.JsonProperty("expenseId", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public string ExpenseId { get; set; }
-
-        /// <summary>
-        /// Description of the expense
-        /// </summary>
-        [Newtonsoft.Json.JsonProperty("description", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public string Description { get; set; }
-
-        /// <summary>
-        /// The total amount of the expense
-        /// </summary>
-        [Newtonsoft.Json.JsonProperty("amount", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public float Amount { get; set; }
-
-        /// <summary>
-        /// The date the expense was added
-        /// </summary>
-        [Newtonsoft.Json.JsonProperty("date", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        [Newtonsoft.Json.JsonConverter(typeof(DateFormatConverter))]
-        public System.DateTimeOffset Date { get; set; }
-
-        /// <summary>
-        /// List of participants in the expense
-        /// </summary>
-        [Newtonsoft.Json.JsonProperty("participants", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public System.Collections.Generic.List<string> Participants { get; set; }
-
-        /// <summary>
-        /// Method of dividing the expense among participants
-        /// </summary>
-        [Newtonsoft.Json.JsonProperty("divisionMethod", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        [Newtonsoft.Json.JsonConverter(typeof(Newtonsoft.Json.Converters.StringEnumConverter))]
-        public DivisionMethod DivisionMethod { get; set; }
-
-        private System.Collections.Generic.IDictionary<string, object> _additionalProperties;
-
-        [Newtonsoft.Json.JsonExtensionData]
-        public System.Collections.Generic.IDictionary<string, object> AdditionalProperties
-        {
-            get { return _additionalProperties ?? (_additionalProperties = new System.Collections.Generic.Dictionary<string, object>()); }
-            set { _additionalProperties = value; }
-        }
-
-    }
-
-    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.2.0.0 (NJsonSchema v11.1.0.0 (Newtonsoft.Json v13.0.0.0))")]
-    public partial class Anonymous2
-    {
-        /// <summary>
-        /// The unique identifier for the group
-        /// </summary>
-        [Newtonsoft.Json.JsonProperty("groupId", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public string GroupId { get; set; }
-
-        /// <summary>
-        /// The name of the group
-        /// </summary>
-        [Newtonsoft.Json.JsonProperty("groupName", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public string GroupName { get; set; }
-
-        /// <summary>
-        /// List of user IDs of group members
-        /// </summary>
-        [Newtonsoft.Json.JsonProperty("members", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public System.Collections.Generic.List<string> Members { get; set; }
-
-        /// <summary>
-        /// The balance of the group (could be positive or negative)
-        /// </summary>
-        [Newtonsoft.Json.JsonProperty("groupBalance", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public float GroupBalance { get; set; }
-
-        private System.Collections.Generic.IDictionary<string, object> _additionalProperties;
-
-        [Newtonsoft.Json.JsonExtensionData]
-        public System.Collections.Generic.IDictionary<string, object> AdditionalProperties
-        {
-            get { return _additionalProperties ?? (_additionalProperties = new System.Collections.Generic.Dictionary<string, object>()); }
-            set { _additionalProperties = value; }
-        }
-
-    }
-
-    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.2.0.0 (NJsonSchema v11.1.0.0 (Newtonsoft.Json v13.0.0.0))")]
-    public partial class Response2
-    {
-        /// <summary>
-        /// List of products with their prices.
-        /// </summary>
-        [Newtonsoft.Json.JsonProperty("products", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public System.Collections.Generic.List<Products> Products { get; set; }
-
-        private System.Collections.Generic.IDictionary<string, object> _additionalProperties;
-
-        [Newtonsoft.Json.JsonExtensionData]
-        public System.Collections.Generic.IDictionary<string, object> AdditionalProperties
-        {
-            get { return _additionalProperties ?? (_additionalProperties = new System.Collections.Generic.Dictionary<string, object>()); }
-            set { _additionalProperties = value; }
-        }
-
-    }
-
-    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.2.0.0 (NJsonSchema v11.1.0.0 (Newtonsoft.Json v13.0.0.0))")]
-    public partial class Response3
-    {
-        /// <summary>
-        /// The ID of the group
-        /// </summary>
-        [Newtonsoft.Json.JsonProperty("groupId", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public long GroupId { get; set; }
-
-        /// <summary>
-        /// List of debts between participants
-        /// </summary>
-        [Newtonsoft.Json.JsonProperty("balances", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public System.Collections.Generic.List<Balances> Balances { get; set; }
-
-        private System.Collections.Generic.IDictionary<string, object> _additionalProperties;
-
-        [Newtonsoft.Json.JsonExtensionData]
-        public System.Collections.Generic.IDictionary<string, object> AdditionalProperties
-        {
-            get { return _additionalProperties ?? (_additionalProperties = new System.Collections.Generic.Dictionary<string, object>()); }
-            set { _additionalProperties = value; }
-        }
-
-    }
-
-    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.2.0.0 (NJsonSchema v11.1.0.0 (Newtonsoft.Json v13.0.0.0))")]
-    public partial class Response4
-    {
-        /// <summary>
-        /// The ID of the user
-        /// </summary>
-        [Newtonsoft.Json.JsonProperty("userId", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public long UserId { get; set; }
-
-        /// <summary>
-        /// List of people and amounts they owe the user
-        /// </summary>
-        [Newtonsoft.Json.JsonProperty("owedByOthers", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public System.Collections.Generic.List<OwedByOthers> OwedByOthers { get; set; }
-
-        /// <summary>
-        /// List of people the user owes money to
-        /// </summary>
-        [Newtonsoft.Json.JsonProperty("owesToOthers", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public System.Collections.Generic.List<OwesToOthers> OwesToOthers { get; set; }
-
-        private System.Collections.Generic.IDictionary<string, object> _additionalProperties;
-
-        [Newtonsoft.Json.JsonExtensionData]
-        public System.Collections.Generic.IDictionary<string, object> AdditionalProperties
-        {
-            get { return _additionalProperties ?? (_additionalProperties = new System.Collections.Generic.Dictionary<string, object>()); }
-            set { _additionalProperties = value; }
-        }
-
-    }
-
-    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.2.0.0 (NJsonSchema v11.1.0.0 (Newtonsoft.Json v13.0.0.0))")]
-    public enum ExpenseSplitType
-    {
-
-        [System.Runtime.Serialization.EnumMember(Value = @"equal")]
-        Equal = 0,
-
-        [System.Runtime.Serialization.EnumMember(Value = @"percentage")]
-        Percentage = 1,
-
-        [System.Runtime.Serialization.EnumMember(Value = @"exact")]
-        Exact = 2,
-
-    }
-
-    /// <summary>
-    /// For equal split, include user IDs only
-    /// </summary>
-    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.2.0.0 (NJsonSchema v11.1.0.0 (Newtonsoft.Json v13.0.0.0))")]
-    public partial class Participants
-    {
-        /// <summary>
-        /// ID of the user participating in the split
-        /// </summary>
-        [Newtonsoft.Json.JsonProperty("userId", Required = Newtonsoft.Json.Required.Always)]
-        public long UserId { get; set; }
-
-        private System.Collections.Generic.IDictionary<string, object> _additionalProperties;
-
-        [Newtonsoft.Json.JsonExtensionData]
-        public System.Collections.Generic.IDictionary<string, object> AdditionalProperties
-        {
-            get { return _additionalProperties ?? (_additionalProperties = new System.Collections.Generic.Dictionary<string, object>()); }
-            set { _additionalProperties = value; }
-        }
-
-    }
-
-    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.2.0.0 (NJsonSchema v11.1.0.0 (Newtonsoft.Json v13.0.0.0))")]
-    public enum MoneyTransferStatus
-    {
-
-        [System.Runtime.Serialization.EnumMember(Value = @"pending")]
-        Pending = 0,
-
-        [System.Runtime.Serialization.EnumMember(Value = @"confirmed")]
-        Confirmed = 1,
-
-        [System.Runtime.Serialization.EnumMember(Value = @"rejected")]
-        Rejected = 2,
-
-    }
-
-    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.2.0.0 (NJsonSchema v11.1.0.0 (Newtonsoft.Json v13.0.0.0))")]
-    public enum Body2Status
-    {
-
-        [System.Runtime.Serialization.EnumMember(Value = @"confirmed")]
-        Confirmed = 0,
-
-        [System.Runtime.Serialization.EnumMember(Value = @"rejected")]
-        Rejected = 1,
-
-    }
-
-    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.2.0.0 (NJsonSchema v11.1.0.0 (Newtonsoft.Json v13.0.0.0))")]
-    public enum DivisionMethod
-    {
-
-        [System.Runtime.Serialization.EnumMember(Value = @"equal")]
-        Equal = 0,
-
-        [System.Runtime.Serialization.EnumMember(Value = @"percentage")]
-        Percentage = 1,
-
-        [System.Runtime.Serialization.EnumMember(Value = @"exact")]
-        Exact = 2,
-
-    }
-
-    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.2.0.0 (NJsonSchema v11.1.0.0 (Newtonsoft.Json v13.0.0.0))")]
-    public partial class Products
-    {
-        /// <summary>
-        /// The name of the product.
-        /// </summary>
-        [Newtonsoft.Json.JsonProperty("name", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public string Name { get; set; }
-
-        /// <summary>
-        /// The price of the product.
-        /// </summary>
-        [Newtonsoft.Json.JsonProperty("price", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public float Price { get; set; }
-
-        private System.Collections.Generic.IDictionary<string, object> _additionalProperties;
-
-        [Newtonsoft.Json.JsonExtensionData]
-        public System.Collections.Generic.IDictionary<string, object> AdditionalProperties
-        {
-            get { return _additionalProperties ?? (_additionalProperties = new System.Collections.Generic.Dictionary<string, object>()); }
-            set { _additionalProperties = value; }
-        }
-
-    }
-
-    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.2.0.0 (NJsonSchema v11.1.0.0 (Newtonsoft.Json v13.0.0.0))")]
-    public partial class Balances
-    {
-        /// <summary>
-        /// ID of the user who owes money
-        /// </summary>
-        [Newtonsoft.Json.JsonProperty("fromUserId", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public long FromUserId { get; set; }
-
-        /// <summary>
-        /// ID of the user who is owed money
-        /// </summary>
-        [Newtonsoft.Json.JsonProperty("toUserId", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public long ToUserId { get; set; }
-
-        /// <summary>
-        /// Amount of money owed
-        /// </summary>
-        [Newtonsoft.Json.JsonProperty("amount", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public float Amount { get; set; }
-
-        private System.Collections.Generic.IDictionary<string, object> _additionalProperties;
-
-        [Newtonsoft.Json.JsonExtensionData]
-        public System.Collections.Generic.IDictionary<string, object> AdditionalProperties
-        {
-            get { return _additionalProperties ?? (_additionalProperties = new System.Collections.Generic.Dictionary<string, object>()); }
-            set { _additionalProperties = value; }
-        }
-
-    }
-
-    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.2.0.0 (NJsonSchema v11.1.0.0 (Newtonsoft.Json v13.0.0.0))")]
-    public partial class OwedByOthers
-    {
-        /// <summary>
-        /// ID of the user who owes money to the specified user
-        /// </summary>
-        [Newtonsoft.Json.JsonProperty("userId", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public long UserId { get; set; }
-
-        /// <summary>
-        /// Amount of money owed by the user
-        /// </summary>
-        [Newtonsoft.Json.JsonProperty("amount", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public float Amount { get; set; }
-
-        private System.Collections.Generic.IDictionary<string, object> _additionalProperties;
-
-        [Newtonsoft.Json.JsonExtensionData]
-        public System.Collections.Generic.IDictionary<string, object> AdditionalProperties
-        {
-            get { return _additionalProperties ?? (_additionalProperties = new System.Collections.Generic.Dictionary<string, object>()); }
-            set { _additionalProperties = value; }
-        }
-
-    }
-
-    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.2.0.0 (NJsonSchema v11.1.0.0 (Newtonsoft.Json v13.0.0.0))")]
-    public partial class OwesToOthers
-    {
-        /// <summary>
-        /// ID of the user to whom money is owed
-        /// </summary>
-        [Newtonsoft.Json.JsonProperty("userId", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public long UserId { get; set; }
-
-        /// <summary>
-        /// Amount of money owed to the user
-        /// </summary>
-        [Newtonsoft.Json.JsonProperty("amount", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public float Amount { get; set; }
-
-        private System.Collections.Generic.IDictionary<string, object> _additionalProperties;
-
-        [Newtonsoft.Json.JsonExtensionData]
-        public System.Collections.Generic.IDictionary<string, object> AdditionalProperties
-        {
-            get { return _additionalProperties ?? (_additionalProperties = new System.Collections.Generic.Dictionary<string, object>()); }
-            set { _additionalProperties = value; }
-        }
-
-    }
-
-    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.2.0.0 (NJsonSchema v11.1.0.0 (Newtonsoft.Json v13.0.0.0))")]
-    internal class DateFormatConverter : Newtonsoft.Json.Converters.IsoDateTimeConverter
-    {
-        public DateFormatConverter()
-        {
-            DateTimeFormat = "yyyy-MM-dd";
-        }
-    }
-
-    [System.CodeDom.Compiler.GeneratedCode("NSwag", "14.2.0.0 (NJsonSchema v11.1.0.0 (Newtonsoft.Json v13.0.0.0))")]
-    public partial class FileParameter
-    {
-        public FileParameter(System.IO.Stream data)
-            : this (data, null, null)
-        {
-        }
-
-        public FileParameter(System.IO.Stream data, string fileName)
-            : this (data, fileName, null)
-        {
-        }
-
-        public FileParameter(System.IO.Stream data, string fileName, string contentType)
-        {
-            Data = data;
-            FileName = fileName;
-            ContentType = contentType;
-        }
-
-        public System.IO.Stream Data { get; private set; }
-
-        public string FileName { get; private set; }
-
-        public string ContentType { get; private set; }
-    }
+		/// <summary>
+		/// Invite the user to the group
+		/// </summary>
+		/// <param name="userId">ID of the invited user</param>
+		/// <returns>Invite sent successfully</returns>
+		[Microsoft.AspNetCore.Mvc.HttpPost, Microsoft.AspNetCore.Mvc.Route("users/{userId}/groupInvites")]
+		public System.Threading.Tasks.Task GroupInvitesPOST(int userId, [Microsoft.AspNetCore.Mvc.FromBody] GroupInvite body)
+		{
+
+			return _implementation.GroupInvitesPOSTAsync(userId, body);
+		}
+
+		/// <summary>
+		/// Accept or reject the group invitation
+		/// </summary>
+		/// <remarks>
+		/// Change invitation status from 'sent' to 'accepted' or 'rejected'
+		/// </remarks>
+		/// <param name="userId">ID of the user</param>
+		/// <param name="invitationId">ID of the invite</param>
+		/// <returns>Successfully changed invitation status</returns>
+		[Microsoft.AspNetCore.Mvc.HttpPut, Microsoft.AspNetCore.Mvc.Route("users/{userId}/groupInvites/{invitationId}")]
+		public System.Threading.Tasks.Task GroupInvitesPUT(int userId, int invitationId, [Microsoft.AspNetCore.Mvc.FromBody] RequestStatus body)
+		{
+
+			return _implementation.GroupInvitesPUTAsync(userId, invitationId, body);
+		}
+
+		/// <summary>
+		/// Get an invite code for the group
+		/// </summary>
+		/// <remarks>
+		/// Retrieve or generate new code that can be used by other users to join this group
+		/// </remarks>
+		/// <param name="groupId">ID of the group to retrieve invite code for</param>
+		/// <returns>Success</returns>
+		[Microsoft.AspNetCore.Mvc.HttpGet, Microsoft.AspNetCore.Mvc.Route("groups/{groupId}/inviteCode")]
+		public System.Threading.Tasks.Task<string> InviteCodeGET(int groupId)
+		{
+
+			return _implementation.InviteCodeGETAsync(groupId);
+		}
+
+		/// <summary>
+		/// Request to join the group referenced by the invitation code
+		/// </summary>
+		/// <returns>Success</returns>
+		[Microsoft.AspNetCore.Mvc.HttpPut, Microsoft.AspNetCore.Mvc.Route("groups/inviteCode")]
+		public System.Threading.Tasks.Task InviteCodePUT([Microsoft.AspNetCore.Mvc.FromBody] string body)
+		{
+
+			return _implementation.InviteCodePUTAsync(body);
+		}
+
+	}
+
+	[System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.2.0.0 (NJsonSchema v11.1.0.0 (Newtonsoft.Json v13.0.0.0))")]
+	public partial class User
+	{
+		/// <summary>
+		/// Unique identifier for the user
+		/// </summary>
+		[Newtonsoft.Json.JsonProperty("id", Required = Newtonsoft.Json.Required.Always)]
+		public int Id { get; set; }
+
+		/// <summary>
+		/// Name of the user
+		/// </summary>
+		[Newtonsoft.Json.JsonProperty("name", Required = Newtonsoft.Json.Required.Always)]
+		[System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
+		public string Name { get; set; }
+
+		/// <summary>
+		/// Email address of the user
+		/// </summary>
+		[Newtonsoft.Json.JsonProperty("email", Required = Newtonsoft.Json.Required.Always)]
+		[System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
+		public string Email { get; set; }
+
+		/// <summary>
+		/// URL of the user's profile picture
+		/// </summary>
+		[Newtonsoft.Json.JsonProperty("profilePictureUrl", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+		public System.Uri ProfilePictureUrl { get; set; }
+
+		private System.Collections.Generic.IDictionary<string, object> _additionalProperties;
+
+		[Newtonsoft.Json.JsonExtensionData]
+		public System.Collections.Generic.IDictionary<string, object> AdditionalProperties
+		{
+			get { return _additionalProperties ?? (_additionalProperties = new System.Collections.Generic.Dictionary<string, object>()); }
+			set { _additionalProperties = value; }
+		}
+
+	}
+
+	[System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.2.0.0 (NJsonSchema v11.1.0.0 (Newtonsoft.Json v13.0.0.0))")]
+	public partial class CreateUserRequest
+	{
+		/// <summary>
+		/// Name of the user
+		/// </summary>
+		[Newtonsoft.Json.JsonProperty("name", Required = Newtonsoft.Json.Required.Always)]
+		[System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
+		public string Name { get; set; }
+
+		/// <summary>
+		/// Email address of the user
+		/// </summary>
+		[Newtonsoft.Json.JsonProperty("email", Required = Newtonsoft.Json.Required.Always)]
+		[System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
+		public string Email { get; set; }
+
+		/// <summary>
+		/// Password of the user
+		/// </summary>
+		[Newtonsoft.Json.JsonProperty("password", Required = Newtonsoft.Json.Required.Always)]
+		[System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
+		public string Password { get; set; }
+
+		/// <summary>
+		/// Profile picture of the user
+		/// </summary>
+		[Newtonsoft.Json.JsonProperty("profilePicture", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+		public byte[] ProfilePicture { get; set; }
+
+		private System.Collections.Generic.IDictionary<string, object> _additionalProperties;
+
+		[Newtonsoft.Json.JsonExtensionData]
+		public System.Collections.Generic.IDictionary<string, object> AdditionalProperties
+		{
+			get { return _additionalProperties ?? (_additionalProperties = new System.Collections.Generic.Dictionary<string, object>()); }
+			set { _additionalProperties = value; }
+		}
+
+	}
+
+	[System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.2.0.0 (NJsonSchema v11.1.0.0 (Newtonsoft.Json v13.0.0.0))")]
+	public partial class AuthenticateRequest
+	{
+		/// <summary>
+		/// Email address of the user
+		/// </summary>
+		[Newtonsoft.Json.JsonProperty("email", Required = Newtonsoft.Json.Required.Always)]
+		[System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
+		public string Email { get; set; }
+
+		/// <summary>
+		/// Password of the user
+		/// </summary>
+		[Newtonsoft.Json.JsonProperty("password", Required = Newtonsoft.Json.Required.Always)]
+		[System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
+		public string Password { get; set; }
+
+		private System.Collections.Generic.IDictionary<string, object> _additionalProperties;
+
+		[Newtonsoft.Json.JsonExtensionData]
+		public System.Collections.Generic.IDictionary<string, object> AdditionalProperties
+		{
+			get { return _additionalProperties ?? (_additionalProperties = new System.Collections.Generic.Dictionary<string, object>()); }
+			set { _additionalProperties = value; }
+		}
+
+	}
+
+	[System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.2.0.0 (NJsonSchema v11.1.0.0 (Newtonsoft.Json v13.0.0.0))")]
+	public partial class ChangeNameRequest
+	{
+		/// <summary>
+		/// The new name of the user
+		/// </summary>
+		[Newtonsoft.Json.JsonProperty("name", Required = Newtonsoft.Json.Required.Always)]
+		[System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
+		public string Name { get; set; }
+
+		private System.Collections.Generic.IDictionary<string, object> _additionalProperties;
+
+		[Newtonsoft.Json.JsonExtensionData]
+		public System.Collections.Generic.IDictionary<string, object> AdditionalProperties
+		{
+			get { return _additionalProperties ?? (_additionalProperties = new System.Collections.Generic.Dictionary<string, object>()); }
+			set { _additionalProperties = value; }
+		}
+
+	}
+
+	[System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.2.0.0 (NJsonSchema v11.1.0.0 (Newtonsoft.Json v13.0.0.0))")]
+	public partial class ChangeProfilePictureRequest
+	{
+		/// <summary>
+		/// The new profile picture of the user
+		/// </summary>
+		[Newtonsoft.Json.JsonProperty("profilePicture", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+		public byte[] ProfilePicture { get; set; }
+
+		private System.Collections.Generic.IDictionary<string, object> _additionalProperties;
+
+		[Newtonsoft.Json.JsonExtensionData]
+		public System.Collections.Generic.IDictionary<string, object> AdditionalProperties
+		{
+			get { return _additionalProperties ?? (_additionalProperties = new System.Collections.Generic.Dictionary<string, object>()); }
+			set { _additionalProperties = value; }
+		}
+
+	}
+
+	[System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.2.0.0 (NJsonSchema v11.1.0.0 (Newtonsoft.Json v13.0.0.0))")]
+	public partial class MoneyRequest
+	{
+		/// <summary>
+		/// Identifier of the sender
+		/// </summary>
+		[Newtonsoft.Json.JsonProperty("senderId", Required = Newtonsoft.Json.Required.Always)]
+		public long SenderId { get; set; }
+
+		/// <summary>
+		/// Identifier of the recipient
+		/// </summary>
+		[Newtonsoft.Json.JsonProperty("recipientId", Required = Newtonsoft.Json.Required.Always)]
+		public long RecipientId { get; set; }
+
+		/// <summary>
+		/// Value of the money being requested
+		/// </summary>
+		[Newtonsoft.Json.JsonProperty("moneyValue", Required = Newtonsoft.Json.Required.Always)]
+		[System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
+		public string MoneyValue { get; set; }
+
+		[Newtonsoft.Json.JsonProperty("gropus", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+		public System.Collections.Generic.List<long> Gropus { get; set; }
+
+		[Newtonsoft.Json.JsonProperty("status", Required = Newtonsoft.Json.Required.Always)]
+		[System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
+		[Newtonsoft.Json.JsonConverter(typeof(Newtonsoft.Json.Converters.StringEnumConverter))]
+		public RequestStatus Status { get; set; }
+
+		private System.Collections.Generic.IDictionary<string, object> _additionalProperties;
+
+		[Newtonsoft.Json.JsonExtensionData]
+		public System.Collections.Generic.IDictionary<string, object> AdditionalProperties
+		{
+			get { return _additionalProperties ?? (_additionalProperties = new System.Collections.Generic.Dictionary<string, object>()); }
+			set { _additionalProperties = value; }
+		}
+
+	}
+
+	[System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.2.0.0 (NJsonSchema v11.1.0.0 (Newtonsoft.Json v13.0.0.0))")]
+	public enum RequestStatus
+	{
+
+		[System.Runtime.Serialization.EnumMember(Value = @"pending")]
+		Pending = 0,
+
+		[System.Runtime.Serialization.EnumMember(Value = @"cancelled")]
+		Cancelled = 1,
+
+		[System.Runtime.Serialization.EnumMember(Value = @"paid")]
+		Paid = 2,
+
+		[System.Runtime.Serialization.EnumMember(Value = @"closed")]
+		Closed = 3,
+
+	}
+
+	[System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.2.0.0 (NJsonSchema v11.1.0.0 (Newtonsoft.Json v13.0.0.0))")]
+	public partial class Expense
+	{
+		/// <summary>
+		/// Identifier of the group where the expense occurred
+		/// </summary>
+		[Newtonsoft.Json.JsonProperty("groupId", Required = Newtonsoft.Json.Required.Always)]
+		public long GroupId { get; set; }
+
+		/// <summary>
+		/// Description of the expense
+		/// </summary>
+		[Newtonsoft.Json.JsonProperty("description", Required = Newtonsoft.Json.Required.Always)]
+		[System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
+		public string Description { get; set; }
+
+		/// <summary>
+		/// Total amount of the expense
+		/// </summary>
+		[Newtonsoft.Json.JsonProperty("totalAmount", Required = Newtonsoft.Json.Required.Always)]
+		public float TotalAmount { get; set; }
+
+		/// <summary>
+		/// The method of splitting the expense
+		/// </summary>
+		[Newtonsoft.Json.JsonProperty("splitType", Required = Newtonsoft.Json.Required.Always)]
+		[System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
+		[Newtonsoft.Json.JsonConverter(typeof(Newtonsoft.Json.Converters.StringEnumConverter))]
+		public ExpenseSplitType SplitType { get; set; }
+
+		/// <summary>
+		/// Details of participants based on the split type
+		/// </summary>
+		[Newtonsoft.Json.JsonProperty("participants", Required = Newtonsoft.Json.Required.Always)]
+		[System.ComponentModel.DataAnnotations.Required]
+		public System.Collections.Generic.List<Participants> Participants { get; set; } = new System.Collections.Generic.List<Participants>();
+
+		/// <summary>
+		/// Optional photo associated with the expense (e.g., receipt)
+		/// </summary>
+		[Newtonsoft.Json.JsonProperty("photo", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+		public byte[] Photo { get; set; }
+
+		private System.Collections.Generic.IDictionary<string, object> _additionalProperties;
+
+		[Newtonsoft.Json.JsonExtensionData]
+		public System.Collections.Generic.IDictionary<string, object> AdditionalProperties
+		{
+			get { return _additionalProperties ?? (_additionalProperties = new System.Collections.Generic.Dictionary<string, object>()); }
+			set { _additionalProperties = value; }
+		}
+
+	}
+
+	[System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.2.0.0 (NJsonSchema v11.1.0.0 (Newtonsoft.Json v13.0.0.0))")]
+	public partial class MoneyTransfer
+	{
+		/// <summary>
+		/// ID of the sender
+		/// </summary>
+		[Newtonsoft.Json.JsonProperty("senderId", Required = Newtonsoft.Json.Required.Always)]
+		public long SenderId { get; set; }
+
+		/// <summary>
+		/// ID of the recipient
+		/// </summary>
+		[Newtonsoft.Json.JsonProperty("recipientId", Required = Newtonsoft.Json.Required.Always)]
+		public long RecipientId { get; set; }
+
+		/// <summary>
+		/// Amount of money being transferred
+		/// </summary>
+		[Newtonsoft.Json.JsonProperty("amount", Required = Newtonsoft.Json.Required.Always)]
+		public float Amount { get; set; }
+
+		/// <summary>
+		/// ID of the group associated with the transfer
+		/// </summary>
+		[Newtonsoft.Json.JsonProperty("groupId", Required = Newtonsoft.Json.Required.Always)]
+		public long GroupId { get; set; }
+
+		/// <summary>
+		/// Status of the money transfer (default is `pending`)
+		/// </summary>
+		[Newtonsoft.Json.JsonProperty("status", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+		[Newtonsoft.Json.JsonConverter(typeof(Newtonsoft.Json.Converters.StringEnumConverter))]
+		public MoneyTransferStatus Status { get; set; } = KasaWGrupieBackend.Controllers.MoneyTransferStatus.Pending;
+
+		private System.Collections.Generic.IDictionary<string, object> _additionalProperties;
+
+		[Newtonsoft.Json.JsonExtensionData]
+		public System.Collections.Generic.IDictionary<string, object> AdditionalProperties
+		{
+			get { return _additionalProperties ?? (_additionalProperties = new System.Collections.Generic.Dictionary<string, object>()); }
+			set { _additionalProperties = value; }
+		}
+
+	}
+
+	[System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.2.0.0 (NJsonSchema v11.1.0.0 (Newtonsoft.Json v13.0.0.0))")]
+	public partial class FriendRequest
+	{
+		/// <summary>
+		/// ID of the user who sent the request
+		/// </summary>
+		[Newtonsoft.Json.JsonProperty("senderId", Required = Newtonsoft.Json.Required.Always)]
+		public int SenderId { get; set; }
+
+		/// <summary>
+		/// ID of the user who receives the request
+		/// </summary>
+		[Newtonsoft.Json.JsonProperty("receiverId", Required = Newtonsoft.Json.Required.Always)]
+		public int ReceiverId { get; set; }
+
+		[Newtonsoft.Json.JsonProperty("status", Required = Newtonsoft.Json.Required.Always)]
+		[System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
+		[Newtonsoft.Json.JsonConverter(typeof(Newtonsoft.Json.Converters.StringEnumConverter))]
+		public InviteRequestStatus Status { get; set; }
+
+		private System.Collections.Generic.IDictionary<string, object> _additionalProperties;
+
+		[Newtonsoft.Json.JsonExtensionData]
+		public System.Collections.Generic.IDictionary<string, object> AdditionalProperties
+		{
+			get { return _additionalProperties ?? (_additionalProperties = new System.Collections.Generic.Dictionary<string, object>()); }
+			set { _additionalProperties = value; }
+		}
+
+	}
+
+	[System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.2.0.0 (NJsonSchema v11.1.0.0 (Newtonsoft.Json v13.0.0.0))")]
+	public partial class Group
+	{
+		/// <summary>
+		/// Unique identifier for the group
+		/// </summary>
+		[Newtonsoft.Json.JsonProperty("id", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+		public int Id { get; set; }
+
+		/// <summary>
+		/// Name of the group
+		/// </summary>
+		[Newtonsoft.Json.JsonProperty("name", Required = Newtonsoft.Json.Required.Always)]
+		[System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
+		public string Name { get; set; }
+
+		/// <summary>
+		/// Currency in which all monetary values in this group are
+		/// </summary>
+		[Newtonsoft.Json.JsonProperty("currency", Required = Newtonsoft.Json.Required.Always)]
+		[System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
+		public string Currency { get; set; }
+
+		/// <summary>
+		/// ID of the user who is the admin of this group
+		/// </summary>
+		[Newtonsoft.Json.JsonProperty("adminId", Required = Newtonsoft.Json.Required.Always)]
+		public int AdminId { get; set; }
+
+		[Newtonsoft.Json.JsonProperty("status", Required = Newtonsoft.Json.Required.Always)]
+		[System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
+		[Newtonsoft.Json.JsonConverter(typeof(Newtonsoft.Json.Converters.StringEnumConverter))]
+		public GroupStatus Status { get; set; }
+
+		/// <summary>
+		/// IDs of all group members
+		/// </summary>
+		[Newtonsoft.Json.JsonProperty("members", Required = Newtonsoft.Json.Required.Always)]
+		[System.ComponentModel.DataAnnotations.Required]
+		public System.Collections.Generic.List<int> Members { get; set; } = new System.Collections.Generic.List<int>();
+
+		private System.Collections.Generic.IDictionary<string, object> _additionalProperties;
+
+		[Newtonsoft.Json.JsonExtensionData]
+		public System.Collections.Generic.IDictionary<string, object> AdditionalProperties
+		{
+			get { return _additionalProperties ?? (_additionalProperties = new System.Collections.Generic.Dictionary<string, object>()); }
+			set { _additionalProperties = value; }
+		}
+
+	}
+
+	[System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.2.0.0 (NJsonSchema v11.1.0.0 (Newtonsoft.Json v13.0.0.0))")]
+	public enum GroupStatus
+	{
+
+		[System.Runtime.Serialization.EnumMember(Value = @"open")]
+		Open = 0,
+
+		[System.Runtime.Serialization.EnumMember(Value = @"closing")]
+		Closing = 1,
+
+		[System.Runtime.Serialization.EnumMember(Value = @"closed")]
+		Closed = 2,
+
+	}
+
+	[System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.2.0.0 (NJsonSchema v11.1.0.0 (Newtonsoft.Json v13.0.0.0))")]
+	public partial class GroupInvite
+	{
+		/// <summary>
+		/// ID of the group user is invited to
+		/// </summary>
+		[Newtonsoft.Json.JsonProperty("groupId", Required = Newtonsoft.Json.Required.Always)]
+		public int GroupId { get; set; }
+
+		/// <summary>
+		/// ID of the invited user
+		/// </summary>
+		[Newtonsoft.Json.JsonProperty("userId", Required = Newtonsoft.Json.Required.Always)]
+		public int UserId { get; set; }
+
+		private System.Collections.Generic.IDictionary<string, object> _additionalProperties;
+
+		[Newtonsoft.Json.JsonExtensionData]
+		public System.Collections.Generic.IDictionary<string, object> AdditionalProperties
+		{
+			get { return _additionalProperties ?? (_additionalProperties = new System.Collections.Generic.Dictionary<string, object>()); }
+			set { _additionalProperties = value; }
+		}
+
+	}
+
+	[System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.2.0.0 (NJsonSchema v11.1.0.0 (Newtonsoft.Json v13.0.0.0))")]
+	public partial class GroupJoinRequest
+	{
+		/// <summary>
+		/// ID of the user wanting to join the group
+		/// </summary>
+		[Newtonsoft.Json.JsonProperty("userId", Required = Newtonsoft.Json.Required.Always)]
+		public int UserId { get; set; }
+
+		/// <summary>
+		/// ID of the group user wants to join
+		/// </summary>
+		[Newtonsoft.Json.JsonProperty("groupId", Required = Newtonsoft.Json.Required.Always)]
+		public int GroupId { get; set; }
+
+		[Newtonsoft.Json.JsonProperty("status", Required = Newtonsoft.Json.Required.Always)]
+		[System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
+		[Newtonsoft.Json.JsonConverter(typeof(Newtonsoft.Json.Converters.StringEnumConverter))]
+		public InviteRequestStatus Status { get; set; }
+
+		private System.Collections.Generic.IDictionary<string, object> _additionalProperties;
+
+		[Newtonsoft.Json.JsonExtensionData]
+		public System.Collections.Generic.IDictionary<string, object> AdditionalProperties
+		{
+			get { return _additionalProperties ?? (_additionalProperties = new System.Collections.Generic.Dictionary<string, object>()); }
+			set { _additionalProperties = value; }
+		}
+
+	}
+
+	[System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.2.0.0 (NJsonSchema v11.1.0.0 (Newtonsoft.Json v13.0.0.0))")]
+	public enum InviteRequestStatus
+	{
+
+		[System.Runtime.Serialization.EnumMember(Value = @"sent")]
+		Sent = 0,
+
+		[System.Runtime.Serialization.EnumMember(Value = @"accepted")]
+		Accepted = 1,
+
+		[System.Runtime.Serialization.EnumMember(Value = @"rejected")]
+		Rejected = 2,
+
+	}
+
+	[System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.2.0.0 (NJsonSchema v11.1.0.0 (Newtonsoft.Json v13.0.0.0))")]
+	public partial class Body
+	{
+		/// <summary>
+		/// ID of the sender
+		/// </summary>
+		[Newtonsoft.Json.JsonProperty("senderId", Required = Newtonsoft.Json.Required.Always)]
+		public long SenderId { get; set; }
+
+		/// <summary>
+		/// ID of the recipient
+		/// </summary>
+		[Newtonsoft.Json.JsonProperty("recipientId", Required = Newtonsoft.Json.Required.Always)]
+		public long RecipientId { get; set; }
+
+		/// <summary>
+		/// Amount of money being transferred
+		/// </summary>
+		[Newtonsoft.Json.JsonProperty("amount", Required = Newtonsoft.Json.Required.Always)]
+		public float Amount { get; set; }
+
+		/// <summary>
+		/// ID of the group associated with the transfer
+		/// </summary>
+		[Newtonsoft.Json.JsonProperty("groupId", Required = Newtonsoft.Json.Required.Always)]
+		public long GroupId { get; set; }
+
+		private System.Collections.Generic.IDictionary<string, object> _additionalProperties;
+
+		[Newtonsoft.Json.JsonExtensionData]
+		public System.Collections.Generic.IDictionary<string, object> AdditionalProperties
+		{
+			get { return _additionalProperties ?? (_additionalProperties = new System.Collections.Generic.Dictionary<string, object>()); }
+			set { _additionalProperties = value; }
+		}
+
+	}
+
+	[System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.2.0.0 (NJsonSchema v11.1.0.0 (Newtonsoft.Json v13.0.0.0))")]
+	public partial class Body2
+	{
+		/// <summary>
+		/// New status of the money transfer
+		/// </summary>
+		[Newtonsoft.Json.JsonProperty("status", Required = Newtonsoft.Json.Required.Always)]
+		[System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
+		[Newtonsoft.Json.JsonConverter(typeof(Newtonsoft.Json.Converters.StringEnumConverter))]
+		public Body2Status Status { get; set; }
+
+		private System.Collections.Generic.IDictionary<string, object> _additionalProperties;
+
+		[Newtonsoft.Json.JsonExtensionData]
+		public System.Collections.Generic.IDictionary<string, object> AdditionalProperties
+		{
+			get { return _additionalProperties ?? (_additionalProperties = new System.Collections.Generic.Dictionary<string, object>()); }
+			set { _additionalProperties = value; }
+		}
+
+	}
+
+	[System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.2.0.0 (NJsonSchema v11.1.0.0 (Newtonsoft.Json v13.0.0.0))")]
+	public partial class Response
+	{
+		/// <summary>
+		/// The authentication token (if applicable)
+		/// </summary>
+		[Newtonsoft.Json.JsonProperty("token", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+		public string Token { get; set; }
+
+		private System.Collections.Generic.IDictionary<string, object> _additionalProperties;
+
+		[Newtonsoft.Json.JsonExtensionData]
+		public System.Collections.Generic.IDictionary<string, object> AdditionalProperties
+		{
+			get { return _additionalProperties ?? (_additionalProperties = new System.Collections.Generic.Dictionary<string, object>()); }
+			set { _additionalProperties = value; }
+		}
+
+	}
+
+	[System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.2.0.0 (NJsonSchema v11.1.0.0 (Newtonsoft.Json v13.0.0.0))")]
+	public partial class Anonymous
+	{
+		/// <summary>
+		/// The unique identifier for the expense
+		/// </summary>
+		[Newtonsoft.Json.JsonProperty("expenseId", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+		public string ExpenseId { get; set; }
+
+		/// <summary>
+		/// Description of the expense
+		/// </summary>
+		[Newtonsoft.Json.JsonProperty("description", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+		public string Description { get; set; }
+
+		/// <summary>
+		/// The total amount of the expense
+		/// </summary>
+		[Newtonsoft.Json.JsonProperty("amount", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+		public float Amount { get; set; }
+
+		/// <summary>
+		/// The date the expense was added
+		/// </summary>
+		[Newtonsoft.Json.JsonProperty("date", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+		[Newtonsoft.Json.JsonConverter(typeof(DateFormatConverter))]
+		public System.DateTimeOffset Date { get; set; }
+
+		/// <summary>
+		/// List of participants in the expense
+		/// </summary>
+		[Newtonsoft.Json.JsonProperty("participants", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+		public System.Collections.Generic.List<string> Participants { get; set; }
+
+		/// <summary>
+		/// Method of dividing the expense among participants
+		/// </summary>
+		[Newtonsoft.Json.JsonProperty("divisionMethod", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+		[Newtonsoft.Json.JsonConverter(typeof(Newtonsoft.Json.Converters.StringEnumConverter))]
+		public DivisionMethod DivisionMethod { get; set; }
+
+		private System.Collections.Generic.IDictionary<string, object> _additionalProperties;
+
+		[Newtonsoft.Json.JsonExtensionData]
+		public System.Collections.Generic.IDictionary<string, object> AdditionalProperties
+		{
+			get { return _additionalProperties ?? (_additionalProperties = new System.Collections.Generic.Dictionary<string, object>()); }
+			set { _additionalProperties = value; }
+		}
+
+	}
+
+	[System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.2.0.0 (NJsonSchema v11.1.0.0 (Newtonsoft.Json v13.0.0.0))")]
+	public partial class Anonymous2
+	{
+		/// <summary>
+		/// The unique identifier for the group
+		/// </summary>
+		[Newtonsoft.Json.JsonProperty("groupId", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+		public string GroupId { get; set; }
+
+		/// <summary>
+		/// The name of the group
+		/// </summary>
+		[Newtonsoft.Json.JsonProperty("groupName", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+		public string GroupName { get; set; }
+
+		/// <summary>
+		/// List of user IDs of group members
+		/// </summary>
+		[Newtonsoft.Json.JsonProperty("members", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+		public System.Collections.Generic.List<string> Members { get; set; }
+
+		/// <summary>
+		/// The balance of the group (could be positive or negative)
+		/// </summary>
+		[Newtonsoft.Json.JsonProperty("groupBalance", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+		public float GroupBalance { get; set; }
+
+		private System.Collections.Generic.IDictionary<string, object> _additionalProperties;
+
+		[Newtonsoft.Json.JsonExtensionData]
+		public System.Collections.Generic.IDictionary<string, object> AdditionalProperties
+		{
+			get { return _additionalProperties ?? (_additionalProperties = new System.Collections.Generic.Dictionary<string, object>()); }
+			set { _additionalProperties = value; }
+		}
+
+	}
+
+	[System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.2.0.0 (NJsonSchema v11.1.0.0 (Newtonsoft.Json v13.0.0.0))")]
+	public partial class Response2
+	{
+		/// <summary>
+		/// List of products with their prices.
+		/// </summary>
+		[Newtonsoft.Json.JsonProperty("products", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+		public System.Collections.Generic.List<Products> Products { get; set; }
+
+		private System.Collections.Generic.IDictionary<string, object> _additionalProperties;
+
+		[Newtonsoft.Json.JsonExtensionData]
+		public System.Collections.Generic.IDictionary<string, object> AdditionalProperties
+		{
+			get { return _additionalProperties ?? (_additionalProperties = new System.Collections.Generic.Dictionary<string, object>()); }
+			set { _additionalProperties = value; }
+		}
+
+	}
+
+	[System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.2.0.0 (NJsonSchema v11.1.0.0 (Newtonsoft.Json v13.0.0.0))")]
+	public partial class Response3
+	{
+		/// <summary>
+		/// The ID of the group
+		/// </summary>
+		[Newtonsoft.Json.JsonProperty("groupId", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+		public long GroupId { get; set; }
+
+		/// <summary>
+		/// List of debts between participants
+		/// </summary>
+		[Newtonsoft.Json.JsonProperty("balances", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+		public System.Collections.Generic.List<Balances> Balances { get; set; }
+
+		private System.Collections.Generic.IDictionary<string, object> _additionalProperties;
+
+		[Newtonsoft.Json.JsonExtensionData]
+		public System.Collections.Generic.IDictionary<string, object> AdditionalProperties
+		{
+			get { return _additionalProperties ?? (_additionalProperties = new System.Collections.Generic.Dictionary<string, object>()); }
+			set { _additionalProperties = value; }
+		}
+
+	}
+
+	[System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.2.0.0 (NJsonSchema v11.1.0.0 (Newtonsoft.Json v13.0.0.0))")]
+	public partial class Response4
+	{
+		/// <summary>
+		/// The ID of the user
+		/// </summary>
+		[Newtonsoft.Json.JsonProperty("userId", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+		public long UserId { get; set; }
+
+		/// <summary>
+		/// List of people and amounts they owe the user
+		/// </summary>
+		[Newtonsoft.Json.JsonProperty("owedByOthers", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+		public System.Collections.Generic.List<OwedByOthers> OwedByOthers { get; set; }
+
+		/// <summary>
+		/// List of people the user owes money to
+		/// </summary>
+		[Newtonsoft.Json.JsonProperty("owesToOthers", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+		public System.Collections.Generic.List<OwesToOthers> OwesToOthers { get; set; }
+
+		private System.Collections.Generic.IDictionary<string, object> _additionalProperties;
+
+		[Newtonsoft.Json.JsonExtensionData]
+		public System.Collections.Generic.IDictionary<string, object> AdditionalProperties
+		{
+			get { return _additionalProperties ?? (_additionalProperties = new System.Collections.Generic.Dictionary<string, object>()); }
+			set { _additionalProperties = value; }
+		}
+
+	}
+
+	[System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.2.0.0 (NJsonSchema v11.1.0.0 (Newtonsoft.Json v13.0.0.0))")]
+	public enum ExpenseSplitType
+	{
+
+		[System.Runtime.Serialization.EnumMember(Value = @"equal")]
+		Equal = 0,
+
+		[System.Runtime.Serialization.EnumMember(Value = @"percentage")]
+		Percentage = 1,
+
+		[System.Runtime.Serialization.EnumMember(Value = @"exact")]
+		Exact = 2,
+
+	}
+
+	/// <summary>
+	/// For equal split, include user IDs only
+	/// </summary>
+	[System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.2.0.0 (NJsonSchema v11.1.0.0 (Newtonsoft.Json v13.0.0.0))")]
+	public partial class Participants
+	{
+		/// <summary>
+		/// ID of the user participating in the split
+		/// </summary>
+		[Newtonsoft.Json.JsonProperty("userId", Required = Newtonsoft.Json.Required.Always)]
+		public long UserId { get; set; }
+
+		private System.Collections.Generic.IDictionary<string, object> _additionalProperties;
+
+		[Newtonsoft.Json.JsonExtensionData]
+		public System.Collections.Generic.IDictionary<string, object> AdditionalProperties
+		{
+			get { return _additionalProperties ?? (_additionalProperties = new System.Collections.Generic.Dictionary<string, object>()); }
+			set { _additionalProperties = value; }
+		}
+
+	}
+
+	[System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.2.0.0 (NJsonSchema v11.1.0.0 (Newtonsoft.Json v13.0.0.0))")]
+	public enum MoneyTransferStatus
+	{
+
+		[System.Runtime.Serialization.EnumMember(Value = @"pending")]
+		Pending = 0,
+
+		[System.Runtime.Serialization.EnumMember(Value = @"confirmed")]
+		Confirmed = 1,
+
+		[System.Runtime.Serialization.EnumMember(Value = @"rejected")]
+		Rejected = 2,
+
+	}
+
+	[System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.2.0.0 (NJsonSchema v11.1.0.0 (Newtonsoft.Json v13.0.0.0))")]
+	public enum Body2Status
+	{
+
+		[System.Runtime.Serialization.EnumMember(Value = @"confirmed")]
+		Confirmed = 0,
+
+		[System.Runtime.Serialization.EnumMember(Value = @"rejected")]
+		Rejected = 1,
+
+	}
+
+	[System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.2.0.0 (NJsonSchema v11.1.0.0 (Newtonsoft.Json v13.0.0.0))")]
+	public enum DivisionMethod
+	{
+
+		[System.Runtime.Serialization.EnumMember(Value = @"equal")]
+		Equal = 0,
+
+		[System.Runtime.Serialization.EnumMember(Value = @"percentage")]
+		Percentage = 1,
+
+		[System.Runtime.Serialization.EnumMember(Value = @"exact")]
+		Exact = 2,
+
+	}
+
+	[System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.2.0.0 (NJsonSchema v11.1.0.0 (Newtonsoft.Json v13.0.0.0))")]
+	public partial class Products
+	{
+		/// <summary>
+		/// The name of the product.
+		/// </summary>
+		[Newtonsoft.Json.JsonProperty("name", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+		public string Name { get; set; }
+
+		/// <summary>
+		/// The price of the product.
+		/// </summary>
+		[Newtonsoft.Json.JsonProperty("price", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+		public float Price { get; set; }
+
+		private System.Collections.Generic.IDictionary<string, object> _additionalProperties;
+
+		[Newtonsoft.Json.JsonExtensionData]
+		public System.Collections.Generic.IDictionary<string, object> AdditionalProperties
+		{
+			get { return _additionalProperties ?? (_additionalProperties = new System.Collections.Generic.Dictionary<string, object>()); }
+			set { _additionalProperties = value; }
+		}
+
+	}
+
+	[System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.2.0.0 (NJsonSchema v11.1.0.0 (Newtonsoft.Json v13.0.0.0))")]
+	public partial class Balances
+	{
+		/// <summary>
+		/// ID of the user who owes money
+		/// </summary>
+		[Newtonsoft.Json.JsonProperty("fromUserId", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+		public long FromUserId { get; set; }
+
+		/// <summary>
+		/// ID of the user who is owed money
+		/// </summary>
+		[Newtonsoft.Json.JsonProperty("toUserId", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+		public long ToUserId { get; set; }
+
+		/// <summary>
+		/// Amount of money owed
+		/// </summary>
+		[Newtonsoft.Json.JsonProperty("amount", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+		public float Amount { get; set; }
+
+		private System.Collections.Generic.IDictionary<string, object> _additionalProperties;
+
+		[Newtonsoft.Json.JsonExtensionData]
+		public System.Collections.Generic.IDictionary<string, object> AdditionalProperties
+		{
+			get { return _additionalProperties ?? (_additionalProperties = new System.Collections.Generic.Dictionary<string, object>()); }
+			set { _additionalProperties = value; }
+		}
+
+	}
+
+	[System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.2.0.0 (NJsonSchema v11.1.0.0 (Newtonsoft.Json v13.0.0.0))")]
+	public partial class OwedByOthers
+	{
+		/// <summary>
+		/// ID of the user who owes money to the specified user
+		/// </summary>
+		[Newtonsoft.Json.JsonProperty("userId", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+		public long UserId { get; set; }
+
+		/// <summary>
+		/// Amount of money owed by the user
+		/// </summary>
+		[Newtonsoft.Json.JsonProperty("amount", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+		public float Amount { get; set; }
+
+		private System.Collections.Generic.IDictionary<string, object> _additionalProperties;
+
+		[Newtonsoft.Json.JsonExtensionData]
+		public System.Collections.Generic.IDictionary<string, object> AdditionalProperties
+		{
+			get { return _additionalProperties ?? (_additionalProperties = new System.Collections.Generic.Dictionary<string, object>()); }
+			set { _additionalProperties = value; }
+		}
+
+	}
+
+	[System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.2.0.0 (NJsonSchema v11.1.0.0 (Newtonsoft.Json v13.0.0.0))")]
+	public partial class OwesToOthers
+	{
+		/// <summary>
+		/// ID of the user to whom money is owed
+		/// </summary>
+		[Newtonsoft.Json.JsonProperty("userId", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+		public long UserId { get; set; }
+
+		/// <summary>
+		/// Amount of money owed to the user
+		/// </summary>
+		[Newtonsoft.Json.JsonProperty("amount", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+		public float Amount { get; set; }
+
+		private System.Collections.Generic.IDictionary<string, object> _additionalProperties;
+
+		[Newtonsoft.Json.JsonExtensionData]
+		public System.Collections.Generic.IDictionary<string, object> AdditionalProperties
+		{
+			get { return _additionalProperties ?? (_additionalProperties = new System.Collections.Generic.Dictionary<string, object>()); }
+			set { _additionalProperties = value; }
+		}
+
+	}
+
+	[System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.2.0.0 (NJsonSchema v11.1.0.0 (Newtonsoft.Json v13.0.0.0))")]
+	internal class DateFormatConverter : Newtonsoft.Json.Converters.IsoDateTimeConverter
+	{
+		public DateFormatConverter()
+		{
+			DateTimeFormat = "yyyy-MM-dd";
+		}
+	}
+
+	[System.CodeDom.Compiler.GeneratedCode("NSwag", "14.2.0.0 (NJsonSchema v11.1.0.0 (Newtonsoft.Json v13.0.0.0))")]
+	public partial class FileParameter
+	{
+		public FileParameter(System.IO.Stream data)
+			: this(data, null, null)
+		{
+		}
+
+		public FileParameter(System.IO.Stream data, string fileName)
+			: this(data, fileName, null)
+		{
+		}
+
+		public FileParameter(System.IO.Stream data, string fileName, string contentType)
+		{
+			Data = data;
+			FileName = fileName;
+			ContentType = contentType;
+		}
+
+		public System.IO.Stream Data { get; private set; }
+
+		public string FileName { get; private set; }
+
+		public string ContentType { get; private set; }
+	}
 
 
 }
 
-#pragma warning restore  108
-#pragma warning restore  114
-#pragma warning restore  472
-#pragma warning restore  612
+#pragma warning restore 108
+#pragma warning restore 114
+#pragma warning restore 472
+#pragma warning restore 612
 #pragma warning restore 1573
 #pragma warning restore 1591
 #pragma warning restore 8073

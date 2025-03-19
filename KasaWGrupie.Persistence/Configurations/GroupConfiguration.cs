@@ -34,12 +34,12 @@ public class GroupConfiguration : IEntityTypeConfiguration<Group>
 		builder.HasOne(g => g.Currency)
 			.WithMany()
 			.HasForeignKey(g => g.CurrencyId)
-			.OnDelete(DeleteBehavior.Restrict);
+			.OnDelete(DeleteBehavior.Cascade);
 
 		builder.HasOne(g => g.Admin)
 			.WithMany()
 			.HasForeignKey(g => g.AdminId)
-			.OnDelete(DeleteBehavior.Restrict);
+			.OnDelete(DeleteBehavior.Cascade);
 
 		builder.HasMany(g => g.Members)
 			.WithMany();
