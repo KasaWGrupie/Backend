@@ -1,8 +1,22 @@
 services:
   kasawgrupie.api:
     image: ${DOCKER_REGISTRY-}kasawgrupieapi
+    container_name: kasawgrupie.api
     build:
       context: .
       dockerfile: KasaWGrupieBackend/Dockerfile
     env_file:
         - .env
+    depends_on: 
+        - kasawgrupie.database
+  kasawgrupie.database:
+    image: postgres:latest
+    container_name: kasawgrupie.database
+    environment:
+        - POSTGRES_DB=kasawgrupie
+        - POSTGRES_USER=postgres
+        - POSTGRES_PASSWORD=postgres
+    volumes:
+        - ./.containers/kasawgrupie-db:/var/lib/postgresql/data
+    ports:
+        - 5432:5432
