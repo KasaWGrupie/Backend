@@ -11,16 +11,20 @@ public class Program
 
 		var builder = WebApplication.CreateBuilder(args);
 
+		builder.Services.RegisterConfigurationOptions(builder.Configuration);
+
+		builder.Services.ConfigureData(builder.Configuration);
+
+		builder.Services.ConfigureValidators();
+
+		builder.Services.RegisterInfrastructureServices(builder.Configuration);
+
 		// Add services to the container.
 
 		builder.Services.AddControllers();
 		// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 		builder.Services.AddEndpointsApiExplorer();
 		builder.Services.AddSwaggerGen();
-
-		builder.Services.RegisterConfigurationOptions(builder.Configuration);
-
-		builder.Services.ConfigureDbContext(builder.Configuration);
 
 		var app = builder.Build();
 
