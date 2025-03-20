@@ -41,7 +41,7 @@ public class CreateGroupHandler : IRequestHandler<CreateGroupCommand, Result>
 		foreach (var memberEmail in request.CreateGroupDto.Members)
 		{
 			var userSpecification = new UserByEmailSpecification(memberEmail);
-			var member = await _userRepository.FirstOrDefaultAsync(userSpecification);
+			var member = await _userRepository.FirstOrDefaultAsync(userSpecification, cancellationToken);
 			if (member == null)
 			{
 				return Result.Invalid(new ValidationError("Members", $"User with email {memberEmail} does not exist."));
@@ -61,7 +61,7 @@ public class CreateGroupHandler : IRequestHandler<CreateGroupCommand, Result>
 		var imageUrl = string.Empty;
 		if (request.CreateGroupDto.Image != null)
 		{
-			var uploadResult = await _imageService.UploadImageAsync(request.CreateGroupDto.Image);
+			var uploadResult = await _imageService.UploadImageAsync(request.CreateGroupDto.Image, cancellationToken);
 			if (uploadResult.IsSuccess)
 			{
 				imageUrl = uploadResult.Url;
