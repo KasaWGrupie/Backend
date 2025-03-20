@@ -865,17 +865,6 @@ namespace KasaWGrupieBackend.Controllers
 		}
 
 		/// <summary>
-		/// Add new group
-		/// </summary>
-		/// <returns>Successfully inserted new group</returns>
-		[Microsoft.AspNetCore.Mvc.HttpPost, Microsoft.AspNetCore.Mvc.Route("groups")]
-		public System.Threading.Tasks.Task<Group> GroupsPOST([Microsoft.AspNetCore.Mvc.FromBody] Group body)
-		{
-
-			return _implementation.GroupsPOSTAsync(body);
-		}
-
-		/// <summary>
 		/// Update group status
 		/// </summary>
 		/// <param name="groupId">ID of group</param>
