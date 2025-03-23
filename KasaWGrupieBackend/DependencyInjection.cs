@@ -66,7 +66,7 @@ public static class DependencyInjection
 		FirebaseApp.Create(new AppOptions
 		{
 			Credential = GoogleCredential.GetApplicationDefault(),
-			ProjectId = "project-id" //TODO 
+			ProjectId = "kasawgrupie"
 		});
 		return services;
 	}
