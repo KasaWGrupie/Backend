@@ -1,7 +1,10 @@
-﻿namespace KasaWGrupie.Infrastructure.ImageService;
+﻿using System.Diagnostics.CodeAnalysis;
+
+namespace KasaWGrupie.Infrastructure.ImageService;
 
 public class UploadResult
 {
+	[MemberNotNullWhen(true, nameof(Url))]
 	public bool IsSuccess { get; set; }
 	public string? Url { get; set; }
 	public List<string> Errors { get; set; }

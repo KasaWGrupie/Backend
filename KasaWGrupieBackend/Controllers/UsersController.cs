@@ -1,0 +1,36 @@
+using Ardalis.Result;
+using Ardalis.Result.AspNetCore;
+using KasaWGrupie.API.DTOs.Users;
+using KasaWGrupie.API.Requests.Users.Commands;
+using KasaWGrupie.Infrastructure.AuthService;
+using MediatR;
+using Microsoft.AspNetCore.Mvc;
+
+namespace KasaWGrupie.API.Controllers;
+
+[Route("users")]
+[ApiController]
+public class UsersController(
+    AuthService authService,
+    IMediator mediator
+) : ControllerBase
+{
+    /// <summary>
+    /// Add new User
+    /// </summary>
+    /// <returns>Successfully inserted new User</returns>
+    [HttpPost]
+    [TranslateResultToActionResult]
+    [FirebaseAuthorize]
+    public async Task<Result> CreateUser([FromForm] CreateUserDto createUserDto)
+    {
+        var authEmail = await authService.GetEmailFromAuthTokenAsync(HttpContext, HttpContext.RequestAborted);
+        if (!string.Equals(authEmail, createUserDto.Email))
+            return Result.Forbidden("User email does not match.");
+        
+        var command = new CreateUserCommand(createUserDto);
+        var result = await mediator.Send(command);
+        
+        return result;
+    }
+}

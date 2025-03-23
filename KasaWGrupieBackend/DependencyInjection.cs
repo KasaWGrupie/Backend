@@ -2,10 +2,13 @@
 using KasaWGrupie.Persistence.Data;
 using Microsoft.EntityFrameworkCore;
 using Ardalis.Specification;
+using FirebaseAdmin;
 using KasaWGrupie.Persistence.Repositories;
 using KasaWGrupie.Infrastructure.ImageService;
 using FluentValidation;
 using FluentValidation.AspNetCore;
+using Google.Apis.Auth.OAuth2;
+using KasaWGrupie.Infrastructure.AuthService;
 
 
 namespace KasaWGrupie.API;
@@ -28,6 +31,7 @@ public static class DependencyInjection
 	{
 		services.ConfigureMediatR();
 
+		services.AddTransient<IAuthService, AuthService>();
 		services.AddTransient<IImageService, DummyImageService>();
 
 		return services;
@@ -54,6 +58,16 @@ public static class DependencyInjection
 	{
 		services.AddDbContext<KasaWGrupieDbContext>(
 			options => options.UseNpgsql(configuration["ConnectionString:DbConnection"]));
+		return services;
+	}
+
+	public static IServiceCollection ConfigureFirebaseApp(this IServiceCollection services, IConfiguration configuration)
+	{
+		FirebaseApp.Create(new AppOptions
+		{
+			Credential = GoogleCredential.GetApplicationDefault(),
+			ProjectId = "kasawgrupie"
+		});
 		return services;
 	}
 

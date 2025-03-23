@@ -9,4 +9,10 @@ public static class ValidatorConstants
 		public const int CurrencyMaxLength = 3;
 		public const int EmailMaxLength = 100;
 	}
+
+	public static class CreateUserDtoConstants
+	{
+		public const int NameMaxLength = 50;
+		public const int EmailMaxLength = 100;
+	}
 }
