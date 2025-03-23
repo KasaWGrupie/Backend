@@ -20,8 +20,11 @@
 	<ItemGroup>
 		<PackageReference Include="Microsoft.AspNetCore.Http" Version="2.3.0" />
 		<PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="9.0.3" />
-		<PackageReference Include="FirebaseAdmin" Version="3.1.0"/>
-		<PackageReference Include="Microsoft.AspNetCore.App.Ref" Version="3.0.0"/>
+		<PackageReference Include="FirebaseAdmin" />
+	</ItemGroup>
+	
+	<ItemGroup>
+		<FrameworkReference Include="Microsoft.AspNetCore.App"/>
 	</ItemGroup>
 
 </Project>

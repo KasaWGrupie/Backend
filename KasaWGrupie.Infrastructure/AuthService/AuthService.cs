@@ -1,3 +1,4 @@
+using FirebaseAdmin;
 using FirebaseAdmin.Auth;
 
 namespace KasaWGrupie.Infrastructure.AuthService;
@@ -13,7 +14,7 @@ public class AuthService : IAuthService
                 .VerifyIdTokenAsync(idToken, cancellationToken);
             return AuthenticationResult.Success(decodedToken);
         }
-        catch (FirebaseAuthException e)
+        catch (FirebaseException e)
         {
             return AuthenticationResult.Failure(e);
         }
