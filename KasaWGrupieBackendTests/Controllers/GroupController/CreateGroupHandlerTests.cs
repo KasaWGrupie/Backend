@@ -84,7 +84,7 @@ namespace KasaWGrupie.Tests
 			_validatorMock.Setup(v => v.ValidateAsync(It.IsAny<CreateGroupDto>(), It.IsAny<CancellationToken>()))
 				.ReturnsAsync(new FluentValidation.Results.ValidationResult());
 
-			_imageServiceMock.Setup(service => service.UploadImageAsync(It.IsAny<IFormFile>()))
+			_imageServiceMock.Setup(service => service.UploadImageAsync(It.IsAny<IFormFile>(), It.IsAny<CancellationToken>()))
 				.ReturnsAsync(new UploadResult { IsSuccess = true, Url = "http://example.com/image.jpg" });
 
 			// Act

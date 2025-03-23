@@ -31,4 +31,32 @@ public sealed class GroupsController : ControllerBase
 		return result;
 	}
 
+    
+    /// Edit existing group
+    
+    /// <returns>Successfully inserted new group</returns>
+    [TranslateResultToActionResult]
+    [HttpPost]
+    public async Task<Result> EditGroup([FromForm] CreateGroupDto createGroupDto)
+    {
+        var command = new CreateGroupCommand(createGroupDto);
+        var result = await _mediator.Send(command);
+
+        return result;
+    }
+
+
+
+    [TranslateResultToActionResult]
+    [HttpPut("{groupId}")]
+    public async Task<Result> UpdateGroup(int groupId, [FromForm] UpdateGroupDto updateGroupDto)
+    {
+        var dto = updateGroupDto with { GroupId = groupId };
+        var command = new UpdateGroupCommand(dto);
+        var result = await _mediator.Send(command);
+        return result;
+    }
+
+
+
 }
