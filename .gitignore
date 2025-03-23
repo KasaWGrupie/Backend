@@ -364,6 +364,7 @@ FodyWeavers.xsd
 
 #secrets
 .env
+kasawgrupie-service-account-file.json
 
 #container data
 .containers

@@ -17,6 +17,8 @@ public class Program
 
 		builder.Services.ConfigureValidators();
 
+		builder.Services.ConfigureFirebaseApp(builder.Configuration);
+
 		builder.Services.RegisterInfrastructureServices(builder.Configuration);
 
 		// Add services to the container.

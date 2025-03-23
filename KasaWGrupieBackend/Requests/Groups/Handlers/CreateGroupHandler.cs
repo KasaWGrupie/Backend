@@ -81,7 +81,7 @@ public class CreateGroupHandler : IRequestHandler<CreateGroupCommand, Result>
 		var group = new Group
 		{
 			Name = request.CreateGroupDto.Name,
-			PictureUrl = imageUrl!,
+			PictureUrl = imageUrl,
 			Description = request.CreateGroupDto.Description,
 			Currency = currency,
 			Admin = admin,
