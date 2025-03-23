@@ -31,4 +31,21 @@ public sealed class GroupsController : ControllerBase
 		return result;
 	}
 
+    
+
+
+
+
+    [TranslateResultToActionResult]
+    [HttpPut("{groupId}")]
+    public async Task<Result> UpdateGroup(int groupId, [FromForm] UpdateGroupDto updateGroupDto)
+    {
+        var dto = updateGroupDto with { GroupId = groupId };
+        var command = new UpdateGroupCommand(dto);
+        var result = await _mediator.Send(command);
+        return result;
+    }
+
+
+
 }
