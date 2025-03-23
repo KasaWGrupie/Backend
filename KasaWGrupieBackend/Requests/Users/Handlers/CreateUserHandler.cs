@@ -5,6 +5,7 @@ using KasaWGrupie.API.DTOs.Users;
 using KasaWGrupie.API.Requests.Users.Commands;
 using KasaWGrupie.Core.Entities;
 using KasaWGrupie.Infrastructure.ImageService;
+using KasaWGrupie.Persistence.Specifications.Users;
 using MediatR;
 
 namespace KasaWGrupie.API.Requests.Users.Handlers;
@@ -29,6 +30,13 @@ public class CreateUserHandler : IRequestHandler<CreateUserCommand, Result>
 			return Result.Invalid(validationResult.Errors.Select(e => new ValidationError(e.PropertyName, e.ErrorMessage)));
 		}
 
+		// sprawdzenie, czy taki użytkownik już nie istnieje
+		var specification = new UserByEmailSpecification(request.CreateUserDto.Email);
+		if (await _userRepository.AnyAsync(specification, cancellationToken))
+		{
+			return Result.Conflict("User with this email already exists");
+		}
+		
 		var imageUrl = string.Empty;
 		if (request.CreateUserDto.ProfilePicture != null)
 		{
