@@ -4,6 +4,7 @@ using UnauthorizedResult = Microsoft.AspNetCore.Mvc.UnauthorizedResult;
 
 namespace KasaWGrupie.Infrastructure.AuthService;
 
+[AttributeUsage(AttributeTargets.Class | AttributeTargets.Method)]
 public class FirebaseAuthorizeAttribute : Attribute, IAsyncAuthorizationFilter
 {
     

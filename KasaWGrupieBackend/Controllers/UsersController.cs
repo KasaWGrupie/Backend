@@ -10,7 +10,10 @@ namespace KasaWGrupie.API.Controllers;
 
 [Route("users")]
 [ApiController]
-public class UsersController(IMediator mediator) : ControllerBase
+public class UsersController(
+    AuthService authService,
+    IMediator mediator
+) : ControllerBase
 {
     /// <summary>
     /// Add new User
@@ -21,6 +24,10 @@ public class UsersController(IMediator mediator) : ControllerBase
     [FirebaseAuthorize]
     public async Task<Result> CreateUser([FromForm] CreateUserDto createUserDto)
     {
+        var authEmail = await authService.GetEmailFromAuthTokenAsync(HttpContext, HttpContext.RequestAborted);
+        if (!string.Equals(authEmail, createUserDto.Email))
+            return Result.Forbidden("User email does not match.");
+        
         var command = new CreateUserCommand(createUserDto);
         var result = await mediator.Send(command);
         
