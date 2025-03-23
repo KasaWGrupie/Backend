@@ -2,6 +2,7 @@ using Ardalis.Result;
 using Ardalis.Result.AspNetCore;
 using KasaWGrupie.API.DTOs.Users;
 using KasaWGrupie.API.Requests.Users.Commands;
+using KasaWGrupie.Infrastructure.AuthService;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -17,6 +18,7 @@ public class UsersController(IMediator mediator) : ControllerBase
     /// <returns>Successfully inserted new User</returns>
     [HttpPost]
     [TranslateResultToActionResult]
+    [FirebaseAuthorize]
     public async Task<Result> CreateUser([FromForm] CreateUserDto createUserDto)
     {
         var command = new CreateUserCommand(createUserDto);
