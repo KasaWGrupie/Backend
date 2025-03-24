@@ -33,4 +33,14 @@ public class UsersController(
         
         return result;
     }
+
+
+    [HttpGet("user-groups")]
+    [TranslateResultToActionResult]
+    public async Task<Result<List<GetUserGroupsDto>>> GetUserGroups([FromQuery] string email)
+    {
+        var command = new GetUserGroupsCommand(email);
+        return await mediator.Send(command);
+    }
+
 }
