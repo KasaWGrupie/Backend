@@ -1,4 +1,5 @@
 using DotNetEnv;
+using KasaWGrupie.Infrastructure.ImageService;
 using KasaWGrupie.Persistence.Extensions;
 
 namespace KasaWGrupie.API;
@@ -29,8 +30,10 @@ public class Program
 		builder.Services.AddSwaggerGen();
 
 		var app = builder.Build();
+        builder.Services.AddSingleton<IImageService, GcsImageService>();
 
-		if (app.Environment.IsDevelopment())
+
+        if (app.Environment.IsDevelopment())
 		{
 			using var scope = app.Services.CreateScope();
 			scope.ServiceProvider.ApplyMigrations();

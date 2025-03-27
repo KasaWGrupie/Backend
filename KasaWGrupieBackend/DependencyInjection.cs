@@ -32,7 +32,7 @@ public static class DependencyInjection
 		services.ConfigureMediatR();
 
 		services.AddTransient<IAuthService, AuthService>();
-		services.AddTransient<IImageService, DummyImageService>();
+		services.AddTransient<IImageService, GcsImageService>();
 
 		return services;
 	}
