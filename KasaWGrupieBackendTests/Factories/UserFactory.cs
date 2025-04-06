@@ -5,6 +5,7 @@ namespace KasaWGrupie.Tests.Factories
 	public static class UserFactory
 	{
 		public static User Create(
+			int id = 1,
 			string email = "user@example.com",
 			string name = "Test User",
 			string profilePictureUrl = "http://example.com/profile.jpg")
