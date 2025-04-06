@@ -52,6 +52,15 @@ public class CreateMoneyTransferHandler : IRequestHandler<CreateMoneyTransferCom
             return Result.Invalid(new ValidationError("GroupId", "Group not found"));
         }
 
+        if (!group.Members.Contains(sender))
+        {
+            return Result.Invalid(new ValidationError("SenderId", "Sender user is not a member of the group"));
+        }
+        if (!group.Members.Contains(recipient))
+        {
+            return Result.Invalid(new ValidationError("RecipientId", "Recipient user is not a member of the group"));
+        }
+
         var moneyTransfer = new MoneyTransfer
         {
             Recipient = recipient,
