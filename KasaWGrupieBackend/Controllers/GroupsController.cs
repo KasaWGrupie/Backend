@@ -31,6 +31,16 @@ public sealed class GroupsController : ControllerBase
 		return result;
 	}
 
+	[TranslateResultToActionResult]
+	[HttpGet("{groupId:int}/expenses")]
+	public async Task<Result<ICollection<GetExpensesDto>>> GetExpenses([FromRoute] int groupId)
+	{
+		var command = new GetExpensesCommand(groupId);
+		var result = await _mediator.Send(command);
+		
+		return result;
+	}
+
     
 
 
