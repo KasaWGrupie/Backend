@@ -8,7 +8,7 @@ using KasaWGrupie.Core.Enums;
 using KasaWGrupie.Persistence.Specifications.FriendRequests;
 
 
-namespace KasaWGrupie.API.Requests.FriendRequests.sHandlers;
+namespace KasaWGrupie.API.Requests.FriendRequests.Handlers;
 
 public class ChangeFriendRequestStatusCommandHandler : IRequestHandler<ChangeFriendRequestStatusCommand, Result>
 {

@@ -2,9 +2,9 @@
 using KasaWGrupie.Core.Entities;
 using KasaWGrupie.Core.Enums;
 
-public class GetUserByIdWithUnconfirmedFriendRequestsWithRecieverSpecification : Specification<User>
+public class GetUserByIdWithUnconfirmedFriendRequestsWithReceiverSpecification : Specification<User>
 {
-	public GetUserByIdWithUnconfirmedFriendRequestsWithRecieverSpecification(int userId)
+	public GetUserByIdWithUnconfirmedFriendRequestsWithReceiverSpecification(int userId)
 	{
 		Query
 			.Where(u => u.Id == userId)

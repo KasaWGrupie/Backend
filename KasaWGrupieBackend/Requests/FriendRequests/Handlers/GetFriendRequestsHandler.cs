@@ -25,7 +25,7 @@ public class GetFriendRequestsHandler : IRequestHandler<GetFriendRequestsCommand
 			return Result.Invalid(validationResult.Errors.Select(e => new ValidationError(e.PropertyName, e.ErrorMessage)));
 		}
 
-		var specificaton = new GetUserByIdWithUnconfirmedFriendRequestsWithRecieverSpecification(request.UserId);
+		var specificaton = new GetUserByIdWithUnconfirmedFriendRequestsWithReceiverSpecification(request.UserId);
 
 		var user = await _userRepository.FirstOrDefaultAsync(specificaton, cancellationToken);
 

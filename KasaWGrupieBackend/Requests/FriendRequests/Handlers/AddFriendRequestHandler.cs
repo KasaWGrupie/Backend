@@ -24,21 +24,18 @@ public class AddFriendRequestHandler : IRequestHandler<AddFriendRequestCommand, 
 	}
 	public async Task<Result> Handle(AddFriendRequestCommand request, CancellationToken cancellationToken)
 	{
-		var validationResult = _validator.Validate(request.AddFriendRequestDto);
+		var validationResult = await _validator.ValidateAsync(request.AddFriendRequestDto);
 		if (!validationResult.IsValid)
 		{
 			return Result.Invalid(validationResult.Errors.Select(e => new ValidationError(e.PropertyName, e.ErrorMessage)));
 		}
 
-		var senderSpecification = new UserByIdSpecification(request.AddFriendRequestDto.SenderId);
-		var receiverSpecification = new UserByIdSpecification(request.AddFriendRequestDto.ReceiverId);
-
-		var sender = await _userRepository.FirstOrDefaultAsync(senderSpecification, cancellationToken);
-		var receiver = await _userRepository.FirstOrDefaultAsync(receiverSpecification, cancellationToken);
+		var sender = await _userRepository.GetByIdAsync(request.AddFriendRequestDto.SenderId, cancellationToken);
+		var receiver = await _userRepository.GetByIdAsync(request.AddFriendRequestDto.ReceiverId, cancellationToken);
 		if (sender == null || receiver == null)
 			return Result.NotFound();
 
-		var existingRequestSpec = new GetFriendRequestByRecieverAndSenderUnconfirmedSpecification(sender.Id, receiver.Id);
+		var existingRequestSpec = new GetFriendRequestByReceiverAndSenderUnconfirmedSpecification(sender.Id, receiver.Id);
 		var existingRequest = await _friendRequestRepository.FirstOrDefaultAsync(existingRequestSpec, cancellationToken);
 
 		if (existingRequest != null)
