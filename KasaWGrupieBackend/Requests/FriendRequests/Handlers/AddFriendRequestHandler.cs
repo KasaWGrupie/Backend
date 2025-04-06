@@ -38,6 +38,14 @@ public class AddFriendRequestHandler : IRequestHandler<AddFriendRequestCommand, 
 		if (sender == null || receiver == null)
 			return Result.NotFound();
 
+		var existingRequestSpec = new GetFriendRequestByRecieverAndSenderUnconfirmedSpecification(sender.Id, receiver.Id);
+		var existingRequest = await _friendRequestRepository.FirstOrDefaultAsync(existingRequestSpec, cancellationToken);
+
+		if (existingRequest != null)
+		{
+			return Result.Success();
+		}
+
 		var friendRequest = new FriendRequest
 		{
 			Sender = sender,

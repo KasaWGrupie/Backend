@@ -64,7 +64,7 @@ public class UsersController(
 
 	[HttpGet("{userId}/friendRequests")]
 	[TranslateResultToActionResult]
-	public async Task<Result<List<FriendRequestDto>>> GetFriendRequests(int userId)
+	public async Task<Result<ICollection<FriendRequestDisplayDto>>> GetFriendRequests(int userId)
 	{
 		var command = new GetFriendRequestsCommand(userId);
 		var result = await mediator.Send(command);
