@@ -12,7 +12,7 @@ using KasaWGrupie.Core.Enums;
 namespace KasaWGrupie.Tests;
 
 [TestClass]
-public class UpdateExpenseTests
+public class UpdateExpenseHandlerTests
 {
 #pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
 	private Mock<IRepositoryBase<User>> _userRepositoryMock;
@@ -42,7 +42,7 @@ public class UpdateExpenseTests
 	}
 
 	[TestMethod]
-	public async Task Handle_ShouldReturnSuccess_WhenExpenseIsUpdatedSuccessfully()
+	public async Task Handler_ShouldReturnSuccess_WhenExpenseIsUpdatedSuccessfully()
 	{
 		// Arrange
 		var payer = UserFactory.Create();
@@ -132,7 +132,7 @@ public class UpdateExpenseTests
 	}
 
 	[TestMethod]
-	public async Task Handle_ShouldReturnInvalid_WhenParticipantDoesNotExist()
+	public async Task Handler_ShouldReturnInvalid_WhenParticipantDoesNotExist()
 	{
 		// Arrange
 		var payer = UserFactory.Create();

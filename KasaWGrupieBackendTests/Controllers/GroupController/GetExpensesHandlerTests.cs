@@ -91,13 +91,13 @@ public class GetExpensesHandlerTests
             new()
             {
                 ExpenseSplit = expenseSplit2,
-                Amount = 25,
+                Percentage = 25,
                 OwingPerson = member1 
             },
             new()
             {
                 ExpenseSplit = expenseSplit2,
-                Amount = 75,
+                Percentage = 75,
                 OwingPerson = member2 
             }
         };
@@ -189,13 +189,13 @@ public class GetExpensesHandlerTests
             new()
             {
                 ExpenseSplit = expenseSplit2,
-                Amount = 25,
+                Percentage = 25,
                 OwingPerson = member1 
             },
             new()
             {
                 ExpenseSplit = expenseSplit2,
-                Amount = 75,
+                Percentage = 75,
                 OwingPerson = member2 
             }
         };
