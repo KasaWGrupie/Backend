@@ -4,7 +4,7 @@ using FluentValidation;
 using FluentValidation.Results;
 using KasaWGrupie.API.DTOs.FriendRequest;
 using KasaWGrupie.API.Requests.FriendRequests.Commands;
-using KasaWGrupie.API.Requests.FriendRequests.sHandlers;
+using KasaWGrupie.API.Requests.FriendRequests.Handlers;
 using KasaWGrupie.Core.Entities;
 using KasaWGrupie.Core.Enums;
 using Ardalis.Specification;

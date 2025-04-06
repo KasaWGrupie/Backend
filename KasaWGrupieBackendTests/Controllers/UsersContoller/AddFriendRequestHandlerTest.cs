@@ -47,11 +47,11 @@ public class AddFriendRequestHandlerTests
 		var receiver = UserFactory.Create(2, "receiver@example.com");
 
 		_validatorMock
-			.Setup(v => v.Validate(dto))
-			.Returns(new ValidationResult());
+			.Setup(v => v.ValidateAsync(dto, It.IsAny<CancellationToken>()))
+			.ReturnsAsync(new ValidationResult());
 
 		_userRepoMock
-			.SetupSequence(r => r.FirstOrDefaultAsync(It.IsAny<ISpecification<User>>(), It.IsAny<CancellationToken>()))
+			.SetupSequence(r => r.GetByIdAsync(It.IsAny<int>(), It.IsAny<CancellationToken>()))
 			.ReturnsAsync(sender)
 			.ReturnsAsync(receiver);
 
@@ -78,8 +78,8 @@ public class AddFriendRequestHandlerTests
 		};
 
 		_validatorMock
-			.Setup(v => v.Validate(dto))
-			.Returns(new ValidationResult(failures));
+			.Setup(v => v.ValidateAsync(dto, It.IsAny<CancellationToken>()))
+			.ReturnsAsync(new ValidationResult(failures));
 
 		// Act
 		var result = await _handler.Handle(command, default);
@@ -97,8 +97,8 @@ public class AddFriendRequestHandlerTests
 		var command = new AddFriendRequestCommand(dto);
 
 		_validatorMock
-			.Setup(v => v.Validate(dto))
-			.Returns(new ValidationResult());
+			.Setup(v => v.ValidateAsync(dto, It.IsAny<CancellationToken>()))
+			.ReturnsAsync(new ValidationResult());
 
 		_userRepoMock
 			.SetupSequence(r => r.FirstOrDefaultAsync(It.IsAny<ISpecification<User>>(), It.IsAny<CancellationToken>()))
