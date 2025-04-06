@@ -12,12 +12,9 @@ public class UpdateMoneyTransferDtoValidator : AbstractValidator<UpdateMoneyTran
             .GreaterThan(0).WithMessage("TransferId is required");
         
         RuleFor(x => x.Status)
-            .Must(BeAValidStatus).WithMessage("Invalid status");
+            .NotEmpty().WithMessage("Status is required")
+            .IsEnumName(typeof(MoneyTransferStatus), caseSensitive: false)
+            .WithMessage("Invalid status");
     }
 
-    private bool BeAValidStatus(string status)
-    {
-        var validNames = Enum.GetNames<MoneyTransferStatus>().Select(it => it.ToLower()).ToList();
-        return validNames.Contains(status);
-    }
 }

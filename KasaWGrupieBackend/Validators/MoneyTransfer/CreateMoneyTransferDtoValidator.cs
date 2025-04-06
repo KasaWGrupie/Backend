@@ -13,7 +13,11 @@ public class CreateMoneyTransferDtoValidator : AbstractValidator<CreateMoneyTran
         
         RuleFor(x => x.RecipientId)
             .GreaterThan(0).WithMessage("RecipientId is required");
-         
+        
+        RuleFor(x => x)
+            .Must(x => x.SenderId != x.RecipientId)
+            .WithMessage("SenderId and RecipientId must be different");
+        
         RuleFor(x => x.GroupId)
             .GreaterThan(0).WithMessage("GroupId is required");
         
