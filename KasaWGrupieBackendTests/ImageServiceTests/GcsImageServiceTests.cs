@@ -26,7 +26,7 @@ namespace KasaWGrupie.Tests.ImageServiceTests
             _storageClientMock = new Mock<StorageClient>();
 
             _configurationMock = new Mock<IConfiguration>();
-            _configurationMock.Setup(c => c["GoogleCloud:BucketName"]).Returns("test-bucket");
+            _configurationMock.Setup(c => c["GCP_BUCKET_NAME"]).Returns("test-bucket");
             _imageService = new GcsImageService(_configurationMock.Object, _storageClientMock.Object);
         }
 
@@ -44,9 +44,7 @@ namespace KasaWGrupie.Tests.ImageServiceTests
             fileMock.Setup(f => f.ContentType).Returns("image/jpeg");
            
 
-           
-
-
+          
 
             _storageClientMock
     .Setup(client => client.UploadObjectAsync(
@@ -57,7 +55,7 @@ namespace KasaWGrupie.Tests.ImageServiceTests
         It.IsAny<UploadObjectOptions>(),
         It.IsAny<CancellationToken>(),
         It.IsAny<IProgress<Google.Apis.Upload.IUploadProgress>>()))
-    .ReturnsAsync(new Google.Apis.Storage.v1.Data.Object { Name = "fake-image.jpg" }); // ✅ Ensure correct return type
+    .ReturnsAsync(new Google.Apis.Storage.v1.Data.Object { Name = "fake-image.jpg" }); //Ensure correct return type
 
 
 

@@ -19,7 +19,7 @@ namespace KasaWGrupie.Infrastructure.ImageService
         public GcsImageService(IConfiguration configuration, StorageClient storageClient)
         {
             _storageClient = storageClient ?? throw new ArgumentNullException(nameof(storageClient));
-            _bucketName = configuration["GoogleCloud:BucketName"]
+            _bucketName = configuration["GCP_BUCKET_NAME"]
          ?? throw new ArgumentNullException(nameof(_bucketName), "BucketName is required");
             
         }

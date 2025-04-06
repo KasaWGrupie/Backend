@@ -20,19 +20,16 @@ namespace KasaWGrupieBackendTests.IntegrationTests
         [TestInitialize]
         public void Setup()
         {
-            // Load secrets configuration
             var configuration = new ConfigurationBuilder()
-                .AddUserSecrets<GcsImageServiceTests>()
+                .AddEnvironmentVariables()
                 .Build();
-            // Debugging output
-            Console.WriteLine("GoogleCloud:BucketName = " + configuration["GoogleCloud:BucketName"]);
-            Console.WriteLine("GoogleCloud:CredentialsPath = " + configuration["GoogleCloud:CredentialsPath"]);
+        
 
-
-            _bucketName = configuration["GoogleCloud:BucketName"]
+            
+            _bucketName = configuration["GCP_BUCKET_NAME"]
                 ?? throw new InvalidOperationException("BucketName is missing in secrets.");
 
-            var credentialsPath = configuration["GoogleCloud:CredentialsPath"]
+            var credentialsPath = configuration["GCP_CREDENTIALS_PATH"]
                 ?? throw new InvalidOperationException("CredentialsPath is missing in secrets.");
 
             // Authenticate and create StorageClient
