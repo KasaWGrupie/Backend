@@ -9,5 +9,5 @@ public class Expense : EntityBase
 	public int PayingPersonId { get; set; }
 	public required User PayingPerson { get; set; }
 	public int ExpenseSplitId { get; set; }
-	public required ExpenseSplit ExpenseSplit { get; set; }
+	public ExpenseSplit ExpenseSplit { get; set; }
 }
