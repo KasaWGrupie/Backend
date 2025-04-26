@@ -1,6 +1,6 @@
 using FluentValidation;
 using KasaWGrupie.API.DTOs.MoneyTransfer;
-using KasaWGrupieBackend.Controllers;
+using KasaWGrupie.Core.Enums;
 
 namespace KasaWGrupie.API.Validators.MoneyTransfer;
 
