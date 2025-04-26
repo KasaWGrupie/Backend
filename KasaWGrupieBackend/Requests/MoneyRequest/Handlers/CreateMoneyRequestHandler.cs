@@ -1,0 +1,84 @@
+using Ardalis.Result;
+using Ardalis.Specification;
+using FluentValidation;
+using KasaWGrupie.API.DTOs.MoneyRequest;
+using KasaWGrupie.API.Requests.MoneyRequest.Commands;
+using KasaWGrupie.Core.Entities;
+using KasaWGrupie.Core.Enums;
+using MediatR;
+
+namespace KasaWGrupie.API.Requests.MoneyRequest.Handlers;
+
+public class CreateMoneyRequestHandler : IRequestHandler<CreateMoneyRequestCommand, Result>
+{
+    private readonly IRepositoryBase<User> _userRepository;
+    private readonly IRepositoryBase<Group> _groupRepository;
+    private readonly IRepositoryBase<PayRequest> _payRequestRepository;
+    private readonly IValidator<CreateMoneyRequestDto> _validator;
+
+    public CreateMoneyRequestHandler(IRepositoryBase<User> userRepository, IRepositoryBase<Group> groupRepository, IRepositoryBase<PayRequest> payRequestRepository, IValidator<CreateMoneyRequestDto> validator)
+    {
+        _userRepository = userRepository;
+        _groupRepository = groupRepository;
+        _payRequestRepository = payRequestRepository;
+        _validator = validator;
+    }
+
+    public async Task<Result> Handle(CreateMoneyRequestCommand request, CancellationToken cancellationToken)
+    {
+        var dto = request.CreateMoneyRequestDto;
+        var validationResult = await _validator.ValidateAsync(dto, cancellationToken);
+        
+        if (!validationResult.IsValid)
+        {
+            return Result.Invalid(validationResult.Errors.Select(e => new ValidationError(e.PropertyName, e.ErrorMessage)));
+        }
+        
+        var sender = await _userRepository.GetByIdAsync(dto.SenderId, cancellationToken);
+        if (sender == null)
+        {
+            return Result.Invalid(new ValidationError("SenderId", "Sender user not found"));
+        }
+        
+        var receiver = await _userRepository.GetByIdAsync(dto.ReceiverId, cancellationToken);
+        if (receiver == null)
+        {
+            return Result.Invalid(new ValidationError("ReceiverId", "Receiver user not found"));
+        }
+        
+        var groups = new List<Group>();
+        foreach (var groupId in dto.GroupIds)
+        {
+            var group = await _groupRepository.GetByIdAsync(groupId, cancellationToken);
+            if (group == null)
+            {
+                return Result.Invalid(new ValidationError("GroupId", "Group not found"));
+            }
+
+            if (!group.Members.Contains(sender))
+            {
+                return Result.Invalid(new ValidationError("SenderId", $"Sender user is not a member of the group {groupId}"));
+            }
+            if (!group.Members.Contains(receiver))
+            {
+                return Result.Invalid(new ValidationError("ReceiverId", $"Receiver user is not a member of the group {groupId}"));
+            }
+            
+            groups.Add(group);
+        }
+
+        var payRequest = new PayRequest
+        {
+            Sender = sender,
+            Receiver = receiver,
+            GroupsToSettle = groups,
+            //TODO amount
+            PayRequestStatus = PayRequestStatus.Pending
+        };
+        
+        await _payRequestRepository.AddAsync(payRequest, cancellationToken);
+        await _payRequestRepository.SaveChangesAsync(cancellationToken);
+        
+        return Result.Success();
+    }
+}
