@@ -13,7 +13,7 @@ using System.Collections.Generic;
 using System.Linq;
 using KasaWGrupie.Core.Enums;
 
-namespace KasaWGrupie.Tests.Handlers.Users
+namespace KasaWGrupie.Tests.Controllers.UserControllers
 {
 	[TestClass]
 	public class DeleteUserHandlerTests

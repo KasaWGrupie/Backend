@@ -60,6 +60,22 @@ public class UsersController(
 		return await mediator.Send(command);
 	}
 
+	[HttpPut("name/{id}")]
+	[TranslateResultToActionResult]
+	public async Task<Result> UpdateUserName(int id, [FromBody] UpdateUserNameDto updateUserNameDto)
+	{
+		var command = new UpdateUserNameCommand(id, updateUserNameDto);
+		return await mediator.Send(command);
+	}
+
+	[HttpPut("profilePicture/{id}")]
+	[TranslateResultToActionResult]
+	public async Task<Result> UpdateUserProfilePicture(int id, [FromForm] UpdateUserProfilePictureDto updateUserProfilePictureDto)
+	{
+		var command = new UpdateUserProfilePictureCommand(id, updateUserProfilePictureDto);
+		return await mediator.Send(command);
+	}
+
 	[HttpGet("user-groups")]
 	[TranslateResultToActionResult]
 	public async Task<Result<List<GetUserGroupsDto>>> GetUserGroups([FromQuery] string email)

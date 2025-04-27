@@ -45,6 +45,7 @@ public class DeleteUserHandler : IRequestHandler<DeleteUserCommand, Result>
 		}
 
 		await _userRepository.DeleteAsync(user, cancellationToken);
+		await _userRepository.SaveChangesAsync(cancellationToken);
 
 		return Result.Success();
 	}

@@ -7,7 +7,7 @@ using KasaWGrupie.API.Requests.Users.Commands;
 using KasaWGrupie.API.Requests.Users.Handlers;
 using Ardalis.Specification;
 
-namespace KasaWGrupie.Tests.Handlers.Users;
+namespace KasaWGrupie.Tests.Controllers.UserControllers;
 
 [TestClass]
 public class GetUserByEmailHandlerTests
