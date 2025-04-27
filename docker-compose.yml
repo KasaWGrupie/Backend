@@ -23,3 +23,20 @@ services:
         - ./.containers/kasawgrupie-db:/var/lib/postgresql/data
     ports:
         - 5432:5432
+
+
+  tests:
+    image: mcr.microsoft.com/dotnet/sdk:8.0
+    working_dir: /src/KasaWGrupieBackendTests
+    volumes:
+      - ./:/src
+    env_file:
+      - .env
+    command: bash -c "
+      dotnet restore KasaWgrupie.Tests.csproj &&
+      dotnet test    KasaWgrupie.Tests.csproj \
+        --no-build \
+        --filter \"FullyQualifiedName~ReceiptProcessorTests\" \
+        --verbosity detailed"
+    
+    
