@@ -84,6 +84,14 @@ public class UsersController(
 		return await mediator.Send(command);
 	}
 
+	[HttpGet("friends/{userId}")]
+	[TranslateResultToActionResult]
+	public async Task<Result<ICollection<GetUserDto>>> GetFriends(int userId)
+	{
+		var command = new GetFriendsCommand(userId);
+		return await mediator.Send(command);
+	}
+
 	[HttpPost("friendRequests")]
 	[TranslateResultToActionResult]
 	public async Task<Result> AddFriendRequest([FromBody] AddFriendRequestDto addFriendRequestDto)
