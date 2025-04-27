@@ -41,21 +41,20 @@ public class GetExpensesHandler : IRequestHandler<GetExpensesCommand, Result<ICo
         
         var expensesDtos = expenses.Select(expense =>
         {
-            // TODO zastąpić `default` wartościami z encji jak zostaną dodane
             var participants = expense.ExpenseSplit.SplitRecords.Select(record => new ExpenseParticipantDto(
                 record.OwingPersonId,
-                default,
+                record.OwingPerson.Name,
                 record.Amount
             )).ToList();
             
             return new GetExpensesDto(
                 expense.Id,
-                default,
-                default,
+                expense.PayingPersonId,
+                expense.Name,
                 expense.PictureUrl,
-                default,
+                expense.Description,
                 expense.Amount,
-                default,
+                expense.Date,
                 participants,
                 expense.ExpenseSplit.Type.ToString()
             );

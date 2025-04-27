@@ -12,6 +12,17 @@ namespace KasaWGrupie.Persistence.Configurations
 
 			builder.Property(e => e.GroupId)
 				.IsRequired();
+			
+			builder.Property(e => e.Name)
+				.IsRequired()
+				.HasMaxLength(ConfigurationConstants.ExpenseConstants.NameMaxLength);
+			
+			builder.Property(e => e.Description)
+				.IsRequired()
+				.HasMaxLength(ConfigurationConstants.ExpenseConstants.DescriptionMaxLength);
+			
+			builder.Property(e => e.Date)
+				.IsRequired();
 
 			builder.Property(e => e.PictureUrl)
 				.IsRequired()

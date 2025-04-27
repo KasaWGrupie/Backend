@@ -78,11 +78,20 @@ public class UpdateExpenseHandler : IRequestHandler<UpdateExpenseCommand, Result
 		if (payingPerson != null)
 			expense.PayingPerson = payingPerson;
 		
+		if (dto.ExpenseName != null)
+			expense.Name = dto.ExpenseName;
+		
 		if (dto.ExpensePictureUri != null)
 			expense.PictureUrl = dto.ExpensePictureUri;
 		
+		if (dto.Description != null)
+			expense.Description = dto.Description;
+		
 		if (dto.Amount is {} amount)
 			expense.Amount = amount;
+		
+		if (dto.Date is {} date)
+			expense.Date = date;
 		
 		var expenseSplit = expense.ExpenseSplit;
 		

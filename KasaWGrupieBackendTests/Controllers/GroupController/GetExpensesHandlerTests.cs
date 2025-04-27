@@ -59,6 +59,8 @@ public class GetExpensesHandlerTests
             Amount = 100,
             Group = group,
             PayingPerson = admin,
+            Name = "Expense 1",
+            Description = "Expense 1 description",
             PictureUrl = "expense.png"
         };
         var expenseSplit1 = expense1.ExpenseSplit = new ExpenseSplit
@@ -80,6 +82,8 @@ public class GetExpensesHandlerTests
             Amount = 350,
             Group = group,
             PayingPerson = admin,
+            Name = "Expense 2",
+            Description = "Expense 2 description",
             PictureUrl = "expense2.png"
         };
         var expenseSplit2 = expense2.ExpenseSplit = new ExpenseSplit
@@ -157,6 +161,8 @@ public class GetExpensesHandlerTests
             Amount = 100,
             Group = group,
             PayingPerson = admin,
+            Name = "Expense 1",
+            Description = "Expense 1 description",
             PictureUrl = "expense.png"
         };
         var expenseSplit1 = expense1.ExpenseSplit = new ExpenseSplit
@@ -178,6 +184,8 @@ public class GetExpensesHandlerTests
             Amount = 350,
             Group = group,
             PayingPerson = admin,
+            Name = "Expense 2",
+            Description = "Expense 2 description",
             PictureUrl = "expense2.png"
         };
         var expenseSplit2 = expense2.ExpenseSplit = new ExpenseSplit

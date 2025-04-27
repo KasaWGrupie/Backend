@@ -68,6 +68,9 @@ public class CreateExpenseHandler : IRequestHandler<CreateExpenseCommand, Result
 		var expense = new Expense
 		{
 			Group = group,
+			Name = dto.ExpenseName,
+			Description = dto.Description,
+			Date = dto.Date,
 			PayingPerson = payingPerson,
 			PictureUrl = dto.ExpensePictureUri,
 			Amount = dto.Amount

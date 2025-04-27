@@ -68,6 +68,8 @@ public class UpdateExpenseHandlerTests
 			Amount = 100,
 			Group = group,
 			PayingPerson = payer,
+			Name = "old expense",
+			Description = "old expense description",
 			PictureUrl = "old_expense.png"
 		};
 		var expenseSplit = expense.ExpenseSplit = new ExpenseSplit
@@ -125,6 +127,8 @@ public class UpdateExpenseHandlerTests
 		_expenseSplitRecordRepositoryMock.Verify(repo => repo.AddRangeAsync(It.IsAny<ICollection<ExpenseSplitRecord>>(), It.IsAny<CancellationToken>()), Times.Once);
 		_expenseSplitRecordRepositoryMock.Verify(repo => repo.DeleteRangeAsync(It.IsAny<ICollection<ExpenseSplitRecord>>(), It.IsAny<CancellationToken>()), Times.Once);
 		expense.PayingPerson.Should().Be(payer);
+		expense.Name.Should().Be("updated expense");
+		expense.Description.Should().Be("new-expense-description");
 		expense.PictureUrl.Should().Be("new_expense.png");
 		expense.Amount.Should().Be(200);
 		expenseSplit.Type.Should().Be(ExpenseSplitType.ByPercent);
@@ -157,6 +161,8 @@ public class UpdateExpenseHandlerTests
 			Amount = 100,
 			Group = group,
 			PayingPerson = payer,
+			Name = "old expense",
+			Description = "old expense description",
 			PictureUrl = "old_expense.png"
 		};
 		var expenseSplit = expense.ExpenseSplit = new ExpenseSplit
