@@ -4,7 +4,7 @@ public class User : EntityBase
 {
 	public required string Name { get; set; }
 	public required string Email { get; set; }
-	public required string ProfilePictureUrl { get; set; }
+	public string ProfilePictureUrl { get; set; } = string.Empty;
 	public ICollection<User> Friends { get; set; } = [];
 	public ICollection<Group> Groups { get; set; } = [];
 	public ICollection<Group> AdministratedGroups { get; set; } = [];

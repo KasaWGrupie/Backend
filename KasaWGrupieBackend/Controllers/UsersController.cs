@@ -36,11 +36,27 @@ public class UsersController(
 		return result;
 	}
 
-	[HttpGet("/{userEmail}")]
+	[HttpGet("email/{userEmail}")]
 	[TranslateResultToActionResult]
-	public async Task<Result<GetUserDto>> GetUser(string userEmail)
+	public async Task<Result<GetUserDto>> GetUserByEmail(string userEmail)
 	{
 		var command = new GetUserByEmailCommand(userEmail);
+		return await mediator.Send(command);
+	}
+
+	[HttpGet("{id}")]
+	[TranslateResultToActionResult]
+	public async Task<Result<GetUserDto>> GetUserById(int id)
+	{
+		var command = new GetUserByIdCommand(id);
+		return await mediator.Send(command);
+	}
+
+	[HttpDelete("{id}")]
+	[TranslateResultToActionResult]
+	public async Task<Result> DeleteUser(int id)
+	{
+		var command = new DeleteUserCommand(id);
 		return await mediator.Send(command);
 	}
 
