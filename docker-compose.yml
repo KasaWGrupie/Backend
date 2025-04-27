@@ -7,6 +7,9 @@ services:
       dockerfile: KasaWGrupieBackend/Dockerfile
     env_file:
         - .env
+    environment:
+        - AzureDocumentIntelligence__Endpoint=${AZURE_DOC_INTEL_ENDPOINT}
+        - AzureDocumentIntelligence__ApiKey=${AZURE_DOC_INTEL_KEY}
     depends_on: 
         - kasawgrupie.database
   kasawgrupie.database:

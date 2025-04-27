@@ -34,7 +34,8 @@ public static class DependencyInjection
 
 		services.AddTransient<IAuthService, AuthService>();
 		services.AddTransient<IImageService, DummyImageService>();
-        services.AddSingleton<IReceiptProcessor, ReceiptProcessor>();
+        services.Configure<DocumentIntelligenceOptions>(configuration.GetSection("AzureDocumentIntelligence"));
+        services.AddSingleton<IReceiptProcessor, AzureReceiptProcessor>();
         return services;
 	}
 

@@ -1,94 +1,94 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.IO;
+using Microsoft.Extensions.Options;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using KasaWGrupie.Infrastructure;
 using KasaWGrupie.Infrastructure.ReceiptProcessor;
-using System.Globalization;
+using Azure;
+using System.Text.Json;
 
-namespace KasaWGrupie.Tests.ReceiptProcessingTests
+namespace KasaWGrupie.Tests
 {
     [TestClass]
     public class ReceiptProcessorTests
     {
+        private AzureReceiptProcessor _processor;
+        public TestContext TestContext { get; set; }
+
         [TestInitialize]
         public void Setup()
         {
-            // If needed, you can set the GOOGLE_APPLICATION_CREDENTIALS environment variable here.
-            Environment.SetEnvironmentVariable("GOOGLE_APPLICATION_CREDENTIALS", @"C:\keys\key.json");
+            DotNetEnv.Env.Load();
+            var endpoint = Environment.GetEnvironmentVariable("AZURE_DOC_INTEL_ENDPOINT");
+            var apiKey = Environment.GetEnvironmentVariable("AZURE_DOC_INTEL_KEY");
 
-        }
+            if (string.IsNullOrEmpty(endpoint) || string.IsNullOrEmpty(apiKey))
+                Assert.Inconclusive("Please set AZURE_DOC_INTEL_ENDPOINT and AZURE_DOC_INTEL_KEY.");
 
-        [TestMethod]
-        public void ProcessReceipt_WithValidImage_ReturnsExtractedText()
-        {
-            // Arrange: Build the file path to the test image.
-            // TestContext.TestDir represents the working directory of the test; adjust accordingly.
-           
-            string imagePath = @"C:\Users\adamf\Desktop\student_debil\semestr6\io\test_paragon.jfif";
-
-            if (!File.Exists(imagePath))
+            var opts = Options.Create(new DocumentIntelligenceOptions
             {
-                Assert.Fail("Test image was not found. Ensure that 'sampleReceipt.jpg' is in the Assets folder and copied to the output directory.");
-            }
+                Endpoint = endpoint,
+                ApiKey = apiKey
+            });
 
-            IReceiptProcessor receiptProcessor = new ReceiptProcessor();
-
-            // Act: Process the receipt image.
-            string extractedText = receiptProcessor.ProcessReceipt(imagePath);
-
-            // Output some details for inspection (optional).
-            Console.WriteLine("Extracted Text: " + extractedText);
-
-            // Assert: Check that some text was extracted.
-            Assert.IsFalse(string.IsNullOrEmpty(extractedText), "Extracted text should not be null or empty.");
+            _processor = new AzureReceiptProcessor(opts);
         }
 
         [TestMethod]
-        public void ParseReceiptText_ReturnsExpectedItemsAndTotal()
+        public void AnalyzeAsync_WithValidReceipt_ShouldReturnItemsAndTotal()
         {
-            string imagePath = @"C:\Users\adamf\Desktop\student_debil\semestr6\io\test_paragon.jfif";
-            IReceiptProcessor receiptProcessor = new ReceiptProcessor();
-
-            // Act: Process the receipt image.
-            string extractedText = receiptProcessor.ProcessReceipt(imagePath);
-            // In this sample text our parser is expected to pick up three items:
-            // "PIWO 4-PAK ZATECK-A 1 x 13.50" with price 13,600,
-            // "PINO ZATECKY-Ax 3,40" with price 3,40,
-            // and "PAPIEROSY WINS 8-0 113.99" with price 13,998.
-            // It should also detect the total "34,39".
-            // Note: The actual numbers here are strings using the comma as a decimal separator.  
-            // Adjust expected values as necessary based on your parsing rules.
-
             // Arrange
-            ReceiptParser parser = new ReceiptParser();
+            string path = Path.Combine(AppContext.BaseDirectory, "TestData", "receipt-sample.jpg");
+            Assert.IsTrue(File.Exists(path), $"Missing test data: {path}");
+            using var stream = File.OpenRead(path);
 
             // Act
-            var (items, total) = parser.ParseReceiptText(extractedText);
+            var task = _processor.AnalyzeAsync(stream);
+            task.Wait();
+            ReceiptParseResult result = task.Result;
 
-            // Debug: Write results to TestContext for inspection.
-            TestContext.WriteLine("Parsed Items:");
-            foreach (var item in items)
+            // Log the full parsed object as JSON
+            string json = JsonSerializer.Serialize(result, new JsonSerializerOptions
             {
-                TestContext.WriteLine($"Description: {item.Description}, Price: {item.Price.ToString("N2", new CultureInfo("pl-PL"))}");
+                WriteIndented = true
+            });
+            TestContext.WriteLine("=== Parsed Receipt Output ===");
+            TestContext.WriteLine(json);
+
+            // Also log key fields individually
+            TestContext.WriteLine($"MerchantName: {result.MerchantName}");
+            TestContext.WriteLine($"TransactionDate: {result.TransactionDate}");
+            TestContext.WriteLine($"Total: {result.Total}");
+            foreach (var item in result.Items)
+            {
+                TestContext.WriteLine($"  Item: {item.Description}, qty={item.Quantity}, price={item.Price}");
             }
-            TestContext.WriteLine("Total: " + total.ToString("N2", new CultureInfo("pl-PL")));
 
-            // Assert: Verify that we at least found some items and the total is correctly parsed.
-            // (Adjust the expected number/count and totals depending on your specific text and parser logic.)
-            Assert.IsTrue(items.Count >= 1, "Should detect at least 3 items.");
-            Assert.AreEqual(34.39m, total, "Total amount should be 34,39 (in pl-PL decimal format).");
 
-            // You may also add further assertions checking individual items.
-            var firstItem = items.FirstOrDefault();
-            Assert.IsNotNull(firstItem, "At least one item should be present.");
-            Assert.IsTrue(firstItem.Description.Contains("PIWO"), "First item should contain the product name 'PIWO'.");
+            // Assert
+            Assert.IsNotNull(result);
+            Assert.IsFalse(string.IsNullOrWhiteSpace(result.MerchantName), "MerchantName expected");
+            Assert.IsTrue(result.TransactionDate.HasValue, "TransactionDate expected");
+            Assert.IsTrue(result.Total > 0, "Total should be positive");
+            CollectionAssert.AllItemsAreNotNull(result.Items);
+            Assert.IsTrue(result.Items.Count > 0, "Expected at least one line item");
+            foreach (var item in result.Items)
+            {
+                Assert.IsFalse(string.IsNullOrWhiteSpace(item.Description), "Item description expected");
+                Assert.IsTrue(item.Price > 0, "Item price should be positive");
+            }
         }
 
-        // For MSTest, you need a TestContext property if you refer to it.
-        public TestContext TestContext { get; set; }
+        [TestMethod]
+        public async Task AnalyzeAsync_WithInvalidStream_ShouldThrowRequestFailedException()
+        {
+            // Arrange: random bytes that aren’t a receipt
+            using var badStream = new MemoryStream(new byte[] { 0, 1, 2 });
+
+            // Act & Assert
+            await Assert.ThrowsExceptionAsync<RequestFailedException>(
+                () => _processor.AnalyzeAsync(badStream),
+                "Invalid content should trigger a RequestFailedException");
+        }
     }
 }
-
-

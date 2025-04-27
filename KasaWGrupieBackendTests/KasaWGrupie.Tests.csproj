@@ -24,4 +24,17 @@
 		<Using Include="Microsoft.VisualStudio.TestTools.UnitTesting" />
 	</ItemGroup>
 
+	<ItemGroup>
+		<None Include="TestData\receipt-sample.jpg">
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</None>
+	</ItemGroup>
+
+	<ItemGroup>
+		<None Include="..\.env">
+			<Link>.env</Link>
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</None>
+	</ItemGroup>
+
 </Project>
