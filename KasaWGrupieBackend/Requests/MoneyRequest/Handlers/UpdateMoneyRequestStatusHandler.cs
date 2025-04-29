@@ -40,14 +40,9 @@ public class UpdateMoneyRequestStatusHandler : IRequestHandler<UpdateMoneyReques
         {
             return Result.Invalid(new ValidationError("Status", "Invalid status value"));
         }
-
-        if (payRequest.PayRequestStatus == PayRequestStatus.Closed)
-        {
-            return Result.Invalid(new ValidationError("Status", "Cannot change status of a closed pay request"));
-        }
         
         payRequest.PayRequestStatus = status;
-        if (status == PayRequestStatus.Closed)
+        if (status != PayRequestStatus.Pending)
         {
             payRequest.EndDate = DateTime.Now;
         }

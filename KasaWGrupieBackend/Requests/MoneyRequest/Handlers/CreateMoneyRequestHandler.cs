@@ -37,13 +37,13 @@ public class CreateMoneyRequestHandler : IRequestHandler<CreateMoneyRequestComma
         var sender = await _userRepository.GetByIdAsync(dto.SenderId, cancellationToken);
         if (sender == null)
         {
-            return Result.Invalid(new ValidationError("SenderId", "Sender user not found"));
+            return Result.NotFound("Sender user not found");
         }
         
         var receiver = await _userRepository.GetByIdAsync(dto.ReceiverId, cancellationToken);
         if (receiver == null)
         {
-            return Result.Invalid(new ValidationError("ReceiverId", "Receiver user not found"));
+            return Result.NotFound("Receiver user not found");
         }
         
         var groups = new List<Group>();
@@ -52,7 +52,7 @@ public class CreateMoneyRequestHandler : IRequestHandler<CreateMoneyRequestComma
             var group = await _groupRepository.GetByIdAsync(groupId, cancellationToken);
             if (group == null)
             {
-                return Result.Invalid(new ValidationError("GroupId", "Group not found"));
+                return Result.NotFound("Group not found");
             }
 
             if (!group.Members.Contains(sender))

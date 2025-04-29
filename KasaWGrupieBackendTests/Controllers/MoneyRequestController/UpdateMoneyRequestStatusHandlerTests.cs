@@ -67,13 +67,13 @@ public class UpdateMoneyRequestStatusHandlerTests
     }
 
     [TestMethod]
-    public async Task Handle_ShouldSetEndDate_WhenStatusChangedToClosed()
+    public async Task Handle_ShouldSetEndDate_WhenStatusChangedToPaid()
     {
         // Arrange
         var sender = UserFactory.Create();
         var receiver = UserFactory.Create(id: 2, email: "receiver@example.com");
         
-        var dto = new UpdateMoneyRequestStatusDto(1, "Closed");
+        var dto = new UpdateMoneyRequestStatusDto(1, "Paid");
         var command = new UpdateMoneyRequestStatusCommand(dto);
         var payRequest = new PayRequest
         {
@@ -94,7 +94,7 @@ public class UpdateMoneyRequestStatusHandlerTests
 
         // Assert
         result.IsSuccess.Should().BeTrue();
-        payRequest.PayRequestStatus.Should().Be(PayRequestStatus.Closed);
+        payRequest.PayRequestStatus.Should().Be(PayRequestStatus.Paid);
         payRequest.EndDate.Should().NotBeNull();
         payRequest.EndDate.Value.Date.Should().Be(DateTime.Now.Date);
     }
@@ -141,34 +141,34 @@ public class UpdateMoneyRequestStatusHandlerTests
     }
 
 
-    [TestMethod]
-    public async Task Handle_ShouldReturnInvalid_WhenTryingToUpdateClosedRequest()
-    {
-        // Arrange
-        var sender = UserFactory.Create();
-        var receiver = UserFactory.Create(id: 2, email: "receiver@example.com");
-        
-        var dto = new UpdateMoneyRequestStatusDto(1, "Paid");
-        var command = new UpdateMoneyRequestStatusCommand(dto);
-        var payRequest = new PayRequest
-        {
-            Id = 1,
-            Sender = sender,
-            Receiver = receiver,
-            PayRequestStatus = PayRequestStatus.Closed
-        };
-
-        _validatorMock.Setup(v => v.ValidateAsync(It.IsAny<UpdateMoneyRequestStatusDto>(), It.IsAny<CancellationToken>()))
-            .ReturnsAsync(new FluentValidation.Results.ValidationResult());
-
-        _payRequestRepositoryMock.Setup(r => r.GetByIdAsync(dto.RequestId, It.IsAny<CancellationToken>()))
-            .ReturnsAsync(payRequest);
-
-        // Act
-        var result = await _handler.Handle(command, CancellationToken.None);
-
-        // Assert
-        result.IsSuccess.Should().BeFalse();
-        result.Status.Should().Be(ResultStatus.Invalid);
-    }
+    // [TestMethod]
+    // public async Task Handle_ShouldReturnInvalid_WhenTryingToUpdateClosedRequest()
+    // {
+    //     // Arrange
+    //     var sender = UserFactory.Create();
+    //     var receiver = UserFactory.Create(id: 2, email: "receiver@example.com");
+    //     
+    //     var dto = new UpdateMoneyRequestStatusDto(1, "Paid");
+    //     var command = new UpdateMoneyRequestStatusCommand(dto);
+    //     var payRequest = new PayRequest
+    //     {
+    //         Id = 1,
+    //         Sender = sender,
+    //         Receiver = receiver,
+    //         PayRequestStatus = PayRequestStatus.Closed
+    //     };
+    //
+    //     _validatorMock.Setup(v => v.ValidateAsync(It.IsAny<UpdateMoneyRequestStatusDto>(), It.IsAny<CancellationToken>()))
+    //         .ReturnsAsync(new FluentValidation.Results.ValidationResult());
+    //
+    //     _payRequestRepositoryMock.Setup(r => r.GetByIdAsync(dto.RequestId, It.IsAny<CancellationToken>()))
+    //         .ReturnsAsync(payRequest);
+    //
+    //     // Act
+    //     var result = await _handler.Handle(command, CancellationToken.None);
+    //
+    //     // Assert
+    //     result.IsSuccess.Should().BeFalse();
+    //     result.Status.Should().Be(ResultStatus.Invalid);
+    // }
 }

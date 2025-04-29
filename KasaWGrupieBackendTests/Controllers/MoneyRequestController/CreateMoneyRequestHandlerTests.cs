@@ -109,7 +109,7 @@ public class CreateMoneyRequestHandlerTests
     }
 
     [TestMethod]
-    public async Task Handle_ShouldReturnInvalid_WhenSenderNotFound()
+    public async Task Handle_ShouldReturnNotFound_WhenSenderNotFound()
     {
         // Arrange
         var dto = new CreateMoneyRequestDto(
@@ -130,11 +130,11 @@ public class CreateMoneyRequestHandlerTests
 
         // Assert
         result.IsSuccess.Should().BeFalse();
-        result.Status.Should().Be(ResultStatus.Invalid);
+        result.Status.Should().Be(ResultStatus.NotFound);
     }
 
     [TestMethod]
-    public async Task Handle_ShouldReturnInvalid_WhenReceiverNotFound()
+    public async Task Handle_ShouldReturnNotFound_WhenReceiverNotFound()
     {
         // Arrange
         var sender = UserFactory.Create();
@@ -158,11 +158,11 @@ public class CreateMoneyRequestHandlerTests
 
         // Assert
         result.IsSuccess.Should().BeFalse();
-        result.Status.Should().Be(ResultStatus.Invalid);
+        result.Status.Should().Be(ResultStatus.NotFound);
     }
 
     [TestMethod]
-    public async Task Handle_ShouldReturnInvalid_WhenGroupNotFound()
+    public async Task Handle_ShouldReturnNotFound_WhenGroupNotFound()
     {
         // Arrange
         var sender = UserFactory.Create();
@@ -190,7 +190,7 @@ public class CreateMoneyRequestHandlerTests
 
         // Assert
         result.IsSuccess.Should().BeFalse();
-        result.Status.Should().Be(ResultStatus.Invalid);
+        result.Status.Should().Be(ResultStatus.NotFound);
     }
 
     [TestMethod]

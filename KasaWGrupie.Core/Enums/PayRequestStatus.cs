@@ -5,5 +5,5 @@ public enum PayRequestStatus
 	Pending,
 	Cancelled,
 	Paid,
-	Closed
+	Rejected
 }
