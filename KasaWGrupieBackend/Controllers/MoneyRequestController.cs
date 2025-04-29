@@ -47,9 +47,11 @@ public class MoneyRequestController(
     /// </summary>
     [HttpGet("findBySender")]
     [TranslateResultToActionResult]
-    public async Task<Result<List<GetMoneyRequestDto>>> GetMoneyRequestBySender([FromQuery] int senderId)
+    public async Task<Result<List<GetMoneyRequestDto>>> GetMoneyRequestBySender(
+        [FromQuery] int senderId,
+        [FromQuery] string? status = null)
     {
-        var command = new GetMoneyRequestForSenderCommand(senderId);
+        var command = new GetMoneyRequestForSenderCommand(senderId, status);
         var result = await mediator.Send(command);
         
         return result;
@@ -60,9 +62,11 @@ public class MoneyRequestController(
     /// </summary>
     [HttpGet("findByRecipient")]
     [TranslateResultToActionResult]
-    public async Task<Result<List<GetMoneyRequestDto>>> GetMoneyRequestByReceiver([FromQuery] int receiverId)
+    public async Task<Result<List<GetMoneyRequestDto>>> GetMoneyRequestByReceiver(
+        [FromQuery] int receiverId,
+        [FromQuery] string? status = null)
     {
-        var command = new GetMoneyRequestForReceiverCommand(receiverId);
+        var command = new GetMoneyRequestForReceiverCommand(receiverId, status);
         var result = await mediator.Send(command);
         
         return result;

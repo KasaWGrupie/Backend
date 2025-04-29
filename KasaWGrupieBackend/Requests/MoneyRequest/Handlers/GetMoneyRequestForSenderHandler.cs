@@ -4,6 +4,7 @@ using FluentValidation;
 using KasaWGrupie.API.DTOs.MoneyRequest;
 using KasaWGrupie.API.Requests.MoneyRequest.Commands;
 using KasaWGrupie.Core.Entities;
+using KasaWGrupie.Core.Enums;
 using KasaWGrupie.Persistence.Specifications.MoneyRequests;
 using MediatR;
 
@@ -36,7 +37,13 @@ public class GetMoneyRequestForSenderHandler : IRequestHandler<GetMoneyRequestFo
             return Result.NotFound("Sender user not found");
         }
         
-        var specification = new GetMoneyRequestsBySenderSpecification(request.SenderId);
+        ISpecification<PayRequest> specification;
+        if (!string.IsNullOrWhiteSpace(request.Status) &&
+            Enum.TryParse<PayRequestStatus>(request.Status, ignoreCase: true, out var status))
+            specification = new GetMoneyRequestsBySenderWithStatusSpecification(request.SenderId, status);
+        else
+            specification = new GetMoneyRequestsBySenderSpecification(request.SenderId);
+        
         var requests = await _payRequestRepository.ListAsync(specification, cancellationToken);
         
         var dtos = requests.Select(pr => new GetMoneyRequestDto(

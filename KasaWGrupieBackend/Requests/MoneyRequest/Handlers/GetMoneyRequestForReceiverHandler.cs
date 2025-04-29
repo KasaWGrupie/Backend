@@ -4,6 +4,7 @@ using FluentValidation;
 using KasaWGrupie.API.DTOs.MoneyRequest;
 using KasaWGrupie.API.Requests.MoneyRequest.Commands;
 using KasaWGrupie.Core.Entities;
+using KasaWGrupie.Core.Enums;
 using KasaWGrupie.Persistence.Specifications.MoneyRequests;
 using MediatR;
 
@@ -36,7 +37,13 @@ public class GetMoneyRequestForReceiverHandler : IRequestHandler<GetMoneyRequest
             return Result.NotFound("Receiver user not found");
         }
         
-        var specification = new GetMoneyRequestsByReceiverSpecification(request.ReceiverId);
+        ISpecification<PayRequest> specification;
+        if (!string.IsNullOrWhiteSpace(request.Status) &&
+            Enum.TryParse<PayRequestStatus>(request.Status, ignoreCase: true, out var status))
+            specification = new GetMoneyRequestsByReceiverWithStatusSpecification(request.ReceiverId, status);
+        else
+            specification = new GetMoneyRequestsByReceiverSpecification(request.ReceiverId);
+
         var requests = await _payRequestRepository.ListAsync(specification, cancellationToken);
         
         var dtos = requests.Select(pr => new GetMoneyRequestDto(

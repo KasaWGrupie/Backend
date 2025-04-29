@@ -5,5 +5,5 @@ using MediatR;
 namespace KasaWGrupie.API.Requests.MoneyRequest.Commands;
 
 public record GetMoneyRequestForSenderCommand(
-    int SenderId
-    ) : IRequest<Result<List<GetMoneyRequestDto>>>;
+    int SenderId,
+    string? Status = null) : IRequest<Result<List<GetMoneyRequestDto>>>;
