@@ -30,7 +30,7 @@ public class UpdateMoneyTransferHandler : IRequestHandler<UpdateMoneyTransferCom
             return Result.Invalid(validationResult.Errors.Select(e => new ValidationError(e.PropertyName, e.ErrorMessage)));
         }
         
-        var transfer = await _transferRepository.GetByIdAsync(dto.TransferId, cancellationToken);
+        var transfer = await _transferRepository.GetByIdAsync(request.TransferId, cancellationToken);
         if (transfer == null)
         {
             return Result.NotFound("Money Transfer not found");

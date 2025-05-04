@@ -28,13 +28,15 @@ public class MoneyTransferController(
         return result;
     }
 
+    /// <summary>
+    /// Changes the status of a money transfer to either <c>confirmed</c> or <c>rejected</c>.
+    /// </summary>
+    /// <returns>Money transfer status updated successfully</returns>
     [HttpPut("{transferId:int}/status")]
     [TranslateResultToActionResult]
     public async Task<Result> UpdateMoneyTransfer([FromRoute] int transferId, [FromBody] UpdateMoneyTransferDto updateMoneyTransferDto)
     {
-        updateMoneyTransferDto = updateMoneyTransferDto with { TransferId = transferId };
-        
-        var command = new UpdateMoneyTransferCommand(updateMoneyTransferDto);
+        var command = new UpdateMoneyTransferCommand(transferId, updateMoneyTransferDto);
         var result = await mediator.Send(command);
         
         return result;

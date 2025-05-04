@@ -66,11 +66,10 @@ public class UpdateMoneyTransferTests
 		};
 
 		var updateMoneyTransferDto = new UpdateMoneyTransferDto(
-			moneyTransfer.Id,
 			MoneyTransferStatus.Confirmed.ToString().ToLower()
 		);
 		
-		var command = new UpdateMoneyTransferCommand(updateMoneyTransferDto);
+		var command = new UpdateMoneyTransferCommand(moneyTransfer.Id, updateMoneyTransferDto);
 		
 		
 		_userRepositoryMock.Setup(repo => repo.GetByIdAsync(sender.Id, It.IsAny<CancellationToken>()))
@@ -100,11 +99,10 @@ public class UpdateMoneyTransferTests
 	{
 		// Arrange
 		var updateMoneyTransferDto = new UpdateMoneyTransferDto(
-			5,
 			MoneyTransferStatus.Confirmed.ToString().ToLower()
 		);
 		
-		var command = new UpdateMoneyTransferCommand(updateMoneyTransferDto);
+		var command = new UpdateMoneyTransferCommand(5, updateMoneyTransferDto);
 		
 		
 		_validatorMock.Setup(v => v.ValidateAsync(It.IsAny<UpdateMoneyTransferDto>(), It.IsAny<CancellationToken>()))
@@ -147,11 +145,10 @@ public class UpdateMoneyTransferTests
 		};
 
 		var updateMoneyTransferDto = new UpdateMoneyTransferDto(
-			moneyTransfer.Id,
 			"fakeStatus"
 		);
 		
-		var command = new UpdateMoneyTransferCommand(updateMoneyTransferDto);
+		var command = new UpdateMoneyTransferCommand(moneyTransfer.Id, updateMoneyTransferDto);
 		
 		
 		_userRepositoryMock.Setup(repo => repo.GetByIdAsync(sender.Id, It.IsAny<CancellationToken>()))
