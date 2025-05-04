@@ -43,4 +43,35 @@ public class MoneyTransferController(
     }
     
     
+    /// <summary>
+    /// Get all transfers sent by a given user
+    /// </summary>
+    [HttpGet("findBySender")]
+    [TranslateResultToActionResult]
+    public async Task<Result<List<GetMoneyTransferDto>>> GetMoneyTransferBySender(
+        [FromQuery] int senderId,
+        [FromQuery] string? status = null)
+    {
+        var command = new GetMoneyTransferForSenderCommand(senderId, status);
+        var result = await mediator.Send(command);
+
+        return result;
+    }
+
+    /// <summary>
+    /// Get all transfers received by a given user
+    /// </summary>
+    [HttpGet("findByRecipient")]
+    [TranslateResultToActionResult]
+    public async Task<Result<List<GetMoneyTransferDto>>> GetMoneyTransferByReceiver(
+        [FromQuery] int recipientId,
+        [FromQuery] string? status = null)
+    {
+        var command = new GetMoneyTransferForRecipientCommand(recipientId, status);
+        var result = await mediator.Send(command);
+
+        return result;
+    }
+    
+    
 }
