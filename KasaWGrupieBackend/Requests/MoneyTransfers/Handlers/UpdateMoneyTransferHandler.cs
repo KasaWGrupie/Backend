@@ -40,6 +40,12 @@ public class UpdateMoneyTransferHandler : IRequestHandler<UpdateMoneyTransferCom
         {
             return Result.Invalid(new ValidationError("Status", "Invalid status value"));
         }
+
+        // set an end date on confirming or rejecting the transfer 
+        if (status != MoneyTransferStatus.Pending)
+        {
+            transfer.EndDate = DateTime.Now;
+        }
         
         transfer.Status = status;
 
