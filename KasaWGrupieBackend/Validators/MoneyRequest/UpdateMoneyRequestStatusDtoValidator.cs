@@ -8,8 +8,6 @@ public class UpdateMoneyRequestStatusDtoValidator : AbstractValidator<UpdateMone
 {
     public UpdateMoneyRequestStatusDtoValidator()
     {
-        RuleFor(x => x.RequestId)
-            .GreaterThan(0).WithMessage("RequestId is required");
         RuleFor(x => x.Status)
             .NotEmpty().WithMessage("Status is required")
             .IsEnumName(typeof(PayRequestStatus), caseSensitive: false)

@@ -30,7 +30,7 @@ public class UpdateMoneyRequestStatusHandler : IRequestHandler<UpdateMoneyReques
             return Result.Invalid(validationResult.Errors.Select(e => new ValidationError(e.PropertyName, e.ErrorMessage)));
         }
         
-        var payRequest = await _payRequestRepository.GetByIdAsync(dto.RequestId, cancellationToken);
+        var payRequest = await _payRequestRepository.GetByIdAsync(request.RequestId, cancellationToken);
         if (payRequest == null)
         {
             return Result.NotFound("Pay request not found");

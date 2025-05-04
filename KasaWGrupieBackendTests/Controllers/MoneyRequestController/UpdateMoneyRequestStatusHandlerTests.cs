@@ -40,8 +40,8 @@ public class UpdateMoneyRequestStatusHandlerTests
         var sender = UserFactory.Create();
         var receiver = UserFactory.Create(id: 2, email: "receiver@example.com");
         
-        var dto = new UpdateMoneyRequestStatusDto(1, "Paid");
-        var command = new UpdateMoneyRequestStatusCommand(dto);
+        var dto = new UpdateMoneyRequestStatusDto("Paid");
+        var command = new UpdateMoneyRequestStatusCommand(1, dto);
         var payRequest = new PayRequest
         {
             Id = 1,
@@ -53,7 +53,7 @@ public class UpdateMoneyRequestStatusHandlerTests
         _validatorMock.Setup(v => v.ValidateAsync(It.IsAny<UpdateMoneyRequestStatusDto>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(new FluentValidation.Results.ValidationResult());
 
-        _payRequestRepositoryMock.Setup(r => r.GetByIdAsync(dto.RequestId, It.IsAny<CancellationToken>()))
+        _payRequestRepositoryMock.Setup(r => r.GetByIdAsync(command.RequestId, It.IsAny<CancellationToken>()))
             .ReturnsAsync(payRequest);
 
         // Act
@@ -73,8 +73,8 @@ public class UpdateMoneyRequestStatusHandlerTests
         var sender = UserFactory.Create();
         var receiver = UserFactory.Create(id: 2, email: "receiver@example.com");
         
-        var dto = new UpdateMoneyRequestStatusDto(1, "Paid");
-        var command = new UpdateMoneyRequestStatusCommand(dto);
+        var dto = new UpdateMoneyRequestStatusDto("Paid");
+        var command = new UpdateMoneyRequestStatusCommand(1, dto);
         var payRequest = new PayRequest
         {
             Id = 1,
@@ -86,7 +86,7 @@ public class UpdateMoneyRequestStatusHandlerTests
         _validatorMock.Setup(v => v.ValidateAsync(It.IsAny<UpdateMoneyRequestStatusDto>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(new FluentValidation.Results.ValidationResult());
 
-        _payRequestRepositoryMock.Setup(r => r.GetByIdAsync(dto.RequestId, It.IsAny<CancellationToken>()))
+        _payRequestRepositoryMock.Setup(r => r.GetByIdAsync(command.RequestId, It.IsAny<CancellationToken>()))
             .ReturnsAsync(payRequest);
 
         // Act
@@ -103,8 +103,8 @@ public class UpdateMoneyRequestStatusHandlerTests
     public async Task Handle_ShouldReturnInvalid_WhenValidationFails()
     {
         // Arrange
-        var dto = new UpdateMoneyRequestStatusDto(1, "Invalid");
-        var command = new UpdateMoneyRequestStatusCommand(dto);
+        var dto = new UpdateMoneyRequestStatusDto("Invalid");
+        var command = new UpdateMoneyRequestStatusCommand(1, dto);
 
         var validationFailure = new FluentValidation.Results.ValidationFailure("Status", "Invalid status");
         _validatorMock.Setup(v => v.ValidateAsync(It.IsAny<UpdateMoneyRequestStatusDto>(), It.IsAny<CancellationToken>()))
@@ -123,13 +123,13 @@ public class UpdateMoneyRequestStatusHandlerTests
     public async Task Handle_ShouldReturnNotFound_WhenPayRequestDoesNotExist()
     {
         // Arrange
-        var dto = new UpdateMoneyRequestStatusDto(1, "Paid");
-        var command = new UpdateMoneyRequestStatusCommand(dto);
+        var dto = new UpdateMoneyRequestStatusDto("Paid");
+        var command = new UpdateMoneyRequestStatusCommand(1, dto);
 
         _validatorMock.Setup(v => v.ValidateAsync(It.IsAny<UpdateMoneyRequestStatusDto>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(new FluentValidation.Results.ValidationResult());
 
-        _payRequestRepositoryMock.Setup(r => r.GetByIdAsync(dto.RequestId, It.IsAny<CancellationToken>()))
+        _payRequestRepositoryMock.Setup(r => r.GetByIdAsync(command.RequestId, It.IsAny<CancellationToken>()))
             .ReturnsAsync((PayRequest?)null);
 
         // Act
@@ -161,7 +161,7 @@ public class UpdateMoneyRequestStatusHandlerTests
     //     _validatorMock.Setup(v => v.ValidateAsync(It.IsAny<UpdateMoneyRequestStatusDto>(), It.IsAny<CancellationToken>()))
     //         .ReturnsAsync(new FluentValidation.Results.ValidationResult());
     //
-    //     _payRequestRepositoryMock.Setup(r => r.GetByIdAsync(dto.RequestId, It.IsAny<CancellationToken>()))
+    //     _payRequestRepositoryMock.Setup(r => r.GetByIdAsync(command.RequestId, It.IsAny<CancellationToken>()))
     //         .ReturnsAsync(payRequest);
     //
     //     // Act
