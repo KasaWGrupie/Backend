@@ -13,7 +13,7 @@ namespace KasaWGrupie.API.Controllers;
 [Route("users")]
 [ApiController]
 public class UsersController(
-	AuthService authService,
+	IAuthService authService,
 	IMediator mediator
 ) : ControllerBase
 {
