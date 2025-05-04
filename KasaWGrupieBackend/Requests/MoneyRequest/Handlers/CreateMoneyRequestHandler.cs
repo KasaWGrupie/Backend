@@ -5,6 +5,7 @@ using KasaWGrupie.API.DTOs.MoneyRequest;
 using KasaWGrupie.API.Requests.MoneyRequest.Commands;
 using KasaWGrupie.Core.Entities;
 using KasaWGrupie.Core.Enums;
+using KasaWGrupie.Persistence.Specifications.MoneyRequests;
 using MediatR;
 
 namespace KasaWGrupie.API.Requests.MoneyRequest.Handlers;
@@ -49,7 +50,8 @@ public class CreateMoneyRequestHandler : IRequestHandler<CreateMoneyRequestComma
         var groups = new List<Group>();
         foreach (var groupId in dto.Groups)
         {
-            var group = await _groupRepository.GetByIdAsync(groupId, cancellationToken);
+            var specification = new GetGroupByIdWithMembersSpecification(groupId);
+            var group = await _groupRepository.FirstOrDefaultAsync(specification, cancellationToken);
             if (group == null)
             {
                 return Result.NotFound("Group not found");
