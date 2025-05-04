@@ -3,9 +3,9 @@ namespace KasaWGrupie.API.DTOs.MoneyRequest;
 public record GetMoneyRequestDto(
     int Id,
     int SenderId,
-    int ReceiverId,
+    int RecipientId,
     decimal MoneyValue,
-    ICollection<int> GroupIds,
+    ICollection<int> Groups,
     string Status,
     DateTime? EndDate
     );

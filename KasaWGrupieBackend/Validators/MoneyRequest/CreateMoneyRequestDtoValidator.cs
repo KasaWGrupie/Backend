@@ -11,7 +11,7 @@ public class CreateMoneyRequestDtoValidator : AbstractValidator<CreateMoneyReque
             .GreaterThan(0).WithMessage("Sender id is required");
         RuleFor(x => x.ReceiverId)
             .GreaterThan(0).WithMessage("Receiver id is required");
-        RuleForEach(x => x.GroupIds)
+        RuleForEach(x => x.Groups)
             .GreaterThan(0).WithMessage("Invalid group id");
     }
 }

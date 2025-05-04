@@ -128,9 +128,9 @@ public class GetMoneyRequestForSenderHandlerTests
         var firstRequest = result.Value.First();
         firstRequest.Id.Should().Be(1);
         firstRequest.SenderId.Should().Be(sender.Id);
-        firstRequest.ReceiverId.Should().Be(receiver.Id);
+        firstRequest.RecipientId.Should().Be(receiver.Id);
         firstRequest.MoneyValue.Should().Be(100m);
-        firstRequest.GroupIds.Should().ContainSingle(id => id == group.Id);
+        firstRequest.Groups.Should().ContainSingle(id => id == group.Id);
         firstRequest.Status.Should().Be(PayRequestStatus.Pending.ToString());
         firstRequest.EndDate.Should().BeNull();
 

@@ -47,7 +47,7 @@ public class CreateMoneyRequestHandler : IRequestHandler<CreateMoneyRequestComma
         }
         
         var groups = new List<Group>();
-        foreach (var groupId in dto.GroupIds)
+        foreach (var groupId in dto.Groups)
         {
             var group = await _groupRepository.GetByIdAsync(groupId, cancellationToken);
             if (group == null)
