@@ -62,7 +62,7 @@ public class UpdateMoneyTransferTests
 			Amount = 5,
 			Recipient = recipient,
 			Sender = sender,
-			Status = MoneyTransferStatus.Unconfirmed,
+			Status = MoneyTransferStatus.Pending,
 		};
 
 		var updateMoneyTransferDto = new UpdateMoneyTransferDto(
@@ -141,7 +141,7 @@ public class UpdateMoneyTransferTests
 			Amount = 5,
 			Recipient = recipient,
 			Sender = sender,
-			Status = MoneyTransferStatus.Unconfirmed,
+			Status = MoneyTransferStatus.Pending,
 		};
 
 		var updateMoneyTransferDto = new UpdateMoneyTransferDto(

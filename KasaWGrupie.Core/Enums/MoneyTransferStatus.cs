@@ -2,7 +2,7 @@
 
 public enum MoneyTransferStatus
 {
-	Unconfirmed,
+	Pending,
 	Confirmed,
 	Rejected
 }

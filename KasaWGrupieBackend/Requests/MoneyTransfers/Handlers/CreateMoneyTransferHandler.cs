@@ -67,7 +67,7 @@ public class CreateMoneyTransferHandler : IRequestHandler<CreateMoneyTransferCom
             Sender = sender,
             Amount = dto.Amount,
             Group = group,
-            Status = MoneyTransferStatus.Unconfirmed
+            Status = MoneyTransferStatus.Pending
         };
         
         await _transferRepository.AddAsync(moneyTransfer, cancellationToken);
