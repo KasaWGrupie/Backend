@@ -19,6 +19,7 @@ public class CreateMoneyRequestHandlerTests
     private Mock<IRepositoryBase<User>> _userRepositoryMock;
     private Mock<IRepositoryBase<Group>> _groupRepositoryMock;
     private Mock<IRepositoryBase<PayRequest>> _payRequestRepositoryMock;
+    private Mock<IRepositoryBase<Currency>> _currencyRepositoryMock;
     private Mock<IValidator<CreateMoneyRequestDto>> _validatorMock;
     private CreateMoneyRequestHandler _handler;
 #pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring as nullable.
@@ -29,12 +30,14 @@ public class CreateMoneyRequestHandlerTests
         _userRepositoryMock = new Mock<IRepositoryBase<User>>();
         _groupRepositoryMock = new Mock<IRepositoryBase<Group>>();
         _payRequestRepositoryMock = new Mock<IRepositoryBase<PayRequest>>();
+        _currencyRepositoryMock = new Mock<IRepositoryBase<Currency>>();
         _validatorMock = new Mock<IValidator<CreateMoneyRequestDto>>();
 
         _handler = new CreateMoneyRequestHandler(
             _userRepositoryMock.Object,
             _groupRepositoryMock.Object,
             _payRequestRepositoryMock.Object,
+            _currencyRepositoryMock.Object,
             _validatorMock.Object
         );
     }
@@ -60,6 +63,7 @@ public class CreateMoneyRequestHandlerTests
         var dto = new CreateMoneyRequestDto(
             sender.Id,
             receiver.Id,
+            "USD",
             new List<int> { group.Id }
         );
 
@@ -91,6 +95,7 @@ public class CreateMoneyRequestHandlerTests
         var dto = new CreateMoneyRequestDto(
             1,
             2,
+            "USD",
             new List<int> { 1 }
             );
         var command = new CreateMoneyRequestCommand(dto);
@@ -115,6 +120,7 @@ public class CreateMoneyRequestHandlerTests
         var dto = new CreateMoneyRequestDto(
             1, 
             2,
+            "USD",
             new List<int> { 1 }
             );
         var command = new CreateMoneyRequestCommand(dto);
@@ -140,7 +146,8 @@ public class CreateMoneyRequestHandlerTests
         var sender = UserFactory.Create();
         var dto = new CreateMoneyRequestDto(
             sender.Id,
-            2, 
+            2,
+            "USD",
             new List<int> { 1 }
             );
         var command = new CreateMoneyRequestCommand(dto);
@@ -171,6 +178,7 @@ public class CreateMoneyRequestHandlerTests
         var dto = new CreateMoneyRequestDto(
             sender.Id,
             receiver.Id,
+            "USD",
             new List<int> { 1 }
             );
         var command = new CreateMoneyRequestCommand(dto);
@@ -214,6 +222,7 @@ public class CreateMoneyRequestHandlerTests
         var dto = new CreateMoneyRequestDto(
             1,
             2,
+            "USD",
             new List<int> { group.Id }
             );
         var command = new CreateMoneyRequestCommand(dto);

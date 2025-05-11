@@ -5,6 +5,7 @@ using KasaWGrupie.API.DTOs.MoneyRequest;
 using KasaWGrupie.API.Requests.MoneyRequest.Commands;
 using KasaWGrupie.Core.Entities;
 using KasaWGrupie.Core.Enums;
+using KasaWGrupie.Persistence.Specifications.Currencies;
 using KasaWGrupie.Persistence.Specifications.MoneyRequests;
 using MediatR;
 
@@ -15,13 +16,15 @@ public class CreateMoneyRequestHandler : IRequestHandler<CreateMoneyRequestComma
     private readonly IRepositoryBase<User> _userRepository;
     private readonly IRepositoryBase<Group> _groupRepository;
     private readonly IRepositoryBase<PayRequest> _payRequestRepository;
+    private readonly IRepositoryBase<Currency> _currencyRepository;
     private readonly IValidator<CreateMoneyRequestDto> _validator;
 
-    public CreateMoneyRequestHandler(IRepositoryBase<User> userRepository, IRepositoryBase<Group> groupRepository, IRepositoryBase<PayRequest> payRequestRepository, IValidator<CreateMoneyRequestDto> validator)
+    public CreateMoneyRequestHandler(IRepositoryBase<User> userRepository, IRepositoryBase<Group> groupRepository, IRepositoryBase<PayRequest> payRequestRepository, IRepositoryBase<Currency> currencyRepository, IValidator<CreateMoneyRequestDto> validator)
     {
         _userRepository = userRepository;
         _groupRepository = groupRepository;
         _payRequestRepository = payRequestRepository;
+        _currencyRepository = currencyRepository;
         _validator = validator;
     }
 
@@ -68,6 +71,16 @@ public class CreateMoneyRequestHandler : IRequestHandler<CreateMoneyRequestComma
             
             groups.Add(group);
         }
+        
+        var currencySpec = new CurrencyByNameSpecification(dto.Currency);
+        var currency = await _currencyRepository.FirstOrDefaultAsync(currencySpec, cancellationToken);
+
+        if (currency == null)
+        {
+            currency = new Currency { Name = dto.Currency };
+            await _currencyRepository.AddAsync(currency, cancellationToken);
+            await _currencyRepository.SaveChangesAsync(cancellationToken);
+        }
 
         var payRequest = new PayRequest
         {
@@ -75,6 +88,7 @@ public class CreateMoneyRequestHandler : IRequestHandler<CreateMoneyRequestComma
             Receiver = receiver,
             GroupsToSettle = groups,
             //TODO amount
+            Currency = currency,
             PayRequestStatus = PayRequestStatus.Pending
         };
         
