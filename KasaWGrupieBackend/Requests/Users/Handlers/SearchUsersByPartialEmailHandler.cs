@@ -28,7 +28,7 @@ public class SearchUsersByPartialEmailHandler : IRequestHandler<SearchUsersByPar
             return Result.Invalid(validationResult.Errors.Select(e => new ValidationError(e.PropertyName, e.ErrorMessage)));
         }
         
-        var specification = new GetUsersLikeEmailSpecification(request.Email);
+        var specification = new SearchUsersByEmailPrefixSpecification(request.Email);
         var friends = await _userRepository.ListAsync(specification, cancellationToken);
         
         var dtos = friends.Select(u => new GetUserDto {

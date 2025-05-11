@@ -42,7 +42,7 @@ public class SearchUsersByPartialEmailHandlerTests
         _validatorMock.Setup(v => v.ValidateAsync(command, It.IsAny<CancellationToken>()))
             .ReturnsAsync(new ValidationResult());
 
-        _userRepositoryMock.Setup(r => r.ListAsync(It.IsAny<GetUsersLikeEmailSpecification>(), It.IsAny<CancellationToken>()))
+        _userRepositoryMock.Setup(r => r.ListAsync(It.IsAny<SearchUsersByEmailPrefixSpecification>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(users);
 
         // Act
@@ -99,7 +99,7 @@ public class SearchUsersByPartialEmailHandlerTests
         _validatorMock.Setup(v => v.ValidateAsync(command, It.IsAny<CancellationToken>()))
             .ReturnsAsync(new ValidationResult());
 
-        _userRepositoryMock.Setup(r => r.ListAsync(It.IsAny<GetUsersLikeEmailSpecification>(), It.IsAny<CancellationToken>()))
+        _userRepositoryMock.Setup(r => r.ListAsync(It.IsAny<SearchUsersByEmailPrefixSpecification>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(new List<User>());
 
         // Act

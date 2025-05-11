@@ -4,7 +4,7 @@ using System.Text.RegularExpressions;
 
 namespace KasaWGrupie.Persistence.Specifications.Users;
 
-public partial class GetUsersLikeEmailSpecification : Specification<User>
+public partial class SearchUsersByEmailPrefixSpecification : Specification<User>
 {
 	[GeneratedRegex(@"[\[\]%_]")]
 	private static partial Regex SpecialCharsRegex();
@@ -12,7 +12,7 @@ public partial class GetUsersLikeEmailSpecification : Specification<User>
 	private static string EscapeSpecialChars(string value) =>
         SpecialCharsRegex().Replace(value, "[$0]");
 
-	public GetUsersLikeEmailSpecification(string email)
+	public SearchUsersByEmailPrefixSpecification(string email)
 	{
 		var pattern = EscapeSpecialChars(email) + "%";
 		Query.Search(u => u.Email, pattern);
