@@ -1,5 +1,4 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Moq;
+﻿using Moq;
 using FluentValidation;
 using FluentValidation.Results;
 using Ardalis.Result;
@@ -9,11 +8,9 @@ using KasaWGrupie.API.Requests.FriendRequests.Handlers;
 using KasaWGrupie.API.Requests.FriendRequests.Commands;
 using Ardalis.Specification;
 using KasaWGrupie.Tests.Factories;
-using KasaWGrupie.Persistence.Specifications.Users;
-using KasaWGrupie.Core.Enums;
-using MediatR;
 
-namespace KasaWGrupie.Tests.Handlers;
+
+namespace KasaWGrupie.Tests.Controllers.UserControllers;
 
 [TestClass]
 public class AddFriendRequestHandlerTests
