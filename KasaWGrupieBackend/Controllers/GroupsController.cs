@@ -31,21 +31,31 @@ public sealed class GroupsController : ControllerBase
 		return result;
 	}
 
-    
+	[TranslateResultToActionResult]
+	[HttpPut("{groupId}")]
+	public async Task<Result> UpdateGroup(int groupId, [FromForm] UpdateGroupDto updateGroupDto)
+	{
+		var dto = updateGroupDto with { GroupId = groupId };
+		var command = new UpdateGroupCommand(dto);
+		var result = await _mediator.Send(command);
+		return result;
+	}
 
+	[TranslateResultToActionResult]
+	[HttpPut("inviteCode/{userEmail}")]
+	public async Task<Result> RequestToJoinGroupWithInviteCode([FromBody] InviteCodeDto updateInviteCodeDto, [FromRoute] string userEmail)
+	{
+		var command = new RequestToJoinGroupWithInviteCodeCommand(updateInviteCodeDto, userEmail);
+		var result = await _mediator.Send(command);
+		return result;
+	}
 
-
-
-    [TranslateResultToActionResult]
-    [HttpPut("{groupId}")]
-    public async Task<Result> UpdateGroup(int groupId, [FromForm] UpdateGroupDto updateGroupDto)
-    {
-        var dto = updateGroupDto with { GroupId = groupId };
-        var command = new UpdateGroupCommand(dto);
-        var result = await _mediator.Send(command);
-        return result;
-    }
-
-
-
+	[TranslateResultToActionResult]
+	[HttpGet("{groupId}/inviteCode")]
+	public async Task<Result<InviteCodeDto>> GetGroupInviteCode(int groupId)
+	{
+		var command = new GetGroupInviteCodeCommand(groupId);
+		var result = await _mediator.Send(command);
+		return result;
+	}
 }
