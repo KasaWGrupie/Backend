@@ -1,5 +1,5 @@
 ﻿using FluentValidation;
-using global::KasaWGrupie.API.Requests.Users.Commands;
+using KasaWGrupie.API.Requests.Users.Commands;
 
 namespace KasaWGrupie.API.Validators.Users;
 
