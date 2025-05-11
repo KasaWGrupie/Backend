@@ -31,12 +31,12 @@ public class SearchUsersByPartialEmailHandler : IRequestHandler<SearchUsersByPar
         var specification = new GetUsersLikeEmailSpecification(request.Email);
         var friends = await _userRepository.ListAsync(specification, cancellationToken);
         
-        var dtos = friends.Select(u => new GetUserDto(
-            u.Id,
-            u.Name,
-            u.Email,
-            u.ProfilePictureUrl
-            )).ToList();
+        var dtos = friends.Select(u => new GetUserDto {
+            Id = u.Id,
+            Name = u.Name,
+            Email = u.Email,
+            ProfilePictureUrl = u.ProfilePictureUrl
+        }).ToList();
         
         return Result.Success(dtos);
     }   

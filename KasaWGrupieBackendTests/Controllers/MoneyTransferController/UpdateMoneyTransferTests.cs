@@ -67,7 +67,7 @@ public class UpdateMoneyTransferTests
 
 		var updateMoneyTransferDto = new UpdateMoneyTransferDto(
 			moneyTransfer.Id,
-			MoneyTransferStatus.Confirmed.ToString().ToLower()
+			MoneyTransferStatus.Confirmed.ToString()
 		);
 		
 		var command = new UpdateMoneyTransferCommand(updateMoneyTransferDto);

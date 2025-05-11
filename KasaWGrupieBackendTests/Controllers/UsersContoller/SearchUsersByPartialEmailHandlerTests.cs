@@ -3,7 +3,6 @@ using Ardalis.Specification;
 using FluentAssertions;
 using FluentValidation;
 using FluentValidation.Results;
-using KasaWGrupie.API.DTOs.Users;
 using KasaWGrupie.API.Requests.Users.Commands;
 using KasaWGrupie.API.Requests.Users.Handlers;
 using KasaWGrupie.Core.Entities;
@@ -53,7 +52,16 @@ public class SearchUsersByPartialEmailHandlerTests
         result.Should().NotBeNull();
         result.IsSuccess.Should().BeTrue();
         result.Value.Should().HaveCount(2);
-        result.Value.Should().BeEquivalentTo(users.Select(u => new GetUserDto(u.Id, u.Name, u.Email, u.ProfilePictureUrl)));
+        
+        result.Value.Should().HaveCount(2);
+        result.Value[0].Id.Should().Be(1);
+        result.Value[0].Name.Should().Be("Test User 1");
+        result.Value[0].Email.Should().Be("test1@example.com");
+        result.Value[0].ProfilePictureUrl.Should().Be("url1.jpg");
+        result.Value[1].Id.Should().Be(2);
+        result.Value[1].Name.Should().Be("Test User 2");
+        result.Value[1].Email.Should().Be("test2@example.com");
+        result.Value[1].ProfilePictureUrl.Should().Be("url2.png");
     }
 
     [TestMethod]
