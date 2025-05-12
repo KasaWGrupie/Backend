@@ -119,4 +119,13 @@ public class UsersController(
 		return result;
 	}
 
+	[HttpGet("email/search/{query}")]
+	[TranslateResultToActionResult]
+	public async Task<Result<List<GetUserDto>>> SearchUsersByEmail([FromRoute] string query)
+	{
+		var command = new SearchUsersByPartialEmailCommand(query);
+		var result = await mediator.Send(command);
+		return result;
+	}
+
 }
