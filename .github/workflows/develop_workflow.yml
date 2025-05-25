@@ -2,7 +2,7 @@ name: Build & Test for Develop
 
 on:
   pull_request:
-    branches: [task/72-dodanie-pipelineów-do-githuba]
+    branches: [Develop]
 
 jobs:
   build-and-test:
