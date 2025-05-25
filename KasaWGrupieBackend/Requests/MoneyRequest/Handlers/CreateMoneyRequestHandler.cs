@@ -93,7 +93,7 @@ public class CreateMoneyRequestHandler : IRequestHandler<CreateMoneyRequestComma
             Sender = sender,
             Receiver = receiver,
             GroupsToSettle = groups,
-            Amount = await CalculateAmount(sender, receiver, groups),
+            Amount = CalculateAmount(sender, receiver, groups),
             Currency = currency,
             PayRequestStatus = PayRequestStatus.Pending
         };
@@ -104,7 +104,7 @@ public class CreateMoneyRequestHandler : IRequestHandler<CreateMoneyRequestComma
         return Result.Success();
     }
     
-    private async Task<decimal> CalculateAmount(User sender, User receiver, List<Group> groups)
+    private decimal CalculateAmount(User sender, User receiver, List<Group> groups)
     {
         var totalAmount = 0M;
         foreach (var group in groups)
