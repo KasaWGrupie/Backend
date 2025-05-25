@@ -5,6 +5,8 @@ using KasaWGrupie.API.DTOs.MoneyRequest;
 using KasaWGrupie.API.Requests.MoneyRequest.Commands;
 using KasaWGrupie.Core.Entities;
 using KasaWGrupie.Core.Enums;
+using KasaWGrupie.Infrastructure.BalanceCalculator;
+using KasaWGrupie.Infrastructure.BalanceCalculator.HelperAdapters;
 using KasaWGrupie.Persistence.Specifications.Currencies;
 using KasaWGrupie.Persistence.Specifications.MoneyRequests;
 using MediatR;
@@ -19,13 +21,16 @@ public class CreateMoneyRequestHandler : IRequestHandler<CreateMoneyRequestComma
     private readonly IRepositoryBase<Currency> _currencyRepository;
     private readonly IValidator<CreateMoneyRequestDto> _validator;
 
-    public CreateMoneyRequestHandler(IRepositoryBase<User> userRepository, IRepositoryBase<Group> groupRepository, IRepositoryBase<PayRequest> payRequestRepository, IRepositoryBase<Currency> currencyRepository, IValidator<CreateMoneyRequestDto> validator)
+    private readonly IGroupBalanceCalculator _balanceCalculator;
+
+    public CreateMoneyRequestHandler(IRepositoryBase<User> userRepository, IRepositoryBase<Group> groupRepository, IRepositoryBase<PayRequest> payRequestRepository, IRepositoryBase<Currency> currencyRepository, IValidator<CreateMoneyRequestDto> validator, IGroupBalanceCalculator balanceCalculator)
     {
         _userRepository = userRepository;
         _groupRepository = groupRepository;
         _payRequestRepository = payRequestRepository;
         _currencyRepository = currencyRepository;
         _validator = validator;
+        _balanceCalculator = balanceCalculator;
     }
 
     public async Task<Result> Handle(CreateMoneyRequestCommand request, CancellationToken cancellationToken)
@@ -81,13 +86,14 @@ public class CreateMoneyRequestHandler : IRequestHandler<CreateMoneyRequestComma
             await _currencyRepository.AddAsync(currency, cancellationToken);
             await _currencyRepository.SaveChangesAsync(cancellationToken);
         }
-
+        
+        
         var payRequest = new PayRequest
         {
             Sender = sender,
             Receiver = receiver,
             GroupsToSettle = groups,
-            //TODO amount
+            Amount = await CalculateAmount(sender, receiver, groups),
             Currency = currency,
             PayRequestStatus = PayRequestStatus.Pending
         };
@@ -96,5 +102,33 @@ public class CreateMoneyRequestHandler : IRequestHandler<CreateMoneyRequestComma
         await _payRequestRepository.SaveChangesAsync(cancellationToken);
         
         return Result.Success();
+    }
+    
+    private async Task<decimal> CalculateAmount(User sender, User receiver, List<Group> groups)
+    {
+        var totalAmount = 0M;
+        foreach (var group in groups)
+        {
+            var expenses = group.Expenses.Select(e => new ExpenseBalanceAdapter(e)).ToList<IExpenseBalance>();
+            var transfers = group.MoneyTransfers.Select(t => new MoneyTransferBalanceAdapter(t)).ToList<IMoneyTransferBalance>();
+            var result = _balanceCalculator.CalculateBalanceInGroup(expenses, transfers);
+        
+            var groupAmount = 0M;
+            foreach (var record in result.BalanceRecords)
+            {
+                if (record.FromUserId == sender.Id && record.ToUserId == receiver.Id)
+                {
+                    groupAmount += record.Amount;
+                }
+                else if (record.FromUserId == receiver.Id && record.ToUserId == sender.Id)
+                {
+                    groupAmount -= record.Amount;
+                }
+            }
+        
+            totalAmount += groupAmount;
+        }
+    
+        return totalAmount;
     }
 }
