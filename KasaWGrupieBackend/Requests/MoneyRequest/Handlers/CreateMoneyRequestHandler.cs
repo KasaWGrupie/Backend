@@ -8,6 +8,7 @@ using KasaWGrupie.Core.Enums;
 using KasaWGrupie.Infrastructure.BalanceCalculator;
 using KasaWGrupie.Infrastructure.BalanceCalculator.HelperAdapters;
 using KasaWGrupie.Persistence.Specifications.Currencies;
+using KasaWGrupie.Persistence.Specifications.Groups;
 using KasaWGrupie.Persistence.Specifications.MoneyRequests;
 using MediatR;
 
@@ -58,7 +59,7 @@ public class CreateMoneyRequestHandler : IRequestHandler<CreateMoneyRequestComma
         var groups = new List<Group>();
         foreach (var groupId in dto.Groups)
         {
-            var specification = new GetGroupByIdWithMembersSpecification(groupId);
+            var specification = new GetGroupByIdWithMembersExpensesAndTransfersSpecification(groupId);
             var group = await _groupRepository.FirstOrDefaultAsync(specification, cancellationToken);
             if (group == null)
             {
