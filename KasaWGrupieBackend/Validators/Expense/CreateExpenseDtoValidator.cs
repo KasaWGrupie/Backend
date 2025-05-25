@@ -34,6 +34,25 @@ public class CreateExpenseDtoValidator : AbstractValidator<CreateExpenseDto>
             .NotEmpty().WithMessage("DivisionMethod is required")
             .IsEnumName(typeof(ExpenseSplitType), caseSensitive: false)
             .WithMessage("Invalid DivisionMethod");
-    }
 
+        // Percentage split validation
+        When(x => x.DivisionMethod.Equals(ExpenseSplitType.ByPercent.ToString(), StringComparison.OrdinalIgnoreCase), () =>
+        {
+            RuleFor(x => x.Participants)
+                .Must(participants => participants.All(p => p.Amount is >= 0 and <= 1))
+                .WithMessage("All percentages must be between 0 and 1")
+                .Must(participants => Math.Abs(participants.Sum(p => p.Amount) - 1) < 0.0001M)
+                .WithMessage("Sum of percentages must equal 100%");
+        });
+
+        // Custom split validation
+        When(x => x.DivisionMethod.Equals(ExpenseSplitType.Custom.ToString(), StringComparison.OrdinalIgnoreCase), () =>
+        {
+            RuleFor(x => x.Participants)
+                .Must(participants => participants.All(p => p.Amount >= 0))
+                .WithMessage("All amounts must be non-negative")
+                .Must((dto, participants) => Math.Abs(participants.Sum(p => p.Amount) - dto.Amount) < 0.0001M)
+                .WithMessage("Sum of split amounts must equal the total expense amount");
+        });
+    }
 }

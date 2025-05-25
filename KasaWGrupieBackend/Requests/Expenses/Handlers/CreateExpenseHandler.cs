@@ -80,13 +80,28 @@ public class CreateExpenseHandler : IRequestHandler<CreateExpenseCommand, Result
 			Expense = expense,
 			Type = splitType,
 		};
-		expenseSplit.SplitRecords = participants.Select(participant => 
-			new ExpenseSplitRecord
+		expenseSplit.SplitRecords = participants.Select(participant =>
+		{
+			var record = new ExpenseSplitRecord
 			{
 				ExpenseSplit = expenseSplit,
 				OwingPerson = participant.user,
-				Amount = participant.amount,
-			}).ToList();
+			};
+
+			switch (splitType)
+			{
+				case ExpenseSplitType.ByPercent:
+					record.Percentage = participant.amount;
+					break;
+				case ExpenseSplitType.Custom:
+					record.Amount = participant.amount;
+					break;
+				case ExpenseSplitType.Equally:
+					break;
+			}
+			
+			return record;
+		}).ToList();
 
 		expense.ExpenseSplit = expenseSplit;
 		

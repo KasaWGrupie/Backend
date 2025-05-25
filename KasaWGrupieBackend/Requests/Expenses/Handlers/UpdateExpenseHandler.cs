@@ -102,12 +102,28 @@ public class UpdateExpenseHandler : IRequestHandler<UpdateExpenseCommand, Result
 		{
 			var oldRecords = expenseSplit.SplitRecords;
 			var newRecords = participants.Select(participant =>
-				new ExpenseSplitRecord
+			{
+				var record = new ExpenseSplitRecord
 				{
 					ExpenseSplit = expenseSplit,
 					OwingPerson = participant.user,
 					Amount = participant.amount,
-				}).ToList();
+				};
+
+				switch (splitType)
+				{
+					case ExpenseSplitType.ByPercent:
+						record.Percentage = participant.amount;
+						break;
+					case ExpenseSplitType.Custom:
+						record.Amount = participant.amount;
+						break;
+					case ExpenseSplitType.Equally:
+						break;
+				}
+				
+				return record;
+			}).ToList();
 			
 			expenseSplit.SplitRecords = newRecords;
 		

@@ -2,6 +2,6 @@
 
 public sealed record ExpenseParticipantDto(
     int UserId,
-    string Username, // potrzebujemy tu tego w ogóle?
+    string Username,
     decimal Amount
 );
