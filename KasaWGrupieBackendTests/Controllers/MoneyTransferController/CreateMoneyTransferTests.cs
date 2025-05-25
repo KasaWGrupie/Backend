@@ -72,7 +72,8 @@ public class CreateMoneyTransferTests
 		_userRepositoryMock.Setup(repo => repo.GetByIdAsync(recipient.Id, It.IsAny<CancellationToken>()))
 			.ReturnsAsync(recipient);
 
-		_groupRepositoryMock.Setup(repo => repo.GetByIdAsync(group.Id, It.IsAny<CancellationToken>()))
+		_groupRepositoryMock.Setup(repo => 
+				repo.FirstOrDefaultAsync(It.IsAny<ISpecification<Group>>(), It.IsAny<CancellationToken>()))
 			.ReturnsAsync(group);
 
 		_validatorMock.Setup(v => v.ValidateAsync(It.IsAny<CreateMoneyTransferDto>(), It.IsAny<CancellationToken>()))
