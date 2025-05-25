@@ -24,4 +24,4 @@ jobs:
         run: dotnet build KasaWGrupieBackend.sln --no-restore
 
       - name: Tests
-        run: dotnet test --no-build --verbosity normal
+        run: dotnet test KasaWGrupieBackend.sln --no-build --verbosity normal
