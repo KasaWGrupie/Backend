@@ -18,7 +18,7 @@ jobs:
           dotnet-version: '8.0'
 
       - name: Restore dependencies
-        run: dotnet restore
+        run: dotnet restore KasaWGrupieBackend.sln
 
       - name: Build
         run: dotnet build KasaWGrupieBackend.sln --no-restore
