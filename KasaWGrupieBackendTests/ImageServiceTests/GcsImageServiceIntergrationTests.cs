@@ -4,9 +4,11 @@ using System.Threading;
 using System.Threading.Tasks;
 using Google.Cloud.Storage.V1;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Options;
 using Microsoft.Extensions.Configuration;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using FluentAssertions;
+using DotNetEnv;
 using KasaWGrupie.Infrastructure.ImageService;
 
 namespace KasaWGrupieBackendTests.IntegrationTests
@@ -20,24 +22,30 @@ namespace KasaWGrupieBackendTests.IntegrationTests
         [TestInitialize]
         public void Setup()
         {
-            var configuration = new ConfigurationBuilder()
-                .AddEnvironmentVariables()
-                .Build();
-        
-
-            
-            _bucketName = configuration["GCP_BUCKET_NAME"]
+            Env.TraversePath().Load();
+            _bucketName = Environment.GetEnvironmentVariable("GCP_BUCKET_NAME")
                 ?? throw new InvalidOperationException("BucketName is missing in secrets.");
-
-            var credentialsPath = configuration["GCP_CREDENTIALS_PATH"]
-                ?? throw new InvalidOperationException("CredentialsPath is missing in secrets.");
-
-            // Authenticate and create StorageClient
+            
+            var credentialsPath = Environment.GetEnvironmentVariable("GCP_CREDENTIALS_PATH")
+                            ?? throw new InvalidOperationException("CredentialsPath is missing in secrets.");
+            
+                        // 2) Build the real StorageClient
             var credential = Google.Apis.Auth.OAuth2.GoogleCredential.FromFile(credentialsPath);
             var storageClient = StorageClient.Create(credential);
+            
+                        // 3) Wrap your two needed settings into IOptions<GcsImageOptions>
+            var opts = new GcsImageOptions
+                        {
+                BucketName = _bucketName,
+CredentialsPath = credentialsPath  // optional in the service itself
+            };
+            var options = Options.Create(opts);
+            
+                        // 4) New constructor signature
+            _imageService = new GcsImageService(options, storageClient);
+        
 
-            // Create the real service
-            _imageService = new GcsImageService(configuration, storageClient);
+
         }
 
         [TestMethod]

@@ -368,3 +368,5 @@ kasawgrupie-service-account-file.json
 
 #container data
 .containers
+
+gcs_key/

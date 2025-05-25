@@ -2,6 +2,7 @@
 using Google.Cloud.Storage.V1;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Options;
 using System;
 using System.IO;
 using System.Net;
@@ -10,17 +11,27 @@ using System.Threading.Tasks;
 
 namespace KasaWGrupie.Infrastructure.ImageService
 {
+    public class GcsImageOptions
+    {
+        // must match your .env variable name, or the JSON section name
+        public string BucketName { get; set; } = default!;
+        // optional: if you want to explicitly load a creds file
+        public string? CredentialsPath { get; set; }
+    }
     public class GcsImageService : IImageService
     {
         private string _bucketName;
         private StorageClient _storageClient;
 
         
-        public GcsImageService(IConfiguration configuration, StorageClient storageClient)
+        public GcsImageService(IOptions<GcsImageOptions> optionsAccessor, StorageClient storageClient)
         {
             _storageClient = storageClient ?? throw new ArgumentNullException(nameof(storageClient));
-            _bucketName = configuration["GCP_BUCKET_NAME"]
-         ?? throw new ArgumentNullException(nameof(_bucketName), "BucketName is required");
+            var opts = optionsAccessor.Value;
+            _bucketName =
+            !string.IsNullOrWhiteSpace(opts.BucketName)
+                ? opts.BucketName
+                : throw new ArgumentNullException(nameof(opts.BucketName), "BucketName is required");
             
         }
 

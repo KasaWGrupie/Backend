@@ -9,6 +9,7 @@ using Microsoft.Extensions.Configuration;
 using Moq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Google.Apis.Auth.OAuth2;
+using Microsoft.Extensions.Options;
 
 
 namespace KasaWGrupie.Tests.ImageServiceTests
@@ -18,16 +19,22 @@ namespace KasaWGrupie.Tests.ImageServiceTests
     {
         private Mock<StorageClient> _storageClientMock;
         private GcsImageService _imageService;
-        private Mock<IConfiguration> _configurationMock;
+        private IOptions<GcsImageOptions> _options;
 
         [TestInitialize]
         public void Setup()
         {
             _storageClientMock = new Mock<StorageClient>();
 
-            _configurationMock = new Mock<IConfiguration>();
-            _configurationMock.Setup(c => c["GCP_BUCKET_NAME"]).Returns("test-bucket");
-            _imageService = new GcsImageService(_configurationMock.Object, _storageClientMock.Object);
+            var opts = new GcsImageOptions
+            {
+                BucketName = "test-bucket",
+                CredentialsPath = null      // or some dummy path
+            };
+            _options = Options.Create(opts);
+
+            // 3) Pass the options + mock client into your service
+            _imageService = new GcsImageService(_options, _storageClientMock.Object);
         }
 
         [TestMethod]
