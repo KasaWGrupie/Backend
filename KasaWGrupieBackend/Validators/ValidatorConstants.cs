@@ -15,4 +15,11 @@ public static class ValidatorConstants
 		public const int NameMaxLength = 50;
 		public const int EmailMaxLength = 100;
 	}
+
+	public static class CreateExpenseDtoConstants
+	{
+		public const int NameMaxLength = 100;
+		public const int DescriptionMaxLength = 500;
+		public const int PictureUrlMaxLength = 200;
+	}
 }
