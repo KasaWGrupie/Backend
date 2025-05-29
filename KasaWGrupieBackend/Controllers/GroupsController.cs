@@ -57,7 +57,7 @@ public sealed class GroupsController : ControllerBase
     }
 
     [TranslateResultToActionResult]
-    [HttpGet("{groupId:long}/balances")]
+    [HttpGet("{groupId:int}/balances")]
     public async Task<Result<GetGroupBalancesDto>> GetBalances(
   [FromRoute] int groupId)
     {
