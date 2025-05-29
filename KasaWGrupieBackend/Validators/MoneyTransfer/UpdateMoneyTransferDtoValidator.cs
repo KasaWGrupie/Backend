@@ -8,9 +8,6 @@ public class UpdateMoneyTransferDtoValidator : AbstractValidator<UpdateMoneyTran
 {
 	public UpdateMoneyTransferDtoValidator()
 	{
-		RuleFor(x => x.TransferId)
-			.GreaterThan(0).WithMessage("TransferId is required");
-
 		RuleFor(x => x.Status)
 			.NotEmpty().WithMessage("Status is required")
 			.IsEnumName(typeof(MoneyTransferStatus), caseSensitive: false)
