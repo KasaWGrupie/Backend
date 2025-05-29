@@ -36,9 +36,19 @@ public class UpdateMoneyTransferHandler : IRequestHandler<UpdateMoneyTransferCom
             return Result.NotFound("Money Transfer not found");
         }
 
+        if (request.UserId != transfer.SenderId)
+        {
+            return Result.Forbidden("Only sender can change money transfer status.");
+        }
+
         if (!Enum.TryParse<MoneyTransferStatus>(dto.Status, out var status))
         {
             return Result.Invalid(new ValidationError("Status", "Invalid status value"));
+        }
+
+        if (transfer.Status != MoneyTransferStatus.Pending && status != MoneyTransferStatus.Pending)
+        {
+            return Result.Invalid(new ValidationError("Status", $"This transfer is already closed with status {transfer.Status}."));
         }
 
         // Set an end date on confirming or rejecting the transfer 

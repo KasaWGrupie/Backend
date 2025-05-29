@@ -10,7 +10,7 @@ using KasaWGrupie.Core.Enums;
 using KasaWGrupie.Tests.Factories;
 using Moq;
 
-namespace KasaWGrupieTests;
+namespace KasaWGrupie.Tests;
 
 [TestClass]
 public class UpdateMoneyRequestStatusHandlerTests
@@ -41,14 +41,16 @@ public class UpdateMoneyRequestStatusHandlerTests
         var receiver = UserFactory.Create(id: 2, email: "receiver@example.com");
         
         var dto = new UpdateMoneyRequestStatusDto("Paid");
-        var command = new UpdateMoneyRequestStatusCommand(1, dto);
+        var command = new UpdateMoneyRequestStatusCommand(receiver.Id, 1, dto);
         var payRequest = new PayRequest
         {
             Id = 1,
             Sender = sender,
+            SenderId = sender.Id,
             CurrencyId = 1,
             Currency = new Currency { Id = 1, Name = "USD" },
             Receiver = receiver,
+            ReceiverId = receiver.Id,
             PayRequestStatus = PayRequestStatus.Pending
         };
 
@@ -76,12 +78,14 @@ public class UpdateMoneyRequestStatusHandlerTests
         var receiver = UserFactory.Create(id: 2, email: "receiver@example.com");
         
         var dto = new UpdateMoneyRequestStatusDto("Paid");
-        var command = new UpdateMoneyRequestStatusCommand(1, dto);
+        var command = new UpdateMoneyRequestStatusCommand(receiver.Id, 1, dto);
         var payRequest = new PayRequest
         {
             Id = 1,
             Sender = sender,
+            SenderId = sender.Id,
             Receiver = receiver,
+            ReceiverId = receiver.Id,
             CurrencyId = 1,
             Currency = new Currency { Id = 1, Name = "USD" },
             PayRequestStatus = PayRequestStatus.Paid
@@ -108,7 +112,7 @@ public class UpdateMoneyRequestStatusHandlerTests
     {
         // Arrange
         var dto = new UpdateMoneyRequestStatusDto("Invalid");
-        var command = new UpdateMoneyRequestStatusCommand(1, dto);
+        var command = new UpdateMoneyRequestStatusCommand(1, 1, dto);
 
         var validationFailure = new FluentValidation.Results.ValidationFailure("Status", "Invalid status");
         _validatorMock.Setup(v => v.ValidateAsync(It.IsAny<UpdateMoneyRequestStatusDto>(), It.IsAny<CancellationToken>()))
@@ -128,7 +132,7 @@ public class UpdateMoneyRequestStatusHandlerTests
     {
         // Arrange
         var dto = new UpdateMoneyRequestStatusDto("Paid");
-        var command = new UpdateMoneyRequestStatusCommand(1, dto);
+        var command = new UpdateMoneyRequestStatusCommand(1, 1, dto);
 
         _validatorMock.Setup(v => v.ValidateAsync(It.IsAny<UpdateMoneyRequestStatusDto>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(new FluentValidation.Results.ValidationResult());
@@ -143,6 +147,42 @@ public class UpdateMoneyRequestStatusHandlerTests
         result.IsSuccess.Should().BeFalse();
         result.Status.Should().Be(ResultStatus.NotFound);
     }
+    
+    [TestMethod]
+    public async Task Handle_ShouldReturnForbidden_WhenUserIdIsNotReceiverId()
+    {
+        // Arrange
+        var sender = UserFactory.Create();
+        var receiver = UserFactory.Create(id: 2, email: "receiver@example.com");
+        var nonReceiver = UserFactory.Create(id: 3, email: "other@example.com");
+        
+        var dto = new UpdateMoneyRequestStatusDto("Paid");
+        var command = new UpdateMoneyRequestStatusCommand(nonReceiver.Id, 1, dto);
+        var payRequest = new PayRequest
+        {
+            Id = 1,
+            Sender = sender,
+            Receiver = receiver,
+            Currency = new Currency { Id = 1, Name = "USD" },
+            CurrencyId = 1,
+            PayRequestStatus = PayRequestStatus.Pending
+        };
+    
+        _validatorMock.Setup(v => v.ValidateAsync(It.IsAny<UpdateMoneyRequestStatusDto>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(new FluentValidation.Results.ValidationResult());
+    
+        _payRequestRepositoryMock.Setup(r => r.GetByIdAsync(command.RequestId, It.IsAny<CancellationToken>()))
+            .ReturnsAsync(payRequest);
+    
+        // Act
+        var result = await _handler.Handle(command, CancellationToken.None);
+    
+        // Assert
+        result.IsSuccess.Should().BeFalse();
+        result.Status.Should().Be(ResultStatus.Forbidden);
+    }
+    
+    
 
 
     // [TestMethod]

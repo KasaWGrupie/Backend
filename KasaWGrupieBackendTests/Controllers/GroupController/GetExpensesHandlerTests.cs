@@ -37,9 +37,9 @@ public class GetExpensesHandlerTests
     public async Task Handler_ShouldReturnSuccess()
     {
         // Arrange
-        var admin = UserFactory.Create(email: "admin@example.com");
-        var member1 = UserFactory.Create(email: "user1@example.com");
-        var member2 = UserFactory.Create(email: "user2@example.com");
+        var admin = UserFactory.Create(id: 1, email: "admin@example.com");
+        var member1 = UserFactory.Create(id: 2, email: "user1@example.com");
+        var member2 = UserFactory.Create(id: 3, email: "user2@example.com");
         
         var group = new Group
         {
@@ -49,7 +49,8 @@ public class GetExpensesHandlerTests
             PictureUrl = "pic.jpg",
             Currency = new Currency { Name = "USD" },
             Admin = admin,
-            Members = new List<User> { admin },
+            AdminId = admin.Id,
+            Members = new List<User> { admin, member1, member2 },
             Status = GroupStatus.Active
         };
         
@@ -59,6 +60,7 @@ public class GetExpensesHandlerTests
             Amount = 100,
             Group = group,
             PayingPerson = admin,
+            PayingPersonId = admin.Id,
             Name = "Expense 1",
             Description = "Expense 1 description",
             PictureUrl = "expense.png"
@@ -73,7 +75,8 @@ public class GetExpensesHandlerTests
             {
                 ExpenseSplit = expenseSplit1,
                 Amount = 0,
-                OwingPerson = member1 
+                OwingPerson = member1,
+                OwingPersonId = member1.Id
             }
         };
         var expense2 = new Expense
@@ -82,6 +85,7 @@ public class GetExpensesHandlerTests
             Amount = 350,
             Group = group,
             PayingPerson = admin,
+            PayingPersonId = admin.Id,
             Name = "Expense 2",
             Description = "Expense 2 description",
             PictureUrl = "expense2.png"
@@ -96,22 +100,24 @@ public class GetExpensesHandlerTests
             {
                 ExpenseSplit = expenseSplit2,
                 Percentage = 25,
-                OwingPerson = member1 
+                OwingPerson = member1,
+                OwingPersonId = member1.Id
             },
             new()
             {
                 ExpenseSplit = expenseSplit2,
                 Percentage = 75,
-                OwingPerson = member2 
+                OwingPerson = member2, 
+                OwingPersonId = member2.Id
             }
         };
 
-        var command = new GetExpensesCommand(group.Id);
+        var command = new GetExpensesCommand(member1.Id, group.Id);
 
         _expenseRepositoryMock.Setup(repo => repo.ListAsync(It.IsAny<ISpecification<Expense>>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(new List<Expense> { expense1, expense2 });
         
-        _groupRepositoryMock.Setup(repo => repo.GetByIdAsync(group.Id, It.IsAny<CancellationToken>()))
+        _groupRepositoryMock.Setup(repo => repo.FirstOrDefaultAsync(It.IsAny<ISpecification<Group>>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(group);
         
         _validatorMock.Setup(validator => validator.ValidateAsync(It.IsAny<GetExpensesCommand>(), It.IsAny<CancellationToken>()))
@@ -208,7 +214,7 @@ public class GetExpensesHandlerTests
             }
         };
 
-        var command = new GetExpensesCommand(5);
+        var command = new GetExpensesCommand(member1.Id, 5);
 
         _expenseRepositoryMock.Setup(repo => repo.ListAsync(It.IsAny<ISpecification<Expense>>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(new List<Expense> { expense1, expense2 });
@@ -223,4 +229,52 @@ public class GetExpensesHandlerTests
 
         result.Status.Should().Be(ResultStatus.NotFound);
     }
+    
+    [TestMethod]
+    public async Task Handler_ShouldReturnForbidden_WhenUserIsNotGroupMember()
+    {
+        // Arrange
+        var admin = UserFactory.Create(id: 1, email: "admin@example.com");
+        var member1 = UserFactory.Create(id: 2, email: "user1@example.com");
+        var nonMember = UserFactory.Create(id: 3, email: "nonmember@example.com");
+        
+        var group = new Group
+        {
+            Id = 1,
+            Name = "Name",
+            Description = "Description",
+            PictureUrl = "pic.jpg",
+            Currency = new Currency { Name = "USD" },
+            Admin = admin,
+            Members = new List<User> { admin, member1 },
+            Status = GroupStatus.Active
+        };
+        
+        var expense = new Expense
+        {
+            Id = 1,
+            Amount = 100,
+            Group = group,
+            PayingPerson = admin,
+            Name = "Expense 1",
+            Description = "Expense 1 description",
+            PictureUrl = "expense.png"
+        };
+        
+        var command = new GetExpensesCommand(nonMember.Id, group.Id);
+    
+        _groupRepositoryMock.Setup(repo => repo.FirstOrDefaultAsync(It.IsAny<ISpecification<Group>>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(group);
+            
+        _expenseRepositoryMock.Setup(repo => repo.ListAsync(It.IsAny<ISpecification<Expense>>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(new List<Expense> { expense });
+        
+        _validatorMock.Setup(validator => validator.ValidateAsync(It.IsAny<GetExpensesCommand>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(new FluentValidation.Results.ValidationResult());
+        
+        var result = await _handler.Handle(command, CancellationToken.None);
+    
+        result.Status.Should().Be(ResultStatus.Forbidden);
+    }
+    
 }

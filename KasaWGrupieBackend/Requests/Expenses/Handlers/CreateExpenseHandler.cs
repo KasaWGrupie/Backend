@@ -38,6 +38,11 @@ public class CreateExpenseHandler : IRequestHandler<CreateExpenseCommand, Result
 			return Result.Invalid(validationResult.Errors.Select(e => new ValidationError(e.PropertyName, e.ErrorMessage)));
 		}
 
+		if (request.UserId != dto.PaidBy)
+		{
+			return Result.Forbidden("You are not allowed to create expenses for other users.");
+		}
+
 		var group = await _groupRepository.GetByIdAsync(dto.GroupId, cancellationToken);
 		if (group == null)
 		{

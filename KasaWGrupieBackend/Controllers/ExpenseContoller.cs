@@ -2,6 +2,7 @@
 using Ardalis.Result.AspNetCore;
 using KasaWGrupie.API.DTOs.Expense;
 using KasaWGrupie.API.Requests.Expenses.Commands;
+using KasaWGrupie.Infrastructure.AuthService;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -9,7 +10,9 @@ namespace KasaWGrupie.API.Controllers;
 
 [Route("expense")]
 [ApiController]
+[FirebaseAuthorize]
 public class ExpenseController(
+    IAuthService authService,
     IMediator mediator
     ) : ControllerBase
 {
@@ -21,7 +24,8 @@ public class ExpenseController(
     [TranslateResultToActionResult]
     public async Task<Result> CreateExpense([FromForm] CreateExpenseDto createExpenseDto)
     {
-        var command = new CreateExpenseCommand(createExpenseDto);
+        var userId = await authService.GetUserIdFromAuthTokenAsync(HttpContext);
+        var command = new CreateExpenseCommand(userId, createExpenseDto);
         var result = await mediator.Send(command);
         
         return result;
@@ -34,7 +38,8 @@ public class ExpenseController(
     [TranslateResultToActionResult]
     public async Task<Result> UpdateExpense([FromForm] UpdateExpenseDto updateExpenseDto)
     {
-        var command = new UpdateExpenseCommand(updateExpenseDto);
+        var userId = await authService.GetUserIdFromAuthTokenAsync(HttpContext);
+        var command = new UpdateExpenseCommand(userId, updateExpenseDto);
         var result = await mediator.Send(command);
         
         return result;

@@ -9,7 +9,7 @@ using KasaWGrupie.Core.Enums;
 using KasaWGrupie.Tests.Factories;
 using Moq;
 
-namespace KasaWGrupieTests;
+namespace KasaWGrupie.Tests;
 
 [TestClass]
 public class GetMoneyRequestForReceiverHandlerTests
@@ -76,6 +76,7 @@ public class GetMoneyRequestForReceiverHandlerTests
             CurrencyId = currency.Id,
             Currency = currency,
             Admin = sender,
+            AdminId = sender.Id,
             Members = new List<User> { sender, receiver },
             Status = GroupStatus.Active       
         };
