@@ -2,8 +2,8 @@ using Ardalis.Result;
 using Ardalis.Specification;
 using FluentAssertions;
 using FluentValidation;
-using KasaWGrupie.API.Requests.MoneyRequest.Commands;
-using KasaWGrupie.API.Requests.MoneyRequest.Handlers;
+using KasaWGrupie.API.Requests.MoneyTransfers.Commands;
+using KasaWGrupie.API.Requests.MoneyTransfers.Handlers;
 using KasaWGrupie.Core.Entities;
 using KasaWGrupie.Core.Enums;
 using KasaWGrupie.Tests.Factories;
@@ -12,44 +12,44 @@ using Moq;
 namespace KasaWGrupieTests;
 
 [TestClass]
-public class GetMoneyRequestForSenderHandlerTests
+public class GetMoneyTransferForSenderHandlerTests
 {
 #pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring as nullable.
     private Mock<IRepositoryBase<User>> _userRepositoryMock;
-    private Mock<IRepositoryBase<PayRequest>> _payRequestRepositoryMock;
-    private Mock<IValidator<GetMoneyRequestForSenderCommand>> _validatorMock;
-    private GetMoneyRequestForSenderHandler _handler;
+    private Mock<IRepositoryBase<MoneyTransfer>> _moneyTransferRepositoryMock;
+    private Mock<IValidator<GetMoneyTransferForSenderCommand>> _validatorMock;
+    private GetMoneyTransferForSenderHandler _handler;
 #pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring as nullable.
 
     [TestInitialize]
     public void Setup()
     {
         _userRepositoryMock = new Mock<IRepositoryBase<User>>();
-        _payRequestRepositoryMock = new Mock<IRepositoryBase<PayRequest>>();
-        _validatorMock = new Mock<IValidator<GetMoneyRequestForSenderCommand>>();
+        _moneyTransferRepositoryMock = new Mock<IRepositoryBase<MoneyTransfer>>();
+        _validatorMock = new Mock<IValidator<GetMoneyTransferForSenderCommand>>();
 
-        _handler = new GetMoneyRequestForSenderHandler(
+        _handler = new GetMoneyTransferForSenderHandler(
             _userRepositoryMock.Object,
-            _payRequestRepositoryMock.Object,
+            _moneyTransferRepositoryMock.Object,
             _validatorMock.Object
         );
     }
 
     [TestMethod]
-    public async Task Handle_ShouldReturnSuccess_WithEmptyList_WhenSenderHasNoRequests()
+    public async Task Handle_ShouldReturnSuccess_WithEmptyList_WhenSenderHasNoTransfers()
     {
         // Arrange
         var sender = UserFactory.Create();
-        var command = new GetMoneyRequestForSenderCommand(sender.Id);
+        var command = new GetMoneyTransferForSenderCommand(sender.Id);
 
-        _validatorMock.Setup(v => v.ValidateAsync(It.IsAny<GetMoneyRequestForSenderCommand>(), It.IsAny<CancellationToken>()))
+        _validatorMock.Setup(v => v.ValidateAsync(It.IsAny<GetMoneyTransferForSenderCommand>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(new FluentValidation.Results.ValidationResult());
 
         _userRepositoryMock.Setup(r => r.GetByIdAsync(sender.Id, It.IsAny<CancellationToken>()))
             .ReturnsAsync(sender);
 
-        _payRequestRepositoryMock.Setup(r => r.ListAsync(It.IsAny<ISpecification<PayRequest>>(), It.IsAny<CancellationToken>()))
-            .ReturnsAsync(new List<PayRequest>());
+        _moneyTransferRepositoryMock.Setup(r => r.ListAsync(It.IsAny<ISpecification<MoneyTransfer>>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(new List<MoneyTransfer>());
 
         // Act
         var result = await _handler.Handle(command, CancellationToken.None);
@@ -61,67 +61,62 @@ public class GetMoneyRequestForSenderHandlerTests
     }
 
     [TestMethod]
-    public async Task Handle_ShouldReturnSuccess_WithRequestsList_WhenSenderHasRequests()
+    public async Task Handle_ShouldReturnSuccess_WithTransfersList_WhenSenderHasTransfers()
     {
         // Arrange
-        var sender = UserFactory.Create();
-        var receiver = UserFactory.Create(id: 2, email: "receiver@example.com");
-        var currency = new Currency { Id = 1, Name = "USD" };
+        var recipient = UserFactory.Create();
+        var sender = UserFactory.Create(id: 2, email: "sender@example.com");
         var group = new Group
         {
             Id = 1,
             Name = "Group 1",
             Description = "Group 1 description",
             PictureUrl = "pic.jpg",
-            CurrencyId = currency.Id,
-            Currency = currency,
+            Currency = new Currency { Name = "USD" },
             Admin = sender,
-            Members = new List<User> { sender, receiver },
-            Status = GroupStatus.Active
+            Members = new List<User> { sender, recipient },
+            Status = GroupStatus.Active       
         };
 
-        List<PayRequest> payRequests =
-        [
-            new PayRequest
+        var moneyTransfers = new List<MoneyTransfer>
+        {
+            new MoneyTransfer
             {
                 Id = 1,
                 Sender = sender,
                 SenderId = sender.Id,
-                Receiver = receiver,
-                ReceiverId = receiver.Id,
+                Recipient = recipient,
+                RecipientId = recipient.Id,
                 Amount = 100m,
-                GroupsToSettle = new List<Group> { group },
-                Currency = currency,
-                CurrencyId = currency.Id,
-                PayRequestStatus = PayRequestStatus.Pending
+                Group = group,
+                GroupId = group.Id,
+                Status = MoneyTransferStatus.Pending
             },
-
-            new PayRequest
+            new MoneyTransfer
             {
                 Id = 2,
                 Sender = sender,
                 SenderId = sender.Id,
-                Receiver = receiver,
-                ReceiverId = receiver.Id,
+                Recipient = recipient,
+                RecipientId = recipient.Id,
                 Amount = 200m,
-                GroupsToSettle = new List<Group> { group },
-                Currency = currency,
-                CurrencyId = currency.Id,
-                PayRequestStatus = PayRequestStatus.Paid,
+                Group = group,
+                GroupId = group.Id,
+                Status = MoneyTransferStatus.Confirmed,
                 EndDate = DateTime.Now
             }
-        ];
+        };
 
-        var command = new GetMoneyRequestForSenderCommand(sender.Id);
+        var command = new GetMoneyTransferForSenderCommand(sender.Id);
 
-        _validatorMock.Setup(v => v.ValidateAsync(It.IsAny<GetMoneyRequestForSenderCommand>(), It.IsAny<CancellationToken>()))
+        _validatorMock.Setup(v => v.ValidateAsync(It.IsAny<GetMoneyTransferForSenderCommand>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(new FluentValidation.Results.ValidationResult());
 
         _userRepositoryMock.Setup(r => r.GetByIdAsync(sender.Id, It.IsAny<CancellationToken>()))
             .ReturnsAsync(sender);
 
-        _payRequestRepositoryMock.Setup(r => r.ListAsync(It.IsAny<ISpecification<PayRequest>>(), It.IsAny<CancellationToken>()))
-            .ReturnsAsync(payRequests);
+        _moneyTransferRepositoryMock.Setup(r => r.ListAsync(It.IsAny<ISpecification<MoneyTransfer>>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(moneyTransfers);
 
         // Act
         var result = await _handler.Handle(command, CancellationToken.None);
@@ -130,31 +125,30 @@ public class GetMoneyRequestForSenderHandlerTests
         result.IsSuccess.Should().BeTrue();
         result.Value.Should().NotBeNull();
         result.Value.Should().HaveCount(2);
-        
-        var firstRequest = result.Value.First();
-        firstRequest.Id.Should().Be(1);
-        firstRequest.SenderId.Should().Be(sender.Id);
-        firstRequest.RecipientId.Should().Be(receiver.Id);
-        firstRequest.MoneyValue.Should().Be(100m);
-        firstRequest.Groups.Should().ContainSingle(id => id == group.Id);
-        firstRequest.Status.Should().Be(PayRequestStatus.Pending.ToString());
-        firstRequest.EndDate.Should().BeNull();
-        firstRequest.Currency.Should().Be("USD");
 
-        var secondRequest = result.Value.Last();
-        secondRequest.Id.Should().Be(2);
-        secondRequest.Status.Should().Be(PayRequestStatus.Paid.ToString());
-        secondRequest.EndDate.Should().NotBeNull();
+        var firstTransfer = result.Value.First();
+        firstTransfer.Id.Should().Be(1);
+        firstTransfer.SenderId.Should().Be(sender.Id);
+        firstTransfer.RecipientId.Should().Be(recipient.Id);
+        firstTransfer.Amount.Should().Be(100m);
+        firstTransfer.GroupId.Should().Be(group.Id);
+        firstTransfer.Status.Should().Be(MoneyTransferStatus.Pending.ToString());
+        firstTransfer.EndDate.Should().BeNull();
+
+        var secondTransfer = result.Value.Last();
+        secondTransfer.Id.Should().Be(2);
+        secondTransfer.Status.Should().Be(MoneyTransferStatus.Confirmed.ToString());
+        secondTransfer.EndDate.Should().NotBeNull();
     }
 
     [TestMethod]
     public async Task Handle_ShouldReturnInvalid_WhenValidationFails()
     {
         // Arrange
-        var command = new GetMoneyRequestForSenderCommand(1);
+        var command = new GetMoneyTransferForSenderCommand(1);
 
         var validationFailure = new FluentValidation.Results.ValidationFailure("SenderId", "Invalid sender id");
-        _validatorMock.Setup(v => v.ValidateAsync(It.IsAny<GetMoneyRequestForSenderCommand>(), It.IsAny<CancellationToken>()))
+        _validatorMock.Setup(v => v.ValidateAsync(It.IsAny<GetMoneyTransferForSenderCommand>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(new FluentValidation.Results.ValidationResult(new[] { validationFailure }));
 
         // Act
@@ -169,9 +163,9 @@ public class GetMoneyRequestForSenderHandlerTests
     public async Task Handle_ShouldReturnNotFound_WhenSenderDoesNotExist()
     {
         // Arrange
-        var command = new GetMoneyRequestForSenderCommand(1);
+        var command = new GetMoneyTransferForSenderCommand(1);
 
-        _validatorMock.Setup(v => v.ValidateAsync(It.IsAny<GetMoneyRequestForSenderCommand>(), It.IsAny<CancellationToken>()))
+        _validatorMock.Setup(v => v.ValidateAsync(It.IsAny<GetMoneyTransferForSenderCommand>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(new FluentValidation.Results.ValidationResult());
 
         _userRepositoryMock.Setup(r => r.GetByIdAsync(1, It.IsAny<CancellationToken>()))
@@ -190,62 +184,57 @@ public class GetMoneyRequestForSenderHandlerTests
     {
         // Arrange
         var sender = UserFactory.Create();
-        var receiver = UserFactory.Create(id: 2, email: "receiver@example.com");
-        var currency = new Currency { Id = 1, Name = "USD" };
+        var recipient = UserFactory.Create(id: 2, email: "recipient@example.com");
         var group = new Group
         {
             Id = 1,
             Name = "Group 1",
             Description = "Group 1 description",
             PictureUrl = "pic.jpg",
-            Currency = currency,
-            CurrencyId = currency.Id,
+            Currency = new Currency { Name = "USD" },
             Admin = sender,
-            AdminId = sender.Id,
-            Members = new List<User> { sender, receiver },
+            Members = new List<User> { sender, recipient },
             Status = GroupStatus.Active
         };
 
-        List<PayRequest> payRequests =
+        List<MoneyTransfer> moneyTransfers =
         [
-            new PayRequest
+            new MoneyTransfer
             {
                 Id = 1,
                 Sender = sender,
                 SenderId = sender.Id,
-                Receiver = receiver,
-                ReceiverId = receiver.Id,
+                Recipient = recipient,
+                RecipientId = recipient.Id,
                 Amount = 100m,
-                CurrencyId = currency.Id,
-                Currency = currency,
-                GroupsToSettle = new List<Group> { group },
-                PayRequestStatus = PayRequestStatus.Pending
+                Group = group,
+                GroupId = group.Id,
+                Status = MoneyTransferStatus.Pending
             },
-            new PayRequest
+            new MoneyTransfer
             {
                 Id = 2,
                 Sender = sender,
                 SenderId = sender.Id,
-                Receiver = receiver,
-                ReceiverId = receiver.Id,
+                Recipient = recipient,
+                RecipientId = recipient.Id,
                 Amount = 200m,
-                CurrencyId = currency.Id,
-                Currency = currency,
-                GroupsToSettle = new List<Group> { group },
-                PayRequestStatus = PayRequestStatus.Paid
+                Group = group,
+                GroupId = group.Id,
+                Status = MoneyTransferStatus.Confirmed
             }
         ];
 
-        var command = new GetMoneyRequestForSenderCommand(sender.Id, "Pending");
+        var command = new GetMoneyTransferForSenderCommand(sender.Id, "Pending");
 
-        _validatorMock.Setup(v => v.ValidateAsync(It.IsAny<GetMoneyRequestForSenderCommand>(), It.IsAny<CancellationToken>()))
+        _validatorMock.Setup(v => v.ValidateAsync(It.IsAny<GetMoneyTransferForSenderCommand>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(new FluentValidation.Results.ValidationResult());
 
         _userRepositoryMock.Setup(r => r.GetByIdAsync(sender.Id, It.IsAny<CancellationToken>()))
             .ReturnsAsync(sender);
 
-        _payRequestRepositoryMock.Setup(r => r.ListAsync(It.IsAny<ISpecification<PayRequest>>(), It.IsAny<CancellationToken>()))
-            .ReturnsAsync(payRequests.Where(r => r.PayRequestStatus == PayRequestStatus.Pending).ToList());
+        _moneyTransferRepositoryMock.Setup(r => r.ListAsync(It.IsAny<ISpecification<MoneyTransfer>>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(moneyTransfers.Where(r => r.Status == MoneyTransferStatus.Pending).ToList());
 
         // Act
         var result = await _handler.Handle(command, CancellationToken.None);
@@ -254,7 +243,7 @@ public class GetMoneyRequestForSenderHandlerTests
         result.IsSuccess.Should().BeTrue();
         result.Value.Should().NotBeNull();
         result.Value.Should().HaveCount(1);
-        result.Value.Single().Status.Should().Be(PayRequestStatus.Pending.ToString());
+        result.Value.Single().Status.Should().Be(MoneyTransferStatus.Pending.ToString());
     }
 
     [TestMethod]
@@ -262,10 +251,10 @@ public class GetMoneyRequestForSenderHandlerTests
     {
         // Arrange
         var sender = UserFactory.Create();
-        var command = new GetMoneyRequestForSenderCommand(sender.Id, "InvalidStatus");
+        var command = new GetMoneyTransferForSenderCommand(sender.Id, "InvalidStatus");
 
         var validationFailure = new FluentValidation.Results.ValidationFailure("Status", "Status must be a valid status value");
-        _validatorMock.Setup(v => v.ValidateAsync(It.IsAny<GetMoneyRequestForSenderCommand>(), It.IsAny<CancellationToken>()))
+        _validatorMock.Setup(v => v.ValidateAsync(It.IsAny<GetMoneyTransferForSenderCommand>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(new FluentValidation.Results.ValidationResult(new[] { validationFailure }));
 
         // Act

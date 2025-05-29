@@ -20,6 +20,14 @@ public class PayRequestConfiguration : IEntityTypeConfiguration<PayRequest>
 			.HasColumnType(ConfigurationConstants.MoneyDecimalPrecision)
 			.IsRequired();
 
+		builder.Property(g => g.CurrencyId)
+			.IsRequired();
+		
+		builder.HasOne(g => g.Currency)
+			.WithMany()
+			.HasForeignKey(g => g.CurrencyId)
+			.OnDelete(DeleteBehavior.Cascade);
+
 		builder.Property(pr => pr.PayRequestStatus)
 			.IsRequired();
 

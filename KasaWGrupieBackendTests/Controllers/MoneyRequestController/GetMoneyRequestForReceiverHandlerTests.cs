@@ -66,13 +66,15 @@ public class GetMoneyRequestForReceiverHandlerTests
         // Arrange
         var receiver = UserFactory.Create();
         var sender = UserFactory.Create(id: 2, email: "sender@example.com");
+        var currency = new Currency { Id = 1, Name = "USD" };
         var group = new Group
         {
             Id = 1,
             Name = "Group 1",
             Description = "Group 1 description",
             PictureUrl = "pic.jpg",
-            Currency = new Currency { Name = "USD" },
+            CurrencyId = currency.Id,
+            Currency = currency,
             Admin = sender,
             Members = new List<User> { sender, receiver },
             Status = GroupStatus.Active       
@@ -88,6 +90,8 @@ public class GetMoneyRequestForReceiverHandlerTests
                 Receiver = receiver,
                 ReceiverId = receiver.Id,
                 Amount = 100m,
+                CurrencyId = currency.Id,
+                Currency = currency,
                 GroupsToSettle = new List<Group> { group },
                 PayRequestStatus = PayRequestStatus.Pending
             },
@@ -99,6 +103,8 @@ public class GetMoneyRequestForReceiverHandlerTests
                 Receiver = receiver,
                 ReceiverId = receiver.Id,
                 Amount = 200m,
+                CurrencyId = currency.Id,
+                Currency = currency,
                 GroupsToSettle = new List<Group> { group },
                 PayRequestStatus = PayRequestStatus.Paid,
                 EndDate = DateTime.Now
@@ -132,6 +138,7 @@ public class GetMoneyRequestForReceiverHandlerTests
         firstRequest.Groups.Should().ContainSingle(id => id == group.Id);
         firstRequest.Status.Should().Be(PayRequestStatus.Pending.ToString());
         firstRequest.EndDate.Should().BeNull();
+        firstRequest.Currency.Should().Be("USD");
 
         var secondRequest = result.Value.Last();
         secondRequest.Id.Should().Be(2);
@@ -183,13 +190,15 @@ public class GetMoneyRequestForReceiverHandlerTests
         // Arrange
         var sender = UserFactory.Create();
         var receiver = UserFactory.Create(id: 2, email: "receiver@example.com");
+        var currency = new Currency { Id = 1, Name = "USD" };
+        
         var group = new Group
         {
             Id = 1,
             Name = "Group 1",
             Description = "Group 1 description",
             PictureUrl = "pic.jpg",
-            Currency = new Currency { Name = "USD" },
+            Currency = currency,
             Admin = sender,
             Members = new List<User> { sender, receiver },
             Status = GroupStatus.Active
@@ -205,6 +214,8 @@ public class GetMoneyRequestForReceiverHandlerTests
                 Receiver = receiver,
                 ReceiverId = receiver.Id,
                 Amount = 100m,
+                CurrencyId = currency.Id,
+                Currency = currency,
                 GroupsToSettle = new List<Group> { group },
                 PayRequestStatus = PayRequestStatus.Pending
             },
@@ -216,6 +227,8 @@ public class GetMoneyRequestForReceiverHandlerTests
                 Receiver = receiver,
                 ReceiverId = receiver.Id,
                 Amount = 200m,
+                CurrencyId = currency.Id,
+                Currency = currency,
                 GroupsToSettle = new List<Group> { group },
                 PayRequestStatus = PayRequestStatus.Paid
             }

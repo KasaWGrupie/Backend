@@ -12,4 +12,5 @@ public class MoneyTransfer : EntityBase
 	public int GroupId { get; set; }
 	public required Group Group { get; set; }
 	public MoneyTransferStatus Status { get; set; }
+	public DateTime? EndDate { get; set; }
 }

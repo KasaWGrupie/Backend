@@ -28,15 +28,48 @@ public class MoneyTransferController(
         return result;
     }
 
+    /// <summary>
+    /// Changes the status of a money transfer to either <c>confirmed</c> or <c>rejected</c>.
+    /// </summary>
+    /// <returns>Money transfer status updated successfully</returns>
     [HttpPut("{transferId:int}/status")]
     [TranslateResultToActionResult]
     public async Task<Result> UpdateMoneyTransfer([FromRoute] int transferId, [FromBody] UpdateMoneyTransferDto updateMoneyTransferDto)
     {
-        updateMoneyTransferDto = updateMoneyTransferDto with { TransferId = transferId };
-        
-        var command = new UpdateMoneyTransferCommand(updateMoneyTransferDto);
+        var command = new UpdateMoneyTransferCommand(transferId, updateMoneyTransferDto);
         var result = await mediator.Send(command);
         
+        return result;
+    }
+    
+    
+    /// <summary>
+    /// Get all transfers sent by a given user
+    /// </summary>
+    [HttpGet("findBySender")]
+    [TranslateResultToActionResult]
+    public async Task<Result<List<GetMoneyTransferDto>>> GetMoneyTransferBySender(
+        [FromQuery] int senderId,
+        [FromQuery] string? status = null)
+    {
+        var command = new GetMoneyTransferForSenderCommand(senderId, status);
+        var result = await mediator.Send(command);
+
+        return result;
+    }
+
+    /// <summary>
+    /// Get all transfers received by a given user
+    /// </summary>
+    [HttpGet("findByRecipient")]
+    [TranslateResultToActionResult]
+    public async Task<Result<List<GetMoneyTransferDto>>> GetMoneyTransferByReceiver(
+        [FromQuery] int recipientId,
+        [FromQuery] string? status = null)
+    {
+        var command = new GetMoneyTransferForRecipientCommand(recipientId, status);
+        var result = await mediator.Send(command);
+
         return result;
     }
     

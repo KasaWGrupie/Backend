@@ -3,6 +3,7 @@ using System;
 using KasaWGrupie.Persistence.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace KasaWGrupie.Persistence.Migrations
 {
     [DbContext(typeof(KasaWGrupieDbContext))]
-    partial class KasaWGrupieDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250511163334_AddEndDateToMoneyTransfer")]
+    partial class AddEndDateToMoneyTransfer
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -111,24 +114,11 @@ namespace KasaWGrupie.Persistence.Migrations
                     b.Property<decimal>("Amount")
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<DateTime>("Date")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<string>("Description")
-                        .IsRequired()
-                        .HasMaxLength(500)
-                        .HasColumnType("character varying(500)");
-
                     b.Property<int>("ExpenseSplitId")
                         .HasColumnType("integer");
 
                     b.Property<int>("GroupId")
                         .HasColumnType("integer");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("character varying(100)");
 
                     b.Property<int>("PayingPersonId")
                         .HasColumnType("integer");
@@ -339,9 +329,6 @@ namespace KasaWGrupie.Persistence.Migrations
                     b.Property<decimal>("Amount")
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<int>("CurrencyId")
-                        .HasColumnType("integer");
-
                     b.Property<DateTime?>("EndDate")
                         .HasColumnType("timestamp with time zone");
 
@@ -355,8 +342,6 @@ namespace KasaWGrupie.Persistence.Migrations
                         .HasColumnType("integer");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("CurrencyId");
 
                     b.HasIndex("ReceiverId");
 
@@ -603,12 +588,6 @@ namespace KasaWGrupie.Persistence.Migrations
 
             modelBuilder.Entity("KasaWGrupie.Core.Entities.PayRequest", b =>
                 {
-                    b.HasOne("KasaWGrupie.Core.Entities.Currency", "Currency")
-                        .WithMany()
-                        .HasForeignKey("CurrencyId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("KasaWGrupie.Core.Entities.User", "Receiver")
                         .WithMany("RecievedPayRequests")
                         .HasForeignKey("ReceiverId")
@@ -620,8 +599,6 @@ namespace KasaWGrupie.Persistence.Migrations
                         .HasForeignKey("SenderId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("Currency");
 
                     b.Navigation("Receiver");
 

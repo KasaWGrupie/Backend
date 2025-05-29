@@ -5,6 +5,7 @@ using KasaWGrupie.API.DTOs.MoneyTransfer;
 using KasaWGrupie.API.Requests.MoneyTransfers.Commands;
 using KasaWGrupie.Core.Entities;
 using KasaWGrupie.Core.Enums;
+using KasaWGrupie.Persistence.Specifications.MoneyRequests;
 using MediatR;
 
 namespace KasaWGrupie.API.Requests.MoneyTransfers.Handlers;
@@ -45,8 +46,9 @@ public class CreateMoneyTransferHandler : IRequestHandler<CreateMoneyTransferCom
         {
             return Result.Invalid(new ValidationError("RecipientId", "Recipient user not found"));
         }
-        
-        var group = await _groupRepository.GetByIdAsync(dto.GroupId, cancellationToken);
+
+        var specification = new GetGroupByIdWithMembersSpecification(dto.GroupId);
+        var group = await _groupRepository.FirstOrDefaultAsync(specification, cancellationToken);
         if (group == null)
         {
             return Result.Invalid(new ValidationError("GroupId", "Group not found"));
@@ -67,7 +69,7 @@ public class CreateMoneyTransferHandler : IRequestHandler<CreateMoneyTransferCom
             Sender = sender,
             Amount = dto.Amount,
             Group = group,
-            Status = MoneyTransferStatus.Unconfirmed
+            Status = MoneyTransferStatus.Pending
         };
         
         await _transferRepository.AddAsync(moneyTransfer, cancellationToken);

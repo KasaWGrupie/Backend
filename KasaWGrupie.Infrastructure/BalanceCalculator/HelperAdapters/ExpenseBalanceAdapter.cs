@@ -2,7 +2,7 @@
 using KasaWGrupie.Core.Enums;
 
 namespace KasaWGrupie.Infrastructure.BalanceCalculator.HelperAdapters;
-class ExpenseBalanceAdapter : IExpenseBalance
+public class ExpenseBalanceAdapter : IExpenseBalance
 {
 	private Expense _expense;
 	public ExpenseBalanceAdapter(Expense expense)
