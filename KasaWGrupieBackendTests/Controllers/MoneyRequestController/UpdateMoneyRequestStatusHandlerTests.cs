@@ -88,7 +88,7 @@ public class UpdateMoneyRequestStatusHandlerTests
             ReceiverId = receiver.Id,
             CurrencyId = 1,
             Currency = new Currency { Id = 1, Name = "USD" },
-            PayRequestStatus = PayRequestStatus.Paid
+            PayRequestStatus = PayRequestStatus.Pending
         };
 
         _validatorMock.Setup(v => v.ValidateAsync(It.IsAny<UpdateMoneyRequestStatusDto>(), It.IsAny<CancellationToken>()))
