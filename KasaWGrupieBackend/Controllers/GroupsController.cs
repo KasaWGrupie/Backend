@@ -56,6 +56,14 @@ public sealed class GroupsController : ControllerBase
         return result;
     }
 
+    [TranslateResultToActionResult]
+    [HttpGet("{groupId:long}/balances")]
+    public async Task<Result<GetGroupBalancesDto>> GetBalances(
+  [FromRoute] int groupId)
+    {
+        var cmd = new GetGroupBalancesCommand(groupId);
+        return await _mediator.Send(cmd);
+    }
 
 
 }
