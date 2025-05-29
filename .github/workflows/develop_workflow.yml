@@ -1,0 +1,27 @@
+name: Build & Test for Develop
+
+on:
+  pull_request:
+    branches: [Develop]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: '8.0'
+
+      - name: Restore dependencies
+        run: dotnet restore KasaWGrupieBackend.sln
+
+      - name: Build
+        run: dotnet build KasaWGrupieBackend.sln --no-restore
+
+      - name: Tests
+        run: dotnet test KasaWGrupieBackend.sln --no-build --verbosity normal

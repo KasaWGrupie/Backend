@@ -32,14 +32,29 @@ public sealed class GroupsController : ControllerBase
 	}
 
 	[TranslateResultToActionResult]
-	[HttpPut("{groupId}")]
-	public async Task<Result> UpdateGroup(int groupId, [FromForm] UpdateGroupDto updateGroupDto)
+	[HttpGet("{groupId:int}/expenses")]
+	public async Task<Result<ICollection<GetExpensesDto>>> GetExpenses([FromRoute] int groupId)
 	{
-		var dto = updateGroupDto with { GroupId = groupId };
-		var command = new UpdateGroupCommand(dto);
+		var command = new GetExpensesCommand(groupId);
 		var result = await _mediator.Send(command);
+		
 		return result;
 	}
+
+    
+
+
+
+
+    [TranslateResultToActionResult]
+    [HttpPut("{groupId}")]
+    public async Task<Result> UpdateGroup(int groupId, [FromForm] UpdateGroupDto updateGroupDto)
+    {
+        var dto = updateGroupDto with { GroupId = groupId };
+        var command = new UpdateGroupCommand(dto);
+        var result = await _mediator.Send(command);
+        return result;
+    }
 
 	[TranslateResultToActionResult]
 	[HttpPut("inviteCode/{userEmail}")]

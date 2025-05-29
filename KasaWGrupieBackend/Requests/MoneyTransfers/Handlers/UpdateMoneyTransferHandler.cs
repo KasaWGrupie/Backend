@@ -30,7 +30,7 @@ public class UpdateMoneyTransferHandler : IRequestHandler<UpdateMoneyTransferCom
             return Result.Invalid(validationResult.Errors.Select(e => new ValidationError(e.PropertyName, e.ErrorMessage)));
         }
         
-        var transfer = await _transferRepository.GetByIdAsync(dto.TransferId, cancellationToken);
+        var transfer = await _transferRepository.GetByIdAsync(request.TransferId, cancellationToken);
         if (transfer == null)
         {
             return Result.NotFound("Money Transfer not found");
@@ -39,6 +39,12 @@ public class UpdateMoneyTransferHandler : IRequestHandler<UpdateMoneyTransferCom
         if (!Enum.TryParse<MoneyTransferStatus>(dto.Status, out var status))
         {
             return Result.Invalid(new ValidationError("Status", "Invalid status value"));
+        }
+
+        // Set an end date on confirming or rejecting the transfer 
+        if (status != MoneyTransferStatus.Pending)
+        {
+            transfer.EndDate = DateTime.Now;
         }
         
         transfer.Status = status;
