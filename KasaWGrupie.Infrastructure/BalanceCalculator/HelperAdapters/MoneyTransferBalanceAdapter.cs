@@ -3,7 +3,7 @@ using KasaWGrupie.Core.Enums;
 
 namespace KasaWGrupie.Infrastructure.BalanceCalculator.HelperAdapters;
 
-class MoneyTransferBalanceAdapter : IMoneyTransferBalance
+public class MoneyTransferBalanceAdapter : IMoneyTransferBalance
 {
 	private MoneyTransfer _moneyTransfer;
 	public MoneyTransferBalanceAdapter(MoneyTransfer moneyTransfer)

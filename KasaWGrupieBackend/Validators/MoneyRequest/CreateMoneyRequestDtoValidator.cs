@@ -13,5 +13,10 @@ public class CreateMoneyRequestDtoValidator : AbstractValidator<CreateMoneyReque
             .GreaterThan(0).WithMessage("Receiver id is required");
         RuleForEach(x => x.Groups)
             .GreaterThan(0).WithMessage("Invalid group id");
+        RuleFor(x => x.Currency)
+            .NotEmpty().WithMessage("Currency is required")
+            .Length(ValidatorConstants.CreateGroupDtoConstants.CurrencyMaxLength)
+            .WithMessage($"Currency code must be exactly {ValidatorConstants.CreateGroupDtoConstants.CurrencyMaxLength} characters.");
+
     }
 }

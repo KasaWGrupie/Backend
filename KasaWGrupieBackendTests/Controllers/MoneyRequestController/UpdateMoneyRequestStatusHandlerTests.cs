@@ -46,6 +46,8 @@ public class UpdateMoneyRequestStatusHandlerTests
         {
             Id = 1,
             Sender = sender,
+            CurrencyId = 1,
+            Currency = new Currency { Id = 1, Name = "USD" },
             Receiver = receiver,
             PayRequestStatus = PayRequestStatus.Pending
         };
@@ -80,6 +82,8 @@ public class UpdateMoneyRequestStatusHandlerTests
             Id = 1,
             Sender = sender,
             Receiver = receiver,
+            CurrencyId = 1,
+            Currency = new Currency { Id = 1, Name = "USD" },
             PayRequestStatus = PayRequestStatus.Paid
         };
 

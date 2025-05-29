@@ -51,6 +51,7 @@ public class GetMoneyRequestForReceiverHandler : IRequestHandler<GetMoneyRequest
             pr.ReceiverId,
             pr.ReceiverId,
             pr.Amount,
+            pr.Currency.Name,
             pr.GroupsToSettle.Select(g => g.Id).ToList(),
             pr.PayRequestStatus.ToString(),
             pr.EndDate

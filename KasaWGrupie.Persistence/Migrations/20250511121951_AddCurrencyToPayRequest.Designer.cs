@@ -3,6 +3,7 @@ using System;
 using KasaWGrupie.Persistence.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace KasaWGrupie.Persistence.Migrations
 {
     [DbContext(typeof(KasaWGrupieDbContext))]
-    partial class KasaWGrupieDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250511121951_AddCurrencyToPayRequest")]
+    partial class AddCurrencyToPayRequest
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -111,24 +114,11 @@ namespace KasaWGrupie.Persistence.Migrations
                     b.Property<decimal>("Amount")
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<DateTime>("Date")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<string>("Description")
-                        .IsRequired()
-                        .HasMaxLength(500)
-                        .HasColumnType("character varying(500)");
-
                     b.Property<int>("ExpenseSplitId")
                         .HasColumnType("integer");
 
                     b.Property<int>("GroupId")
                         .HasColumnType("integer");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("character varying(100)");
 
                     b.Property<int>("PayingPersonId")
                         .HasColumnType("integer");
@@ -301,9 +291,6 @@ namespace KasaWGrupie.Persistence.Migrations
 
                     b.Property<decimal>("Amount")
                         .HasColumnType("decimal(18,2)");
-
-                    b.Property<DateTime?>("EndDate")
-                        .HasColumnType("timestamp with time zone");
 
                     b.Property<int>("GroupId")
                         .HasColumnType("integer");

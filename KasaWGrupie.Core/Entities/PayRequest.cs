@@ -12,6 +12,8 @@ public class PayRequest : EntityBase
 	public ICollection<Group> GroupsToSettle { get; set; } = [];
 	public PayRequestStatus PayRequestStatus { get; set; }
 	public DateTime? EndDate { get; set; }
+	public int CurrencyId { get; set; }
+	public required Currency Currency { get; set; }
 
 	//TODO: Może dodać pole message?
 }
