@@ -1,7 +1,7 @@
 ﻿using KasaWGrupie.Core.Entities;
 using KasaWGrupie.Persistence.Configurations;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Internal;
+using KasaWGrupie.Persistence.Extensions;
 
 namespace KasaWGrupie.Persistence.Data;
 
@@ -22,6 +22,7 @@ public sealed class KasaWGrupieDbContext : DbContext
 	public DbSet<MoneyTransfer> MoneyTransfers { get; set; }
 	public DbSet<PayRequest> PayRequests { get; set; }
 	public DbSet<User> Users { get; set; }
+	public DbSet<ExchangeRate> ExchangeRates { get; set; }
 	protected override void OnModelCreating(ModelBuilder modelBuilder)
 	{
 		base.OnModelCreating(modelBuilder);
@@ -36,6 +37,9 @@ public sealed class KasaWGrupieDbContext : DbContext
 		modelBuilder.ApplyConfiguration(new GroupConfiguration());
 		modelBuilder.ApplyConfiguration(new JoinRequestConfiguration());
 		modelBuilder.ApplyConfiguration(new MoneyTransferConfiguration());
+		modelBuilder.ApplyConfiguration(new ExchangeRateConfiguration());
+
+		modelBuilder.AddCurrenciesData();
 	}
 
 }
