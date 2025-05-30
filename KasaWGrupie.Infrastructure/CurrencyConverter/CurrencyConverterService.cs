@@ -3,7 +3,7 @@ using KasaWGrupie.Persistence.Specifications.ExchangeRates;
 
 namespace KasaWGrupie.Infrastructure.CurrencyConverter;
 
-public class CurrencyConverterService
+public class CurrencyConverterService : ICurrencyConverter
 {
 	private readonly IRepositoryBase<ExchangeRate> _exchangeRateRepo;
 
