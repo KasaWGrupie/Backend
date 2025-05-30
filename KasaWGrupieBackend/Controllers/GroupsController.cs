@@ -56,6 +56,13 @@ public sealed class GroupsController : ControllerBase
         return result;
     }
 
+    [TranslateResultToActionResult]
+    [HttpGet("{groupId:int}")]
+    public async Task<Result<GroupDto>> GetGroupById([FromRoute] int groupId)
+    {
+        var cmd = new GetGroupByIdCommand(groupId);
+        return await _mediator.Send(cmd);
+    }
 
 
 }
