@@ -30,8 +30,8 @@ public static class DependencyInjection
 	public static IServiceCollection RegisterInfrastructureServices(this IServiceCollection services, IConfiguration configuration)
 	{
 		services.ConfigureMediatR();
-
-		services.AddTransient<IAuthService, AuthService>();
+        services.AddHttpContextAccessor();
+        services.AddTransient<IAuthService, AuthService>();
 		services.AddTransient<IImageService, DummyImageService>();
 
 		return services;

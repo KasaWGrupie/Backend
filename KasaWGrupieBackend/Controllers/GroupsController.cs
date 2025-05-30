@@ -58,4 +58,11 @@ public sealed class GroupsController : ControllerBase
 
 
 
+    [TranslateResultToActionResult]
+    [HttpGet("{groupId:int}/joinRequests")]
+    public async Task<Result<GetGroupJoinRequestsDto>> GetJoinRequests(
+  [FromRoute] int groupId)
+  => await _mediator.Send(new GetGroupJoinRequestsCommand(groupId));
+
+
 }
