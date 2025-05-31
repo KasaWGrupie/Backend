@@ -7,12 +7,13 @@ using Ardalis.Specification;
 using FluentAssertions;
 using FluentValidation;
 using FluentValidation.Results;
-using KasaWGrupie.API.DTOs.Groups;
 using KasaWGrupie.API.Requests.Groups.Commands;
 using KasaWGrupie.API.Requests.Groups.Handlers;
 using KasaWGrupie.Core.Entities;
 using KasaWGrupie.Core.Enums;
-using KasaWGrupie.Tests.Factories;
+using KasaWGrupie.Infrastructure.BalanceCalculator;                           // Real BalanceResult / BalanceRecord
+using KasaWGrupie.Infrastructure.BalanceCalculator.HelperAdapters;
+using KasaWGrupie.Persistence.Specifications.Groups;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 
@@ -21,199 +22,233 @@ namespace KasaWGrupie.Tests
     [TestClass]
     public class GetGroupBalancesHandlerTests
     {
-        private Mock<IRepositoryBase<Group>> _groupRepoMock;
-        private Mock<IRepositoryBase<Expense>> _expenseRepoMock;
-        private Mock<IValidator<GetGroupBalancesCommand>> _validatorMock;
+        private Mock<IRepositoryBase<Group>> _groupRepo;
+        private Mock<IRepositoryBase<Expense>> _expenseRepo;
+        private Mock<IRepositoryBase<MoneyTransfer>> _moneyTransferRepo;
+        private Mock<IGroupBalanceCalculator> _balanceCalculator;
+        private Mock<IValidator<GetGroupBalancesCommand>> _validator;
         private GetGroupBalancesHandler _handler;
 
         [TestInitialize]
         public void Setup()
         {
-            _groupRepoMock = new Mock<IRepositoryBase<Group>>();
-            _expenseRepoMock = new Mock<IRepositoryBase<Expense>>();
-            _validatorMock = new Mock<IValidator<GetGroupBalancesCommand>>();
+            _groupRepo = new Mock<IRepositoryBase<Group>>();
+            _expenseRepo = new Mock<IRepositoryBase<Expense>>();
+            _moneyTransferRepo = new Mock<IRepositoryBase<MoneyTransfer>>();
+            _balanceCalculator = new Mock<IGroupBalanceCalculator>();
+            _validator = new Mock<IValidator<GetGroupBalancesCommand>>();
 
             _handler = new GetGroupBalancesHandler(
-              _groupRepoMock.Object,
-              _expenseRepoMock.Object,
-              _validatorMock.Object
+                _groupRepo.Object,
+                _expenseRepo.Object,
+                _moneyTransferRepo.Object,
+                _balanceCalculator.Object,
+                _validator.Object
             );
         }
 
         [TestMethod]
         public async Task Handle_ReturnsInvalid_WhenValidationFails()
         {
-            var cmd = new GetGroupBalancesCommand(-1);
-            var failures = new List<ValidationFailure>
-            {
-                new ValidationFailure(nameof(cmd.GroupId), "must be positive")
-            };
-            _validatorMock
-              .Setup(v => v.ValidateAsync(cmd, It.IsAny<CancellationToken>()))
-              .ReturnsAsync(new ValidationResult(failures));
+            // Arrange
+            var cmd = new GetGroupBalancesCommand(0);
+            _validator
+                .Setup(v => v.ValidateAsync(cmd, It.IsAny<CancellationToken>()))
+                .ReturnsAsync(new ValidationResult(new[]
+                {
+                    new ValidationFailure(nameof(cmd.GroupId), "GroupId must be > 0")
+                }));
 
+            // Act
             var result = await _handler.Handle(cmd, CancellationToken.None);
 
+            // Assert
             result.Status.Should().Be(ResultStatus.Invalid);
         }
 
         [TestMethod]
         public async Task Handle_ReturnsNotFound_WhenGroupDoesNotExist()
         {
-            var groupId = 99;
-            var cmd = new GetGroupBalancesCommand(groupId);
+            // Arrange
+            var cmd = new GetGroupBalancesCommand(5);
+            _validator
+                .Setup(v => v.ValidateAsync(cmd, It.IsAny<CancellationToken>()))
+                .ReturnsAsync(new ValidationResult());
 
-            _validatorMock
-              .Setup(v => v.ValidateAsync(cmd, It.IsAny<CancellationToken>()))
-              .ReturnsAsync(new ValidationResult());
+            _groupRepo
+                .Setup(r => r.GetByIdAsync(cmd.GroupId, It.IsAny<CancellationToken>()))
+                .ReturnsAsync((Group)null);
 
-            _groupRepoMock
-              .Setup(r => r.GetByIdAsync(groupId, It.IsAny<CancellationToken>()))
-              .ReturnsAsync((Group)null);
-
+            // Act
             var result = await _handler.Handle(cmd, CancellationToken.None);
 
+            // Assert
             result.Status.Should().Be(ResultStatus.NotFound);
         }
 
         [TestMethod]
-        public async Task Handle_ReturnsSuccess_WithAggregatedBalances()
+        public async Task Handle_ReturnsSuccess_WithEmptyBalances_WhenNoData()
         {
             // Arrange
-            var groupId = 1;
-            var cmd = new GetGroupBalancesCommand(groupId);
+            var cmd = new GetGroupBalancesCommand(10);
+            _validator
+                .Setup(v => v.ValidateAsync(cmd, It.IsAny<CancellationToken>()))
+                .ReturnsAsync(new ValidationResult());
 
-            _validatorMock
-              .Setup(v => v.ValidateAsync(cmd, It.IsAny<CancellationToken>()))
-              .ReturnsAsync(new ValidationResult());
-
-            // Users
-            var admin = UserFactory.Create(email: "admin@x.com", id: 1);
-            var u1 = UserFactory.Create(email: "u1@x.com", id: 2);
-            var u2 = UserFactory.Create(email: "u2@x.com", id: 3);
-
-            // Group
+            // Set up a fully initialized Group entity
+            var admin = new User
+            {
+                Id = 1,
+                Email = "admin@x.com",
+                Name = "Admin",
+                ProfilePictureUrl = "http://example.com/pic.png",
+                Friends = new List<User>(),
+                Groups = new List<Group>(),
+                AdministratedGroups = new List<Group>(),
+                SentPayRequests = new List<PayRequest>(),
+                RecievedPayRequests = new List<PayRequest>(),
+                SentFriendRequests = new List<FriendRequest>(),
+                RecievedFriendRequests = new List<FriendRequest>()
+            };
             var group = new Group
             {
-                Id = groupId,
+                Id = cmd.GroupId,
                 Name = "Test Group",
-                Description = "Desc",
-                PictureUrl = "pic.jpg",
-                Currency = new Currency { Name = "EUR" },
+                Description = "A test group",
+                PictureUrl = "http://example.com/group.png",
+                Currency = new Currency { Name = "USD" },
                 Admin = admin,
-                Members = new List<User> { admin, u1, u2 },
+                Members = new List<User> { admin },
                 Status = GroupStatus.Active
             };
-            _groupRepoMock
-              .Setup(x => x.GetByIdAsync(groupId, It.IsAny<CancellationToken>()))
-              .ReturnsAsync(group);
 
-            // Expense #1 with its split and two split-records
-            var expense1 = new Expense
-            {
-                Id = 10,
-                Group = group,
-                GroupId = groupId,
-                PayingPerson = admin,
-                PayingPersonId = admin.Id,
-                Name = "E1",
-                Description = "first",
-                PictureUrl = "p1.jpg",
-                Amount = 80m,                        // total (not used)
-                Date = System.DateTime.UtcNow,
-                ExpenseSplit = new ExpenseSplit
-                {
-                    // circular back-pointer set here
-                    Expense = null!,                  // placeholder
-                    ExpenseId = 10,
-                    Type = ExpenseSplitType.Equally,
-                    SplitRecords = new List<ExpenseSplitRecord>
-            {
-                new ExpenseSplitRecord
-                {
-                    ExpenseSplit   = null!,         // placeholder
-                    OwingPerson    = u1,
-                    OwingPersonId  = u1.Id,
-                    Amount         = 50m,
-                    Percentage     = 0m
-                },
-                new ExpenseSplitRecord
-                {
-                    ExpenseSplit   = null!,         // placeholder
-                    OwingPerson    = u2,
-                    OwingPersonId  = u2.Id,
-                    Amount         = 30m,
-                    Percentage     = 0m
-                }
-            }
-                }
-            };
-            // now patch placeholders
-            expense1.ExpenseSplit.Expense = expense1;
-            foreach (var rec in expense1.ExpenseSplit.SplitRecords)
-                rec.ExpenseSplit = expense1.ExpenseSplit;
+            _groupRepo
+                .Setup(r => r.GetByIdAsync(cmd.GroupId, It.IsAny<CancellationToken>()))
+                .ReturnsAsync(group);
 
-            // Expense #2 with its split and one record
-            var expense2 = new Expense
-            {
-                Id = 11,
-                Group = group,
-                GroupId = groupId,
-                PayingPerson = admin,
-                PayingPersonId = admin.Id,
-                Name = "E2",
-                Description = "second",
-                PictureUrl = "p2.jpg",
-                Amount = 20m,
-                Date = System.DateTime.UtcNow,
-                ExpenseSplit = new ExpenseSplit
-                {
-                    Expense = null!,
-                    ExpenseId = 11,
-                    Type = ExpenseSplitType.Equally,
-                    SplitRecords = new List<ExpenseSplitRecord>
-            {
-                new ExpenseSplitRecord
-                {
-                    ExpenseSplit   = null!,
-                    OwingPerson    = u1,
-                    OwingPersonId  = u1.Id,
-                    Amount         = 20m,
-                    Percentage     = 0m
-                }
-            }
-                }
-            };
-            expense2.ExpenseSplit.Expense = expense2;
-            foreach (var rec in expense2.ExpenseSplit.SplitRecords)
-                rec.ExpenseSplit = expense2.ExpenseSplit;
+            _expenseRepo
+                .Setup(r => r.ListAsync(
+                    It.IsAny<ExpensesByGroupIdSpecification>(),
+                    It.IsAny<CancellationToken>()))
+                .ReturnsAsync(new List<Expense>());
 
-            _expenseRepoMock
-              .Setup(x => x.ListAsync(
-                  It.IsAny<ISpecification<Expense>>(),
-                  It.IsAny<CancellationToken>()))
-              .ReturnsAsync(new List<Expense> { expense1, expense2 });
+            _moneyTransferRepo
+                .Setup(r => r.ListAsync(
+                    It.IsAny<MoneyTransfersByGroupIdSpecification>(),
+                    It.IsAny<CancellationToken>()))
+                .ReturnsAsync(new List<MoneyTransfer>());
+
+            // Return a REAL, infrastructure-level BalanceResult (with an empty list)
+            _balanceCalculator
+                .Setup(b => b.CalculateBalanceInGroup(
+                    It.IsAny<List<IExpenseBalance>>(),
+                    It.IsAny<List<IMoneyTransferBalance>>()))
+                .Returns(new KasaWGrupie.Infrastructure.BalanceCalculator.BalanceResult
+                {
+                    BalanceRecords = new List<KasaWGrupie.Infrastructure.BalanceCalculator.BalanceRecord>()
+                }
+                );
 
             // Act
             var result = await _handler.Handle(cmd, CancellationToken.None);
 
             // Assert
             result.Status.Should().Be(ResultStatus.Ok);
-            var balances = result.Value!.Balances.ToList();
-
-            balances.Should().HaveCount(2);
-            balances.Should().Contain(b =>
-                b.FromUserId == u1.Id &&
-                b.ToUserId == admin.Id &&
-                b.Amount == 70f   // 50 + 20
-            );
-            balances.Should().Contain(b =>
-                b.FromUserId == u2.Id &&
-                b.ToUserId == admin.Id &&
-                b.Amount == 30f
-            );
+            var dto = result.Value;
+            dto.GroupId.Should().Be(10);
+            dto.Balances.Should().BeEmpty();
         }
 
+        [TestMethod]
+        public async Task Handle_ReturnsSuccess_WithCorrectBalances()
+        {
+            // Arrange
+            var cmd = new GetGroupBalancesCommand(20);
+            _validator
+                .Setup(v => v.ValidateAsync(cmd, It.IsAny<CancellationToken>()))
+                .ReturnsAsync(new ValidationResult());
 
+            var admin = new User
+            {
+                Id = 1,
+                Email = "admin@x.com",
+                Name = "Admin",
+                ProfilePictureUrl = "http://example.com/pic.png",
+                Friends = new List<User>(),
+                Groups = new List<Group>(),
+                AdministratedGroups = new List<Group>(),
+                SentPayRequests = new List<PayRequest>(),
+                RecievedPayRequests = new List<PayRequest>(),
+                SentFriendRequests = new List<FriendRequest>(),
+                RecievedFriendRequests = new List<FriendRequest>()
+            };
+            var group = new Group
+            {
+                Id = cmd.GroupId,
+                Name = "Test Group",
+                Description = "A test group",
+                PictureUrl = "http://example.com/group.png",
+                Currency = new Currency { Name = "EUR" },
+                Admin = admin,
+                Members = new List<User> { admin },
+                Status = GroupStatus.Active
+            };
+
+            _groupRepo
+                .Setup(r => r.GetByIdAsync(cmd.GroupId, It.IsAny<CancellationToken>()))
+                .ReturnsAsync(group);
+
+            _expenseRepo
+                .Setup(r => r.ListAsync(
+                    It.IsAny<ExpensesByGroupIdSpecification>(),
+                    It.IsAny<CancellationToken>()))
+                .ReturnsAsync(new List<Expense>());
+
+            _moneyTransferRepo
+                .Setup(r => r.ListAsync(
+                    It.IsAny<MoneyTransfersByGroupIdSpecification>(),
+                    It.IsAny<CancellationToken>()))
+                .ReturnsAsync(new List<MoneyTransfer>());
+
+            
+            // Prepare two real BalanceRecord instances
+            var records = new List<KasaWGrupie.Infrastructure.BalanceCalculator.BalanceRecord>
+            {
+                new KasaWGrupie.Infrastructure.BalanceCalculator.BalanceRecord
+                {
+                    FromUserId = 2,
+                    ToUserId = 1,
+                    Amount = 50m
+                },
+                new KasaWGrupie.Infrastructure.BalanceCalculator.BalanceRecord
+                {
+                    FromUserId=3, 
+                    ToUserId = 1,
+                    Amount = 30m
+                }
+            };
+            _balanceCalculator
+                .Setup(b => b.CalculateBalanceInGroup(
+                    It.IsAny<List<IExpenseBalance>>(),
+                    It.IsAny<List<IMoneyTransferBalance>>()))
+                .Returns(new KasaWGrupie.Infrastructure.BalanceCalculator.BalanceResult
+                {
+                    BalanceRecords = records
+                });
+
+            // Act
+            var result = await _handler.Handle(cmd, CancellationToken.None);
+
+            // Assert
+            result.Status.Should().Be(ResultStatus.Ok);
+            var dto = result.Value;
+            dto.GroupId.Should().Be(20);
+            dto.Balances.Count.Should().Be(2);
+
+            dto.Balances.Should().Contain(b =>
+                b.FromUserId == 2 && b.ToUserId == 1 && b.Amount == 50f);
+            dto.Balances.Should().Contain(b =>
+                b.FromUserId == 3 && b.ToUserId == 1 && b.Amount == 30f);
+        }
     }
 }
