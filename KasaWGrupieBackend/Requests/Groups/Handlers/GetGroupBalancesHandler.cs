@@ -80,7 +80,7 @@ namespace KasaWGrupie.API.Requests.Groups.Handlers
                 .Select(br => new BalanceDto(
                     br.FromUserId,
                     br.ToUserId,
-                    (float)br.Amount))
+                    br.Amount))
                 .ToList();
 
             var dto = new GetGroupBalancesDto(request.GroupId, balances);

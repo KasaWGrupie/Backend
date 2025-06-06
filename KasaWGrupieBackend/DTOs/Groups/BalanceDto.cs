@@ -4,7 +4,7 @@
     (
         int FromUserId,
         int ToUserId,
-        float Amount
+        decimal Amount
     );
 
     public sealed record GetGroupBalancesDto

@@ -246,9 +246,9 @@ namespace KasaWGrupie.Tests
             dto.Balances.Count.Should().Be(2);
 
             dto.Balances.Should().Contain(b =>
-                b.FromUserId == 2 && b.ToUserId == 1 && b.Amount == 50f);
+                b.FromUserId == 2 && b.ToUserId == 1 && b.Amount == 50m);
             dto.Balances.Should().Contain(b =>
-                b.FromUserId == 3 && b.ToUserId == 1 && b.Amount == 30f);
+                b.FromUserId == 3 && b.ToUserId == 1 && b.Amount == 30m);
         }
     }
 }
