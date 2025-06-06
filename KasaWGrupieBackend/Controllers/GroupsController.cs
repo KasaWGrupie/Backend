@@ -62,9 +62,18 @@ public sealed class GroupsController : ControllerBase
   [FromRoute] int groupId,
   [FromBody] ChangeGroupStatusDto dto)
     {
-        // merge route + body into one DTO:
+      // merge route + body into one DTO:
         var dtoWithId = dto with { GroupId = groupId };
         var cmd = new ChangeGroupStatusCommand(dtoWithId);
+        return await _mediator.Send(cmd);
+    }
+  
+  
+    [TranslateResultToActionResult]
+    [HttpGet("{groupId:int}")]
+    public async Task<Result<GroupDto>> GetGroupById([FromRoute] int groupId)
+    {
+        var cmd = new GetGroupByIdCommand(groupId);
         return await _mediator.Send(cmd);
     }
 
