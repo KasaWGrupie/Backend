@@ -240,9 +240,9 @@ namespace KasaWGrupie.Tests
             dto.GroupId.Should().Be(groupId);
             dto.JoinRequests.Should().HaveCount(2);
             dto.JoinRequests.Should().ContainEquivalentOf(new JoinRequestDto(
-                100, uA.Id, uA.Name, JoinRequestStatus.Unconfirmed));
+                groupId, uA.Id, JoinRequestStatus.Unconfirmed));
             dto.JoinRequests.Should().ContainEquivalentOf(new JoinRequestDto(
-                101, uB.Id, uB.Name, JoinRequestStatus.Confirmed));
+                groupId, uB.Id, JoinRequestStatus.Confirmed));
         }
     }
 }

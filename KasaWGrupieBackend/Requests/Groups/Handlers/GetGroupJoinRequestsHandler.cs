@@ -74,9 +74,8 @@ public class GetGroupJoinRequestsHandler
 
         // 6) Map DTOs
         var dtos = joins.Select(j => new JoinRequestDto(
-          j.Id,
+          request.GroupId,
           j.RequestingUserId,
-          j.RequestingUser.Name,
           j.Status              // enum
         )).ToList();
 
