@@ -9,6 +9,7 @@ using FluentValidation;
 using FluentValidation.AspNetCore;
 using Google.Apis.Auth.OAuth2;
 using KasaWGrupie.Infrastructure.AuthService;
+using KasaWGrupie.Infrastructure.BalanceCalculator;
 
 
 namespace KasaWGrupie.API;
@@ -33,6 +34,7 @@ public static class DependencyInjection
 
 		services.AddTransient<IAuthService, AuthService>();
 		services.AddTransient<IImageService, DummyImageService>();
+		services.AddTransient<IGroupBalanceCalculator, BalanceCalculator>();
 
 		return services;
 	}
