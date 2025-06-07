@@ -18,7 +18,7 @@ public class MoneyRequestController(
     /// <returns>Money transfer created successfully</returns>
     [HttpPost]
     [TranslateResultToActionResult]
-    public async Task<Result> CreateMoneyRequest([FromForm] CreateMoneyRequestDto createMoneyRequestDto)
+    public async Task<Result> CreateMoneyRequest([FromBody] CreateMoneyRequestDto createMoneyRequestDto)
     {
         var command = new CreateMoneyRequestCommand(createMoneyRequestDto);
         var result = await mediator.Send(command);
