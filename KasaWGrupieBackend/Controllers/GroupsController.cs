@@ -55,7 +55,7 @@ public sealed class GroupsController : ControllerBase
         var result = await _mediator.Send(command);
         return result;
     }
-
+    
     [TranslateResultToActionResult]
     [HttpPut("{groupId:int}/status")]
     public async Task<Result> ChangeStatus(
@@ -76,6 +76,18 @@ public sealed class GroupsController : ControllerBase
         var cmd = new GetGroupByIdCommand(groupId);
         return await _mediator.Send(cmd);
     }
+    
+    [TranslateResultToActionResult]
+    [HttpGet("{groupId:int}/balances")]
+    public async Task<Result<GetGroupBalancesDto>> GetBalances(
+[FromRoute] int groupId)
+    {
+        var cmd = new GetGroupBalancesCommand(groupId);
+        return await _mediator.Send(cmd);
+    }
+
+
+
 
 
 }
