@@ -19,7 +19,7 @@ public class ExpenseController(
     /// </summary>
     [HttpPost]
     [TranslateResultToActionResult]
-    public async Task<Result> CreateExpense([FromForm] CreateExpenseDto createExpenseDto)
+    public async Task<Result> CreateExpense([FromBody] CreateExpenseDto createExpenseDto)
     {
         var command = new CreateExpenseCommand(createExpenseDto);
         var result = await mediator.Send(command);
@@ -32,7 +32,7 @@ public class ExpenseController(
     /// </summary>
     [HttpPut]
     [TranslateResultToActionResult]
-    public async Task<Result> UpdateExpense([FromForm] UpdateExpenseDto updateExpenseDto)
+    public async Task<Result> UpdateExpense([FromBody] UpdateExpenseDto updateExpenseDto)
     {
         var command = new UpdateExpenseCommand(updateExpenseDto);
         var result = await mediator.Send(command);
