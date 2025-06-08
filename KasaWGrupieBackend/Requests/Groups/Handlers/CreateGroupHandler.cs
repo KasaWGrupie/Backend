@@ -36,6 +36,11 @@ public class CreateGroupHandler : IRequestHandler<CreateGroupCommand, Result>
 			return Result.Invalid(validationResult.Errors.Select(e => new ValidationError(e.PropertyName, e.ErrorMessage)));
 		}
 
+		if (!string.Equals(request.UserEmail, request.CreateGroupDto.AdminEmail, StringComparison.OrdinalIgnoreCase))
+		{
+			return Result.Forbidden("You are not allowed to create groups for other users. You must be the admin of the group to create it.");
+		}
+		
 		var members = new List<User>();
 
 		foreach (var memberEmail in request.CreateGroupDto.Members)

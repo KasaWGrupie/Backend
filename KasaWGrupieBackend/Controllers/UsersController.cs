@@ -13,6 +13,7 @@ namespace KasaWGrupie.API.Controllers;
 
 [Route("users")]
 [ApiController]
+[FirebaseAuthorize]
 public class UsersController(
 	IAuthService authService,
 	IMediator mediator
@@ -26,7 +27,6 @@ public class UsersController(
 	/// <returns>Successfully inserted new User</returns>
 	[HttpPost]
 	[TranslateResultToActionResult]
-	[FirebaseAuthorize]
 	[Consumes("multipart/form-data")]
 	public async Task<Result> CreateUser(IFormCollection formCollection, IFormFile? profilePicture)
 	{
@@ -71,6 +71,10 @@ public class UsersController(
 	[TranslateResultToActionResult]
 	public async Task<Result> DeleteUser(int id)
 	{
+		if (id != await authService.GetUserIdFromAuthTokenAsync(HttpContext))
+		{
+			return Result.Forbidden("Cannot delete another user's account.");
+		}
 		var command = new DeleteUserCommand(id);
 		return await mediator.Send(command);
 	}
@@ -79,6 +83,10 @@ public class UsersController(
 	[TranslateResultToActionResult]
 	public async Task<Result> UpdateUserName(int id, [FromBody] UpdateUserNameDto updateUserNameDto)
 	{
+		if (id != await authService.GetUserIdFromAuthTokenAsync(HttpContext))
+		{
+			return Result.Forbidden("Cannot update another user's name.");
+		}
 		var command = new UpdateUserNameCommand(id, updateUserNameDto);
 		return await mediator.Send(command);
 	}
@@ -88,6 +96,10 @@ public class UsersController(
 	[Consumes("multipart/form-data")]
 	public async Task<Result> UpdateUserProfilePicture(int id, [FromForm] IFormFile? profilePicture)
 	{
+		if (id != await authService.GetUserIdFromAuthTokenAsync(HttpContext))
+		{
+			return Result.Forbidden("Cannot update another user's profile picture.");
+		}
 		var command = new UpdateUserProfilePictureCommand(id, profilePicture);
 		return await mediator.Send(command);
 	}
@@ -104,6 +116,7 @@ public class UsersController(
 	[TranslateResultToActionResult]
 	public async Task<Result<ICollection<GetUserDto>>> GetFriends(int userId)
 	{
+		// inni użytkownicy mogą czy nie?
 		var command = new GetFriendsCommand(userId);
 		return await mediator.Send(command);
 	}
@@ -112,7 +125,8 @@ public class UsersController(
 	[TranslateResultToActionResult]
 	public async Task<Result> AddFriendRequest([FromBody] AddFriendRequestDto addFriendRequestDto)
 	{
-		var command = new AddFriendRequestCommand(addFriendRequestDto);
+		var userId = await authService.GetUserIdFromAuthTokenAsync(HttpContext);
+		var command = new AddFriendRequestCommand(userId, addFriendRequestDto);
 		var result = await mediator.Send(command);
 		return result;
 	}
@@ -121,7 +135,8 @@ public class UsersController(
 	[TranslateResultToActionResult]
 	public async Task<Result> ChangeFriendRequestStatus(int requestId, [FromBody] ChangeFriendRequestStatusDto changeFriendRequestStatusDto)
 	{
-		var command = new ChangeFriendRequestStatusCommand(requestId, changeFriendRequestStatusDto);
+		var userId = await authService.GetUserIdFromAuthTokenAsync(HttpContext);
+		var command = new ChangeFriendRequestStatusCommand(userId, requestId, changeFriendRequestStatusDto);
 		var result = await mediator.Send(command);
 		return result;
 	}
@@ -130,6 +145,10 @@ public class UsersController(
 	[TranslateResultToActionResult]
 	public async Task<Result<ICollection<FriendRequestDisplayDto>>> GetFriendRequests(int userId)
 	{
+		if (userId != await authService.GetUserIdFromAuthTokenAsync(HttpContext))
+		{
+			return Result.Forbidden("Cannot get friend requests of another user.");
+		}
 		var command = new GetFriendRequestsCommand(userId);
 		var result = await mediator.Send(command);
 		return result;
@@ -144,4 +163,20 @@ public class UsersController(
 		return result;
 	}
 
+
+    [TranslateResultToActionResult]
+    [HttpGet("{userId:int}/balances")]
+    public async Task<Result<GetUserBalancesDto>> GetUserBalances([FromRoute] int userId)
+    {
+        return await mediator.Send(new GetUserBalancesCommand(userId));
+    }
+
+    [TranslateResultToActionResult]
+    [HttpGet("{userId:int}/balances/{otherUserId:int}")]
+    public async Task<Result<GetUserToUserBalancesDto>> GetBetweenUsers(
+   [FromRoute] int userId,
+   [FromRoute] int otherUserId)
+    {
+        return await mediator.Send(new GetUserBalancesWithUserCommand(userId, otherUserId));
+    }
 }

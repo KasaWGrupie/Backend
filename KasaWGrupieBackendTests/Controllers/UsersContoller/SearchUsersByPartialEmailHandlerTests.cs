@@ -9,7 +9,7 @@ using KasaWGrupie.Core.Entities;
 using KasaWGrupie.Persistence.Specifications.Users;
 using Moq;
 
-namespace KasaWGrupieTests;
+namespace KasaWGrupie.Tests;
 
 [TestClass]
 public class SearchUsersByPartialEmailHandlerTests

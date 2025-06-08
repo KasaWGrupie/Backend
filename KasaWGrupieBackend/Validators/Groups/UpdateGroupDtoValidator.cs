@@ -7,9 +7,6 @@ public class UpdateGroupDtoValidator : AbstractValidator<UpdateGroupDto>
 {
     public UpdateGroupDtoValidator()
     {
-        RuleFor(x => x.GroupId)
-            .GreaterThan(0).WithMessage("GroupId is required.");
-
         RuleFor(x => x.Name)
                     .MaximumLength(ValidatorConstants.CreateGroupDtoConstants.NameMaxLength)
                     .WithMessage($"Group name cannot exceed {ValidatorConstants.CreateGroupDtoConstants.NameMaxLength} characters.")

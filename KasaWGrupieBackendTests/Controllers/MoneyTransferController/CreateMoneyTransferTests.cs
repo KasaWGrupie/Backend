@@ -64,7 +64,7 @@ public class CreateMoneyTransferTests
 			group.Id
 		);
 
-		var command = new CreateMoneyTransferCommand(createMoneyTransferDto);
+		var command = new CreateMoneyTransferCommand(sender.Id, createMoneyTransferDto);
 		
 		
 		_userRepositoryMock.Setup(repo => repo.GetByIdAsync(sender.Id, It.IsAny<CancellationToken>()))
@@ -112,7 +112,7 @@ public class CreateMoneyTransferTests
 			group.Id
 		);
 
-		var command = new CreateMoneyTransferCommand(createMoneyTransferDto);
+		var command = new CreateMoneyTransferCommand(sender.Id, createMoneyTransferDto);
 		
 		
 		_userRepositoryMock.Setup(repo => repo.GetByIdAsync(sender.Id, It.IsAny<CancellationToken>()))
@@ -157,7 +157,7 @@ public class CreateMoneyTransferTests
 			group.Id
 		);
 
-		var command = new CreateMoneyTransferCommand(createMoneyTransferDto);
+		var command = new CreateMoneyTransferCommand(sender.Id, createMoneyTransferDto);
 		
 		
 		_userRepositoryMock.Setup(repo => repo.GetByIdAsync(sender.Id, It.IsAny<CancellationToken>()))
@@ -192,7 +192,7 @@ public class CreateMoneyTransferTests
 			1
 		);
 
-		var command = new CreateMoneyTransferCommand(createMoneyTransferDto);
+		var command = new CreateMoneyTransferCommand(sender.Id, createMoneyTransferDto);
 		
 		
 		_userRepositoryMock.Setup(repo => repo.GetByIdAsync(sender.Id, It.IsAny<CancellationToken>()))

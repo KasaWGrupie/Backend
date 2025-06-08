@@ -38,7 +38,7 @@ public class AddFriendRequestHandlerTests
 	{
 		// Arrange
 		var dto = new AddFriendRequestDto { SenderId = 1, ReceiverId = 2 };
-		var command = new AddFriendRequestCommand(dto);
+		var command = new AddFriendRequestCommand(1, dto);
 
 		var sender = UserFactory.Create(1, "sender@example.com");
 		var receiver = UserFactory.Create(2, "receiver@example.com");
@@ -66,7 +66,7 @@ public class AddFriendRequestHandlerTests
 	{
 		// Arrange
 		var dto = new AddFriendRequestDto { SenderId = 0, ReceiverId = 0 };
-		var command = new AddFriendRequestCommand(dto);
+		var command = new AddFriendRequestCommand(1, dto);
 
 		var failures = new List<ValidationFailure>
 		{
@@ -91,7 +91,7 @@ public class AddFriendRequestHandlerTests
 	{
 		// Arrange
 		var dto = new AddFriendRequestDto { SenderId = 1, ReceiverId = 2 };
-		var command = new AddFriendRequestCommand(dto);
+		var command = new AddFriendRequestCommand(1, dto);
 
 		_validatorMock
 			.Setup(v => v.ValidateAsync(dto, It.IsAny<CancellationToken>()))
@@ -107,5 +107,23 @@ public class AddFriendRequestHandlerTests
 
 		// Assert
 		Assert.AreEqual(ResultStatus.NotFound, result.Status);
+	}
+	
+	[TestMethod]
+	public async Task Handle_ReturnsForbidden_WhenCommandIdNotSenderId()
+	{
+		// Arrange
+		var dto = new AddFriendRequestDto { SenderId = 1, ReceiverId = 2 };
+		var command = new AddFriendRequestCommand(2, dto);
+	
+		_validatorMock
+			.Setup(v => v.ValidateAsync(dto, It.IsAny<CancellationToken>()))
+			.ReturnsAsync(new ValidationResult());
+			
+		// Act
+		var result = await _handler.Handle(command, default);
+	
+		// Assert
+		Assert.AreEqual(ResultStatus.Forbidden, result.Status);
 	}
 }
