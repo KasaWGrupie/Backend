@@ -161,4 +161,11 @@ public class UsersController(
 		return result;
 	}
 
+
+    [TranslateResultToActionResult]
+    [HttpGet("{userId:int}/balances")]
+    public async Task<Result<GetUserBalancesDto>> GetUserBalances([FromRoute] int userId)
+    {
+        return await mediator.Send(new GetUserBalancesCommand(userId));
+    }
 }
