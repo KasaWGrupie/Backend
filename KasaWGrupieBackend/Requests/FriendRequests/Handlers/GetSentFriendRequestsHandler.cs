@@ -39,8 +39,8 @@ public class GetSentFriendRequestsHandler : IRequestHandler<GetSentFriendRequest
 				r.Id,
 				r.SenderId,
 				r.ReceiverId,
-				r.Sender.Name,
-				r.Sender.ProfilePictureUrl
+				r.Receiver.Name,
+				r.Receiver.ProfilePictureUrl
 			))
 			.ToList();
 
