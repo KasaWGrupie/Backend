@@ -4,6 +4,7 @@
 		<TargetFramework>net8.0</TargetFramework>
 		<LangVersion>latest</LangVersion>
 		<ImplicitUsings>enable</ImplicitUsings>
+		
 		<Nullable>enable</Nullable>
 	</PropertyGroup>
 
@@ -32,10 +33,18 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<None Include="..\.env">
-			<Link>.env</Link>
-			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+	<None Include="..\.env">
+		<Link>.env</Link>
+		<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+	</None>
+</ItemGroup>
+
+		<ItemGroup>
+		<None Include="..\gcs_key\key.json">
+			<Link>gcs_key\key.json</Link>
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 		</None>
 	</ItemGroup>
+
 
 </Project>

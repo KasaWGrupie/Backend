@@ -10,6 +10,8 @@ services:
     environment:
         - AzureDocumentIntelligence__Endpoint=${AZURE_DOC_INTEL_ENDPOINT}
         - AzureDocumentIntelligence__ApiKey=${AZURE_DOC_INTEL_KEY}
+    volumes:
+      - ./gcs_key:/app/gcs_key:ro
     depends_on: 
         - kasawgrupie.database
   kasawgrupie.database:
@@ -27,16 +29,12 @@ services:
 
   tests:
     image: mcr.microsoft.com/dotnet/sdk:8.0
-    working_dir: /src/KasaWGrupieBackendTests
+    container_name: kasawgrupie.tests
     volumes:
       - ./:/src
     env_file:
       - .env
-    command: bash -c "
-      dotnet restore KasaWgrupie.Tests.csproj &&
-      dotnet test    KasaWgrupie.Tests.csproj \
-        --no-build \
-        --filter \"FullyQualifiedName~ReceiptProcessorTests\" \
-        --verbosity detailed"
-    
-    
+    working_dir: /src/KasaWGrupieBackendTests
+    command: bash -c "dotnet restore && dotnet test --no-build --verbosity normal"
+    depends_on:
+      - kasawgrupie.database

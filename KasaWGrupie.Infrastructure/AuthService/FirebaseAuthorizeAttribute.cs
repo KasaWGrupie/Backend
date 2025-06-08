@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.Extensions.DependencyInjection;
 using UnauthorizedResult = Microsoft.AspNetCore.Mvc.UnauthorizedResult;
@@ -16,7 +17,7 @@ public class FirebaseAuthorizeAttribute : Attribute, IAsyncAuthorizationFilter
         
         if (string.IsNullOrEmpty(idToken))
         {
-            context.Result = new UnauthorizedResult();
+            context.Result = new UnauthorizedObjectResult("Authorization header is missing.");
             return;
         }
         
@@ -24,7 +25,7 @@ public class FirebaseAuthorizeAttribute : Attribute, IAsyncAuthorizationFilter
         
         if (!authResult.IsAuthenticated)
         {
-            context.Result = new UnauthorizedResult();
+            context.Result = new UnauthorizedObjectResult(authResult.Exception.Message);
         }
     }
 }

@@ -18,8 +18,8 @@ public class CreateGroupHandler : IRequestHandler<CreateGroupCommand, Result>
 	private readonly IRepositoryBase<User> _userRepository;
 	private readonly IRepositoryBase<Currency> _currencyRepository;
 	private readonly IImageService _imageService;
-	private readonly IValidator<CreateGroupDto> _validator;
-	public CreateGroupHandler(IRepositoryBase<Group> groupRepository, IRepositoryBase<User> userRepository, IRepositoryBase<Currency> currencyRepository, IImageService imageService, IValidator<CreateGroupDto> validator)
+	private readonly IValidator<CreateGroupCommand> _validator;
+	public CreateGroupHandler(IRepositoryBase<Group> groupRepository, IRepositoryBase<User> userRepository, IRepositoryBase<Currency> currencyRepository, IImageService imageService, IValidator<CreateGroupCommand> validator)
 	{
 		_groupRepository = groupRepository;
 		_userRepository = userRepository;
@@ -29,29 +29,32 @@ public class CreateGroupHandler : IRequestHandler<CreateGroupCommand, Result>
 	}
 	public async Task<Result> Handle(CreateGroupCommand request, CancellationToken cancellationToken)
 	{
-		var validationResult = await _validator.ValidateAsync(request.CreateGroupDto, cancellationToken);
+		var validationResult = await _validator.ValidateAsync(request, cancellationToken);
 
 		if (!validationResult.IsValid)
 		{
 			return Result.Invalid(validationResult.Errors.Select(e => new ValidationError(e.PropertyName, e.ErrorMessage)));
 		}
 
+		if (request.UserId != request.CreateGroupDto.AdminId)
+		{
+			return Result.Forbidden("You are not allowed to create groups for other users. You must be the admin of the group to create it.");
+		}
+
 		var members = new List<User>();
 
-		foreach (var memberEmail in request.CreateGroupDto.Members)
+		foreach (var memberId in request.CreateGroupDto.Members)
 		{
-			var userSpecification = new UserByEmailSpecification(memberEmail);
-			var member = await _userRepository.FirstOrDefaultAsync(userSpecification, cancellationToken);
+			var member = await _userRepository.GetByIdAsync(memberId, cancellationToken);
 			if (member == null)
 			{
-				return Result.Invalid(new ValidationError("Members", $"User with email {memberEmail} does not exist."));
+				return Result.Invalid(new ValidationError("Members", $"User with email {memberId} does not exist."));
 			}
 
 			members.Add(member);
 		}
 
-		var adminSpec = new UserByEmailSpecification(request.CreateGroupDto.AdminEmail);
-		var admin = await _userRepository.FirstOrDefaultAsync(adminSpec, cancellationToken);
+		var admin = await _userRepository.GetByIdAsync(request.CreateGroupDto.AdminId, cancellationToken);
 
 		if (admin == null)
 		{
@@ -59,9 +62,9 @@ public class CreateGroupHandler : IRequestHandler<CreateGroupCommand, Result>
 		}
 
 		var imageUrl = string.Empty;
-		if (request.CreateGroupDto.Image != null)
+		if (request.Image != null)
 		{
-			var uploadResult = await _imageService.UploadImageAsync(request.CreateGroupDto.Image, cancellationToken);
+			var uploadResult = await _imageService.UploadImageAsync(request.Image, cancellationToken);
 			if (uploadResult.IsSuccess)
 			{
 				imageUrl = uploadResult.Url;
