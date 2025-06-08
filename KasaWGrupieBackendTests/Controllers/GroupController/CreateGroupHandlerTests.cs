@@ -56,27 +56,28 @@ namespace KasaWGrupie.Tests
 				"Group1",
 				"Description",
 				"USD",
-				"admin@example.com",
-				new List<string> { "user1@example.com", "user2@example.com" }
+				1,
+				new List<int> { 1, 2 }
 			);
 
 
-			var admin = UserFactory.Create(email: "admin@example.com"); // Tworzymy admina
-			var user1 = UserFactory.Create(email: "user1@example.com"); // Tworzymy członka 1
-			var user2 = UserFactory.Create(email: "user2@example.com"); // Tworzymy członka 2
-			var currency = new Currency { Name = "USD" };
-			
-			var command = new CreateGroupCommand(admin.Email, createGroupDto, null);
+			var admin = UserFactory.Create(email: "admin@example.com", id: 1); // Tworzymy admina
+			var user1 = UserFactory.Create(email: "user1@example.com", id: 2); // Tworzymy członka 1
+
+			var command = new CreateGroupCommand(admin.Id, createGroupDto, null);
+
+			var currency = new Currency
+			{
+				Id = 1,
+				Name = "USD"
+			};
 
 			// Mockujemy odpowiedzi repozytoriów
-			_userRepositoryMock.Setup(repo => repo.FirstOrDefaultAsync(It.IsAny<UserByEmailSpecification>(), It.IsAny<CancellationToken>()))
+			_userRepositoryMock.Setup(repo => repo.GetByIdAsync(1, It.IsAny<CancellationToken>()))
 				.ReturnsAsync(admin);
 
-			_userRepositoryMock.Setup(repo => repo.FirstOrDefaultAsync(It.IsAny<UserByEmailSpecification>(), It.IsAny<CancellationToken>()))
-				.ReturnsAsync(user1);
-
-			_userRepositoryMock.Setup(repo => repo.FirstOrDefaultAsync(It.IsAny<UserByEmailSpecification>(), It.IsAny<CancellationToken>()))
-				.ReturnsAsync(user2);
+			_userRepositoryMock.Setup(repo => repo.GetByIdAsync(2, It.IsAny<CancellationToken>()))
+				.ReturnsAsync(admin);
 
 			_currencyRepositoryMock.Setup(repo => repo.FirstOrDefaultAsync(It.IsAny<CurrencyByNameSpecification>(), It.IsAny<CancellationToken>()))
 				.ReturnsAsync(currency);
@@ -103,13 +104,13 @@ namespace KasaWGrupie.Tests
 				"Group1",
 				"Description",
 				"USD",
-				"nonexistent@example.com",
-				new List<string> { "user1@example.com" }
+				1,
+				new List<int> { 1 }
 			);
 
-			var command = new CreateGroupCommand("nonexistent@example.com", createGroupDto, null);
+			var command = new CreateGroupCommand(1, createGroupDto, null);
 
-			_userRepositoryMock.Setup(repo => repo.FirstOrDefaultAsync(It.IsAny<UserByEmailSpecification>(), It.IsAny<CancellationToken>()))
+			_userRepositoryMock.Setup(repo => repo.GetByIdAsync(1, It.IsAny<CancellationToken>()))
 				.ReturnsAsync((User?)null); // Admin user does not exist
 
 			_validatorMock.Setup(v => v.ValidateAsync(It.IsAny<CreateGroupCommand>(), It.IsAny<CancellationToken>()))
@@ -130,18 +131,18 @@ namespace KasaWGrupie.Tests
 				"Group1",
 				"Description",
 				"USD",
-				"admin@example.com",
-				new List<string> { "nonexistent@example.com" }
+				1,
+				new List<int> { 1 }
 			);
-			
-			var admin = UserFactory.Create(email: "admin@example.com");
-			
-			var command = new CreateGroupCommand(admin.Email, createGroupDto, null);
 
-			_userRepositoryMock.Setup(repo => repo.FirstOrDefaultAsync(It.IsAny<UserByEmailSpecification>(), It.IsAny<CancellationToken>()))
+			var admin = UserFactory.Create(email: "admin@example.com");
+
+			var command = new CreateGroupCommand(1, createGroupDto, null);
+
+			_userRepositoryMock.Setup(repo => repo.GetByIdAsync(1, It.IsAny<CancellationToken>()))
 				.ReturnsAsync(admin);
 
-			_userRepositoryMock.Setup(repo => repo.FirstOrDefaultAsync(It.IsAny<UserByEmailSpecification>(), It.IsAny<CancellationToken>()))
+			_userRepositoryMock.Setup(repo => repo.GetByIdAsync(1, It.IsAny<CancellationToken>()))
 				.ReturnsAsync((User?)null); // Member does not exist
 
 			_validatorMock.Setup(v => v.ValidateAsync(It.IsAny<CreateGroupCommand>(), It.IsAny<CancellationToken>()))
@@ -153,8 +154,8 @@ namespace KasaWGrupie.Tests
 			// Assert
 			result.IsSuccess.Should().BeFalse();
 		}
-		
-		
+
+
 		[TestMethod]
 		public async Task Handle_ShouldReturnInvalid_WhenAdminEmailsDoNotMatch()
 		{
@@ -163,21 +164,21 @@ namespace KasaWGrupie.Tests
 				"Group1",
 				"Description",
 				"USD",
-				"admin@example.com",
-				new List<string> { "user1@example.com" }
+				1,
+				new List<int> { 1 }
 			);
-		
-			var command = new CreateGroupCommand("different@example.com", createGroupDto, null);
-		
+
+			var command = new CreateGroupCommand(2, createGroupDto, null);
+
 			_validatorMock.Setup(v => v.ValidateAsync(It.IsAny<CreateGroupCommand>(), It.IsAny<CancellationToken>()))
 				.ReturnsAsync(new FluentValidation.Results.ValidationResult());
-		
+
 			// Act
 			var result = await _handler.Handle(command, CancellationToken.None);
-		
+
 			// Assert
 			result.IsSuccess.Should().BeFalse();
 		}
-		
+
 	}
 }

@@ -44,8 +44,8 @@ public sealed class GroupsController : ControllerBase
 			return Result.Invalid(new ValidationError("dto", "Invalid JSON data."));
 		}
 
-		var userEmail = await _authService.GetEmailFromAuthTokenAsync(HttpContext, HttpContext.RequestAborted);
-		var command = new CreateGroupCommand(userEmail, createGroupDto, image);
+		var userId = await _authService.GetUserIdFromAuthTokenAsync(HttpContext);
+		var command = new CreateGroupCommand(userId, createGroupDto, image);
 		var result = await _mediator.Send(command);
 
 		return result;

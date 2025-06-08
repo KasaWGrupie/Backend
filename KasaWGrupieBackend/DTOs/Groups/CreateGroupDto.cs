@@ -4,6 +4,6 @@ public sealed record CreateGroupDto(
 	string Name,
 	string Description,
 	string Currency,
-	string AdminEmail,
-	ICollection<string> Members
+	int AdminId,
+	ICollection<int> Members
 	);
