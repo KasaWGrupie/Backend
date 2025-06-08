@@ -65,24 +65,15 @@ namespace KasaWGrupie.Tests
                 Status = GroupStatus.Active
             };
 
-            var dto = new UpdateGroupDto("New Name", "New Description", null, null,  null, null);
+            var dto = new UpdateGroupDto("New Name", "New Description", null);
             var command = new UpdateGroupCommand(admin.Id, 1, dto);
-            var currency = new Currency { Name = "USD" };
+
             // Arrange: mock group fetch by ID
             _groupRepositoryMock
                 .Setup(repo => repo.GetByIdAsync(group.Id, It.IsAny<CancellationToken>()))
                 .ReturnsAsync(group);
 
-            // Arrange: mock admin fetch
-            _userRepositoryMock
-                .Setup(repo => repo.FirstOrDefaultAsync(It.IsAny<UserByEmailSpecification>(), It.IsAny<CancellationToken>()))
-                .ReturnsAsync(admin);
 
-
-            // Arrange: mock currency fetch
-            _currencyRepositoryMock
-                .Setup(repo => repo.FirstOrDefaultAsync(It.IsAny<CurrencyByNameSpecification>(), It.IsAny<CancellationToken>()))
-                .ReturnsAsync(currency);
 
             // Arrange: mock validator
             _validatorMock
@@ -107,7 +98,7 @@ namespace KasaWGrupie.Tests
         [TestMethod]
         public async Task Handle_ShouldReturnNotFound_WhenGroupDoesNotExist()
         {
-            var dto = new UpdateGroupDto("Name", "Desc", null, null, null, null);
+            var dto = new UpdateGroupDto("Name", "Desc", null);
             var command = new UpdateGroupCommand(1, 2, dto);
 
             _groupRepositoryMock.Setup(r => r.FirstOrDefaultAsync(It.IsAny<ISpecification<Group>>(), It.IsAny<CancellationToken>()))
@@ -140,7 +131,7 @@ namespace KasaWGrupie.Tests
                 Status = GroupStatus.Active
             };
         
-            var dto = new UpdateGroupDto("New Name", "New Description", null, null, null, null);
+            var dto = new UpdateGroupDto("New Name", "New Description", null);
             var command = new UpdateGroupCommand(differentUser.Id, group.Id, dto);
         
             _groupRepositoryMock

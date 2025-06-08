@@ -47,41 +47,7 @@ public class UpdateGroupHandler : IRequestHandler<UpdateGroupCommand, Result>
             return Result.Forbidden("Only admin can update the group.");
         }
         
-        // Admin
-        User? admin = null;
-        if (!string.IsNullOrWhiteSpace(dto.AdminEmail))
-        {
-            admin = await _userRepository.FirstOrDefaultAsync(new UserByEmailSpecification(dto.AdminEmail), cancellationToken);
-            if (admin == null)
-                return Result.Invalid(new ValidationError("AdminEmail", "Admin user does not exist."));
-        }
 
-        // Members
-        List<User>? members = null;
-        if (dto.Members != null)
-        {
-            members = new List<User>();
-            foreach (var email in dto.Members)
-            {
-                var member = await _userRepository.FirstOrDefaultAsync(new UserByEmailSpecification(email), cancellationToken);
-                if (member == null)
-                    return Result.Invalid(new ValidationError("Members", $"User with email {email} does not exist."));
-                members.Add(member);
-            }
-        }
-
-        // Currency
-        Currency? currency = null;
-        if (!string.IsNullOrWhiteSpace(dto.Currency))
-        {
-            currency = await _currencyRepository.FirstOrDefaultAsync(new CurrencyByNameSpecification(dto.Currency), cancellationToken);
-            if (currency == null)
-            {
-                currency = new Currency { Name = dto.Currency };
-                await _currencyRepository.AddAsync(currency, cancellationToken);
-                await _currencyRepository.SaveChangesAsync(cancellationToken);
-            }
-        }
 
         // Image
         string? imageUrl = null;
@@ -102,14 +68,6 @@ public class UpdateGroupHandler : IRequestHandler<UpdateGroupCommand, Result>
         if (imageUrl != null)
             group.PictureUrl = imageUrl;
 
-        if (admin != null)
-            group.Admin = admin;
-
-        if (members != null)
-            group.Members = members;
-
-        if (currency != null)
-            group.Currency = currency;
 
         await _groupRepository.UpdateAsync(group, cancellationToken);
         await _groupRepository.SaveChangesAsync(cancellationToken);

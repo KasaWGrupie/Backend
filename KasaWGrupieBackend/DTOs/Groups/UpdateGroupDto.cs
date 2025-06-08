@@ -3,8 +3,5 @@
 public sealed record UpdateGroupDto(
     string? Name,
     string? Description,
-    IFormFile? Image,
-    string? Currency,
-    string? AdminEmail,
-    ICollection<string>? Members
+    IFormFile? Image
     );
