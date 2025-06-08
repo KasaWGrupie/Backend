@@ -21,22 +21,19 @@ public class CreateGroupDtoValidator : AbstractValidator<CreateGroupDto>
 			.Length(ValidatorConstants.CreateGroupDtoConstants.CurrencyMaxLength)
 			.WithMessage($"Currency code must be exactly {ValidatorConstants.CreateGroupDtoConstants.CurrencyMaxLength} characters.");
 
-		RuleFor(x => x.AdminEmail)
-			.NotEmpty().WithMessage("Administrator email is required.")
-			.MaximumLength(ValidatorConstants.CreateGroupDtoConstants.EmailMaxLength)
-			.WithMessage($"Administrator email cannot exceed {ValidatorConstants.CreateGroupDtoConstants.EmailMaxLength} characters.")
-			.EmailAddress().WithMessage("Invalid email format.");
+		RuleFor(x => x.AdminId)
+			.NotEmpty().WithMessage("Administrator id is required.")
+			.GreaterThan(0);
 
 		RuleFor(x => x.Members)
 			.NotEmpty().WithMessage("At least one member is required.");
 
 		RuleForEach(x => x.Members)
-			.EmailAddress().WithMessage("Each member must have a valid email address.")
-			.MaximumLength(ValidatorConstants.CreateGroupDtoConstants.EmailMaxLength)
-			.WithMessage($"Member email cannot exceed {ValidatorConstants.CreateGroupDtoConstants.EmailMaxLength} characters.");
+			.NotEmpty().WithMessage("Members id must be greater than 0.")
+			.GreaterThan(0);
 
 		RuleFor(x => x)
-			.Must(x => x.Members != null && x.Members.Contains(x.AdminEmail))
+			.Must(x => x.Members != null && x.Members.Contains(x.AdminId))
 			.WithMessage("The administrator must be a member of the group.");
 	}
 
