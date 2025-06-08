@@ -5,6 +5,7 @@ using KasaWGrupie.API.DTOs.Expense;
 using KasaWGrupie.API.Requests.Expenses.Commands;
 using KasaWGrupie.Core.Entities;
 using KasaWGrupie.Core.Enums;
+using KasaWGrupie.Infrastructure.ImageService;
 using MediatR;
 
 namespace KasaWGrupie.API.Requests.Expenses.Handlers;
@@ -17,8 +18,9 @@ public class CreateExpenseHandler : IRequestHandler<CreateExpenseCommand, Result
 	private readonly IRepositoryBase<Group> _groupRepository;
 	private readonly IRepositoryBase<User> _userRepository;
 	private readonly IValidator<CreateExpenseDto> _validator;
+	private readonly IImageService _imageService;
 
-	public CreateExpenseHandler(IRepositoryBase<Expense> expenseRepository, IRepositoryBase<ExpenseSplit> expenseSplitRepository, IRepositoryBase<ExpenseSplitRecord> expenseSplitRecordRepository, IRepositoryBase<Group> groupRepository, IRepositoryBase<User> userRepository, IValidator<CreateExpenseDto> validator)
+	public CreateExpenseHandler(IRepositoryBase<Expense> expenseRepository, IRepositoryBase<ExpenseSplit> expenseSplitRepository, IRepositoryBase<ExpenseSplitRecord> expenseSplitRecordRepository, IRepositoryBase<Group> groupRepository, IRepositoryBase<User> userRepository, IValidator<CreateExpenseDto> validator, IImageService imageService)
 	{
 		_expenseRepository = expenseRepository;
 		_expenseSplitRepository = expenseSplitRepository;
@@ -26,12 +28,13 @@ public class CreateExpenseHandler : IRequestHandler<CreateExpenseCommand, Result
 		_groupRepository = groupRepository;
 		_userRepository = userRepository;
 		_validator = validator;
+		_imageService = imageService;
 	}
 
 	public async Task<Result> Handle(CreateExpenseCommand request, CancellationToken cancellationToken)
 	{
 		var dto = request.CreateExpenseDto;
-		
+
 		var validationResult = await _validator.ValidateAsync(dto, cancellationToken);
 		if (!validationResult.IsValid)
 		{
@@ -48,15 +51,15 @@ public class CreateExpenseHandler : IRequestHandler<CreateExpenseCommand, Result
 		{
 			return Result.Invalid(new ValidationError("GroupId", "Group not found"));
 		}
-		
+
 		var payingPerson = await _userRepository.GetByIdAsync(dto.PaidBy, cancellationToken);
 		if (payingPerson == null)
 		{
 			return Result.Invalid(new ValidationError("PayingPersonId", "Paying person not found"));
 		}
-		
+
 		var splitType = Enum.Parse<ExpenseSplitType>(dto.DivisionMethod, true);
-		
+
 		var participants = new List<(User user, decimal amount)>();
 
 		foreach (var participantDto in dto.Participants)
@@ -66,8 +69,20 @@ public class CreateExpenseHandler : IRequestHandler<CreateExpenseCommand, Result
 			{
 				return Result.Invalid(new ValidationError("UserId", "User not found"));
 			}
-			
+
 			participants.Add((user, participantDto.Amount));
+		}
+
+		var expensePictureUri = string.Empty;
+
+		if (request.ExpensePicture != null)
+		{
+			var imageUploadResult = await _imageService.UploadImageAsync(request.ExpensePicture, cancellationToken);
+
+			if (imageUploadResult.IsSuccess)
+			{
+				expensePictureUri = imageUploadResult.Url;
+			}
 		}
 
 		var expense = new Expense
@@ -77,7 +92,7 @@ public class CreateExpenseHandler : IRequestHandler<CreateExpenseCommand, Result
 			Description = dto.Description,
 			Date = dto.Date,
 			PayingPerson = payingPerson,
-			PictureUrl = dto.ExpensePictureUri,
+			PictureUrl = expensePictureUri,
 			Amount = dto.Amount
 		};
 		var expenseSplit = new ExpenseSplit
@@ -104,16 +119,16 @@ public class CreateExpenseHandler : IRequestHandler<CreateExpenseCommand, Result
 				case ExpenseSplitType.Equally:
 					break;
 			}
-			
+
 			return record;
 		}).ToList();
 
 		expense.ExpenseSplit = expenseSplit;
-		
+
 		await _expenseRepository.AddAsync(expense, cancellationToken);
 		await _expenseSplitRepository.AddAsync(expenseSplit, cancellationToken);
 		await _expenseSplitRecordRepository.AddRangeAsync(expenseSplit.SplitRecords, cancellationToken);
-		
+
 		await _expenseRepository.SaveChangesAsync(cancellationToken);
 		await _expenseSplitRepository.SaveChangesAsync(cancellationToken);
 		await _expenseSplitRecordRepository.SaveChangesAsync(cancellationToken);
