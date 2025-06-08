@@ -38,9 +38,12 @@ public class ChangeFriendRequestStatusCommandHandler : IRequestHandler<ChangeFri
 			return Result.NotFound();
 		}
 
-		if (request.UserId != friendRequest.ReceiverId)
+		var isReceiver = friendRequest.ReceiverId == request.UserId;
+		var isSender = friendRequest.SenderId == request.UserId;
+
+		if (!isSender && !isReceiver)
 		{
-			return Result.Forbidden("Only request receiver can change friend request status.");
+			return Result.Forbidden("This friend request is not yours.");
 		}
 
 		var status = Enum.Parse<FriendRequestStatus>(request.ChangeFriendRequestStatusDto.Status);
@@ -57,6 +60,10 @@ public class ChangeFriendRequestStatusCommandHandler : IRequestHandler<ChangeFri
 
 		if (status == FriendRequestStatus.Confirmed && friendRequest.Status == FriendRequestStatus.Unconfirmed)
 		{
+			if (!isReceiver)
+			{
+				return Result.Forbidden("Only the receiver can confirm a friend request.");
+			}
 			friendRequest.Sender.Friends.Add(friendRequest.Receiver);
 			friendRequest.Receiver.Friends.Add(friendRequest.Sender);
 
