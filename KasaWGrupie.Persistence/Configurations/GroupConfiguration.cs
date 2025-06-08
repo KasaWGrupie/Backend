@@ -31,6 +31,9 @@ public class GroupConfiguration : IEntityTypeConfiguration<Group>
 		builder.Property(g => g.Status)
 			.IsRequired();
 
+		builder.Property(g => g.InviteCode)
+			.HasMaxLength(ConfigurationConstants.GroupConstants.InviteCodeMaxLength);
+
 		builder.HasOne(g => g.Currency)
 			.WithMany()
 			.HasForeignKey(g => g.CurrencyId)
