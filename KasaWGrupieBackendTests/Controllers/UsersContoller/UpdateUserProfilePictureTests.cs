@@ -38,7 +38,7 @@ public class UpdateUserProfilePictureHandlerTests
 	public async Task Handle_ShouldReturnInvalid_WhenValidationFails()
 	{
 		// Arrange
-		var command = new UpdateUserProfilePictureCommand(1, new UpdateUserProfilePictureDto(null)); // Null image
+		var command = new UpdateUserProfilePictureCommand(1, null); // Null image
 		var validationFailures = new List<FluentValidation.Results.ValidationFailure>
 		{
 			new FluentValidation.Results.ValidationFailure("ProfilePicture", "Profile picture is required.")
@@ -57,7 +57,7 @@ public class UpdateUserProfilePictureHandlerTests
 	public async Task Handle_ShouldReturnNotFound_WhenUserDoesNotExist()
 	{
 		// Arrange
-		var command = new UpdateUserProfilePictureCommand(1, new UpdateUserProfilePictureDto(new Mock<IFormFile>().Object));
+		var command = new UpdateUserProfilePictureCommand(1, new Mock<IFormFile>().Object);
 
 		_validatorMock.Setup(v => v.ValidateAsync(It.IsAny<UpdateUserProfilePictureCommand>(), It.IsAny<CancellationToken>()))
 			.ReturnsAsync(new ValidationResult());
@@ -76,7 +76,7 @@ public class UpdateUserProfilePictureHandlerTests
 	{
 		// Arrange
 		var user = new User { Id = 1, Name = "Test User", Email = "user@example.com", ProfilePictureUrl = "old-url.jpg" };
-		var command = new UpdateUserProfilePictureCommand(1, new UpdateUserProfilePictureDto(new Mock<IFormFile>().Object));
+		var command = new UpdateUserProfilePictureCommand(1, new Mock<IFormFile>().Object);
 
 		_validatorMock.Setup(v => v.ValidateAsync(It.IsAny<UpdateUserProfilePictureCommand>(), It.IsAny<CancellationToken>()))
 			.ReturnsAsync(new ValidationResult());
@@ -103,7 +103,7 @@ public class UpdateUserProfilePictureHandlerTests
 	{
 		// Arrange
 		var user = new User { Id = 1, Name = "Test User", Email = "user@example.com", ProfilePictureUrl = "old-url.jpg" };
-		var command = new UpdateUserProfilePictureCommand(1, new UpdateUserProfilePictureDto(new Mock<IFormFile>().Object));
+		var command = new UpdateUserProfilePictureCommand(1, new Mock<IFormFile>().Object);
 
 		_validatorMock.Setup(v => v.ValidateAsync(It.IsAny<UpdateUserProfilePictureCommand>(), It.IsAny<CancellationToken>()))
 			.ReturnsAsync(new ValidationResult());

@@ -17,8 +17,8 @@ public class UpdateGroupHandler : IRequestHandler<UpdateGroupCommand, Result>
     private readonly IRepositoryBase<User> _userRepository;
     private readonly IRepositoryBase<Currency> _currencyRepository;
     private readonly IImageService _imageService;
-    private readonly IValidator<UpdateGroupDto> _validator;
-    public UpdateGroupHandler(IRepositoryBase<Group> groupRepository, IRepositoryBase<User> userRepository, IRepositoryBase<Currency> currencyRepository, IImageService imageService, IValidator<UpdateGroupDto> validator)
+    private readonly IValidator<UpdateGroupCommand> _validator;
+    public UpdateGroupHandler(IRepositoryBase<Group> groupRepository, IRepositoryBase<User> userRepository, IRepositoryBase<Currency> currencyRepository, IImageService imageService, IValidator<UpdateGroupCommand> validator)
     {
         _groupRepository = groupRepository;
         _userRepository = userRepository;
@@ -32,7 +32,7 @@ public class UpdateGroupHandler : IRequestHandler<UpdateGroupCommand, Result>
         var dto = request.UpdateGroupDto;
 
         // Optional: Adjust validation if validator assumes all fields are required.
-        var validationResult = await _validator.ValidateAsync(dto, cancellationToken);
+        var validationResult = await _validator.ValidateAsync(request, cancellationToken);
         if (!validationResult.IsValid)
         {
             return Result.Invalid(validationResult.Errors.Select(e => new ValidationError(e.PropertyName, e.ErrorMessage)));
@@ -85,9 +85,9 @@ public class UpdateGroupHandler : IRequestHandler<UpdateGroupCommand, Result>
 
         // Image
         string? imageUrl = null;
-        if (dto.Image != null)
+        if (request.Image != null)
         {
-            var uploadResult = await _imageService.UploadImageAsync(dto.Image, cancellationToken);
+            var uploadResult = await _imageService.UploadImageAsync(request.Image, cancellationToken);
             if (uploadResult.IsSuccess)
                 imageUrl = uploadResult.Url;
         }

@@ -3,21 +3,18 @@ using KasaWGrupie.API.Requests.Groups.Commands;
 
 namespace KasaWGrupie.API.Validators.Groups;
 
-public class UpdateGroupCommandValidator : AbstractValidator<UpdateGroupCommand>
+public class CreateGroupCommandValidator : AbstractValidator<CreateGroupCommand>
 {
-    public UpdateGroupCommandValidator()
+    public CreateGroupCommandValidator()
     {
-        RuleFor(x => x.GroupId)
-            .GreaterThan(0).WithMessage("Group id is required");
+        RuleFor(x => x.CreateGroupDto)
+            .SetValidator(new CreateGroupDtoValidator());
         
         RuleFor(x => x.Image)
-            .Must(BeAValidImage)
-            .WithMessage("Invalid image format. Allowed formats: jpg, jpeg, png.")
-            .When(x => x.Image != null);
-
-        RuleFor(x => x.UpdateGroupDto)
-            .SetValidator(new UpdateGroupDtoValidator());
+            .Must(BeAValidImage).When(x => x.Image != null)
+            .WithMessage("Invalid image format. Allowed formats: jpg, jpeg, png.");
     }
+    
     
     private bool BeAValidImage(IFormFile? file)
     {
