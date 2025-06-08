@@ -35,22 +35,9 @@ public class CreateGroupDtoValidator : AbstractValidator<CreateGroupDto>
 			.MaximumLength(ValidatorConstants.CreateGroupDtoConstants.EmailMaxLength)
 			.WithMessage($"Member email cannot exceed {ValidatorConstants.CreateGroupDtoConstants.EmailMaxLength} characters.");
 
-		RuleFor(x => x.Image)
-			.Must(BeAValidImage).When(x => x.Image != null)
-			.WithMessage("Invalid image format. Allowed formats: jpg, jpeg, png.");
-
 		RuleFor(x => x)
 			.Must(x => x.Members != null && x.Members.Contains(x.AdminEmail))
 			.WithMessage("The administrator must be a member of the group.");
 	}
 
-	private bool BeAValidImage(IFormFile? file)
-	{
-		if (file == null) return true;
-
-		var allowedExtensions = new[] { ".jpg", ".jpeg", ".png" };
-		var fileExtension = System.IO.Path.GetExtension(file.FileName).ToLower();
-
-		return allowedExtensions.Contains(fileExtension);
-	}
 }

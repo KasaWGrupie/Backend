@@ -19,6 +19,8 @@ public class UsersController(
 	IMediator mediator
 ) : ControllerBase
 {
+	private static readonly JsonSerializerOptions JsonOptions = new() { PropertyNameCaseInsensitive = true };
+	
 	/// <summary>
 	/// Add new User
 	/// </summary>
@@ -31,11 +33,10 @@ public class UsersController(
 		var json = formCollection["dto"][0];
 		if (json is null)
 		{
-			return Result.Invalid(new ValidationError(nameof(formCollection), "Invalid JSON data."));
+			return Result.Invalid(new ValidationError("dto", "JSON data required in 'dto' field."));
 		}
-		var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
-		var createUserDto = JsonSerializer.Deserialize<CreateUserDto>(json, options);
-		if (createUserDto == null)
+		var createUserDto = JsonSerializer.Deserialize<CreateUserDto>(json, JsonOptions);
+		if (createUserDto is null)
 		{
 			return Result.Invalid(new ValidationError("dto", "Invalid JSON data."));
 		}
@@ -92,13 +93,14 @@ public class UsersController(
 
 	[HttpPut("profilePicture/{id}")]
 	[TranslateResultToActionResult]
-	public async Task<Result> UpdateUserProfilePicture(int id, [FromForm] UpdateUserProfilePictureDto updateUserProfilePictureDto)
+	[Consumes("multipart/form-data")]
+	public async Task<Result> UpdateUserProfilePicture(int id, [FromForm] IFormFile? profilePicture)
 	{
 		if (id != await authService.GetUserIdFromAuthTokenAsync(HttpContext))
 		{
 			return Result.Forbidden("Cannot update another user's profile picture.");
 		}
-		var command = new UpdateUserProfilePictureCommand(id, updateUserProfilePictureDto);
+		var command = new UpdateUserProfilePictureCommand(id, profilePicture);
 		return await mediator.Send(command);
 	}
 
