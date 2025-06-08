@@ -68,7 +68,7 @@ public sealed class GroupsController : ControllerBase
         }
 
         var userId = await _authService.GetUserIdFromAuthTokenAsync(HttpContext);
-        var command = new UpdateGroupCommand(userId, groupId, updateGroupDto);
+        var command = new UpdateGroupCommand(userId, groupId, updateGroupDto, image);
         var result = await _mediator.Send(command);
         return result;
     }

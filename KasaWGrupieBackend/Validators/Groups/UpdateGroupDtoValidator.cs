@@ -17,16 +17,7 @@ public class UpdateGroupDtoValidator : AbstractValidator<UpdateGroupDto>
             .WithMessage($"Group description cannot exceed {ValidatorConstants.CreateGroupDtoConstants.DescriptionMaxLength} characters.")
             .When(x => x.Description != null);
 
-
+        
     }
 
-    private bool BeAValidImage(IFormFile? file)
-    {
-        if (file == null) return true;
-
-        var allowedExtensions = new[] { ".jpg", ".jpeg", ".png" };
-        var fileExtension = System.IO.Path.GetExtension(file.FileName).ToLower();
-
-        return allowedExtensions.Contains(fileExtension);
-    }
 }
