@@ -5,5 +5,6 @@ using KasaWGrupie.API.DTOs.Groups;
 namespace KasaWGrupie.API.Requests.Groups.Commands;
 
 public sealed record CreateGroupCommand(
-	CreateGroupDto CreateGroupDto
+	CreateGroupDto CreateGroupDto,
+	IFormFile? Image
 	) : IRequest<Result>;

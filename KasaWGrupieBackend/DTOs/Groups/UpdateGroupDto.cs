@@ -4,7 +4,6 @@ public sealed record UpdateGroupDto(
     int GroupId,
     string? Name,
     string? Description,
-    IFormFile? Image,
     string? Currency,
     string? AdminEmail,
     ICollection<string>? Members

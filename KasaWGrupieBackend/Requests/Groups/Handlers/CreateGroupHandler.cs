@@ -18,8 +18,8 @@ public class CreateGroupHandler : IRequestHandler<CreateGroupCommand, Result>
 	private readonly IRepositoryBase<User> _userRepository;
 	private readonly IRepositoryBase<Currency> _currencyRepository;
 	private readonly IImageService _imageService;
-	private readonly IValidator<CreateGroupDto> _validator;
-	public CreateGroupHandler(IRepositoryBase<Group> groupRepository, IRepositoryBase<User> userRepository, IRepositoryBase<Currency> currencyRepository, IImageService imageService, IValidator<CreateGroupDto> validator)
+	private readonly IValidator<CreateGroupCommand> _validator;
+	public CreateGroupHandler(IRepositoryBase<Group> groupRepository, IRepositoryBase<User> userRepository, IRepositoryBase<Currency> currencyRepository, IImageService imageService, IValidator<CreateGroupCommand> validator)
 	{
 		_groupRepository = groupRepository;
 		_userRepository = userRepository;
@@ -29,7 +29,7 @@ public class CreateGroupHandler : IRequestHandler<CreateGroupCommand, Result>
 	}
 	public async Task<Result> Handle(CreateGroupCommand request, CancellationToken cancellationToken)
 	{
-		var validationResult = await _validator.ValidateAsync(request.CreateGroupDto, cancellationToken);
+		var validationResult = await _validator.ValidateAsync(request, cancellationToken);
 
 		if (!validationResult.IsValid)
 		{
@@ -59,9 +59,9 @@ public class CreateGroupHandler : IRequestHandler<CreateGroupCommand, Result>
 		}
 
 		var imageUrl = string.Empty;
-		if (request.CreateGroupDto.Image != null)
+		if (request.Image != null)
 		{
-			var uploadResult = await _imageService.UploadImageAsync(request.CreateGroupDto.Image, cancellationToken);
+			var uploadResult = await _imageService.UploadImageAsync(request.Image, cancellationToken);
 			if (uploadResult.IsSuccess)
 			{
 				imageUrl = uploadResult.Url;

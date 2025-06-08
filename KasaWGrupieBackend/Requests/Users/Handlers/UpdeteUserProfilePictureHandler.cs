@@ -37,9 +37,9 @@ public class UpdateUserProfilePictureHandler : IRequestHandler<UpdateUserProfile
 
 		var imageUrl = string.Empty;
 
-		if (request.UpdateUserProfilePictureDto.ProfilePicture != null)
+		if (request.ProfilePicture != null)
 		{
-			var uploadResult = await _imageService.UploadImageAsync(request.UpdateUserProfilePictureDto.ProfilePicture, cancellationToken);
+			var uploadResult = await _imageService.UploadImageAsync(request.ProfilePicture, cancellationToken);
 			if (uploadResult.IsSuccess)
 			{
 				imageUrl = uploadResult.Url;
