@@ -26,7 +26,7 @@ namespace KasaWGrupie.Tests
 		private Mock<IRepositoryBase<User>> _userRepositoryMock;
 		private Mock<IRepositoryBase<Currency>> _currencyRepositoryMock;
 		private Mock<IImageService> _imageServiceMock;
-		private Mock<IValidator<CreateGroupDto>> _validatorMock;
+		private Mock<IValidator<CreateGroupCommand>> _validatorMock;
 		private CreateGroupHandler _handler;
 #pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
 
@@ -37,7 +37,7 @@ namespace KasaWGrupie.Tests
 			_userRepositoryMock = new Mock<IRepositoryBase<User>>();
 			_currencyRepositoryMock = new Mock<IRepositoryBase<Currency>>();
 			_imageServiceMock = new Mock<IImageService>();
-			_validatorMock = new Mock<IValidator<CreateGroupDto>>();
+			_validatorMock = new Mock<IValidator<CreateGroupCommand>>();
 
 			_handler = new CreateGroupHandler(
 				_groupRepositoryMock.Object,
@@ -55,7 +55,6 @@ namespace KasaWGrupie.Tests
 			var createGroupDto = new CreateGroupDto(
 				"Group1",
 				"Description",
-				null,
 				"USD",
 				"admin@example.com",
 				new List<string> { "user1@example.com", "user2@example.com" }
@@ -67,7 +66,7 @@ namespace KasaWGrupie.Tests
 			var user2 = UserFactory.Create(email: "user2@example.com"); // Tworzymy członka 2
 			var currency = new Currency { Name = "USD" };
 			
-			var command = new CreateGroupCommand(admin.Email, createGroupDto);
+			var command = new CreateGroupCommand(admin.Email, createGroupDto, null);
 
 			// Mockujemy odpowiedzi repozytoriów
 			_userRepositoryMock.Setup(repo => repo.FirstOrDefaultAsync(It.IsAny<UserByEmailSpecification>(), It.IsAny<CancellationToken>()))
@@ -82,7 +81,7 @@ namespace KasaWGrupie.Tests
 			_currencyRepositoryMock.Setup(repo => repo.FirstOrDefaultAsync(It.IsAny<CurrencyByNameSpecification>(), It.IsAny<CancellationToken>()))
 				.ReturnsAsync(currency);
 
-			_validatorMock.Setup(v => v.ValidateAsync(It.IsAny<CreateGroupDto>(), It.IsAny<CancellationToken>()))
+			_validatorMock.Setup(v => v.ValidateAsync(It.IsAny<CreateGroupCommand>(), It.IsAny<CancellationToken>()))
 				.ReturnsAsync(new FluentValidation.Results.ValidationResult());
 
 			_imageServiceMock.Setup(service => service.UploadImageAsync(It.IsAny<IFormFile>(), It.IsAny<CancellationToken>()))
@@ -103,18 +102,17 @@ namespace KasaWGrupie.Tests
 			var createGroupDto = new CreateGroupDto(
 				"Group1",
 				"Description",
-				null,
 				"USD",
 				"nonexistent@example.com",
 				new List<string> { "user1@example.com" }
 			);
 
-			var command = new CreateGroupCommand("nonexistent@example.com", createGroupDto);
+			var command = new CreateGroupCommand("nonexistent@example.com", createGroupDto, null);
 
 			_userRepositoryMock.Setup(repo => repo.FirstOrDefaultAsync(It.IsAny<UserByEmailSpecification>(), It.IsAny<CancellationToken>()))
 				.ReturnsAsync((User?)null); // Admin user does not exist
 
-			_validatorMock.Setup(v => v.ValidateAsync(It.IsAny<CreateGroupDto>(), It.IsAny<CancellationToken>()))
+			_validatorMock.Setup(v => v.ValidateAsync(It.IsAny<CreateGroupCommand>(), It.IsAny<CancellationToken>()))
 				.ReturnsAsync(new FluentValidation.Results.ValidationResult());
 
 			// Act
@@ -131,7 +129,6 @@ namespace KasaWGrupie.Tests
 			var createGroupDto = new CreateGroupDto(
 				"Group1",
 				"Description",
-				null,
 				"USD",
 				"admin@example.com",
 				new List<string> { "nonexistent@example.com" }
@@ -139,7 +136,7 @@ namespace KasaWGrupie.Tests
 			
 			var admin = UserFactory.Create(email: "admin@example.com");
 			
-			var command = new CreateGroupCommand(admin.Email, createGroupDto);
+			var command = new CreateGroupCommand(admin.Email, createGroupDto, null);
 
 			_userRepositoryMock.Setup(repo => repo.FirstOrDefaultAsync(It.IsAny<UserByEmailSpecification>(), It.IsAny<CancellationToken>()))
 				.ReturnsAsync(admin);
@@ -147,7 +144,7 @@ namespace KasaWGrupie.Tests
 			_userRepositoryMock.Setup(repo => repo.FirstOrDefaultAsync(It.IsAny<UserByEmailSpecification>(), It.IsAny<CancellationToken>()))
 				.ReturnsAsync((User?)null); // Member does not exist
 
-			_validatorMock.Setup(v => v.ValidateAsync(It.IsAny<CreateGroupDto>(), It.IsAny<CancellationToken>()))
+			_validatorMock.Setup(v => v.ValidateAsync(It.IsAny<CreateGroupCommand>(), It.IsAny<CancellationToken>()))
 				.ReturnsAsync(new FluentValidation.Results.ValidationResult());
 
 			// Act
@@ -165,15 +162,14 @@ namespace KasaWGrupie.Tests
 			var createGroupDto = new CreateGroupDto(
 				"Group1",
 				"Description",
-				null,
 				"USD",
 				"admin@example.com",
 				new List<string> { "user1@example.com" }
 			);
 		
-			var command = new CreateGroupCommand("different@example.com", createGroupDto);
+			var command = new CreateGroupCommand("different@example.com", createGroupDto, null);
 		
-			_validatorMock.Setup(v => v.ValidateAsync(It.IsAny<CreateGroupDto>(), It.IsAny<CancellationToken>()))
+			_validatorMock.Setup(v => v.ValidateAsync(It.IsAny<CreateGroupCommand>(), It.IsAny<CancellationToken>()))
 				.ReturnsAsync(new FluentValidation.Results.ValidationResult());
 		
 			// Act

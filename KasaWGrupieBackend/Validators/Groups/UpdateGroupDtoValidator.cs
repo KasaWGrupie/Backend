@@ -40,24 +40,10 @@ public class UpdateGroupDtoValidator : AbstractValidator<UpdateGroupDto>
             .WithMessage($"Member email cannot exceed {ValidatorConstants.CreateGroupDtoConstants.EmailMaxLength} characters.")
             .When(x => x.Members != null);
 
-        RuleFor(x => x.Image)
-            .Must(BeAValidImage)
-            .WithMessage("Invalid image format. Allowed formats: jpg, jpeg, png.")
-            .When(x => x.Image != null);
-
         RuleFor(x => x)
             .Must(x => x.AdminEmail == null || (x.Members != null && x.Members.Contains(x.AdminEmail)))
             .WithMessage("The administrator must be a member of the group.")
             .When(x => x.AdminEmail != null);
     }
 
-    private bool BeAValidImage(IFormFile? file)
-    {
-        if (file == null) return true;
-
-        var allowedExtensions = new[] { ".jpg", ".jpeg", ".png" };
-        var fileExtension = System.IO.Path.GetExtension(file.FileName).ToLower();
-
-        return allowedExtensions.Contains(fileExtension);
-    }
 }

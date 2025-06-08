@@ -1,4 +1,5 @@
-﻿using Ardalis.Result;
+﻿using System.Text.Json;
+using Ardalis.Result;
 using Microsoft.AspNetCore.Mvc;
 using MediatR;
 using Ardalis.Result.AspNetCore;
@@ -20,6 +21,8 @@ public sealed class GroupsController : ControllerBase
 		_mediator = mediator;
 		_authService = authService;
 	}
+	
+	private static readonly JsonSerializerOptions JsonOptions = new() { PropertyNameCaseInsensitive = true };
 
 	/// <summary>
 	/// Add new group
@@ -27,10 +30,22 @@ public sealed class GroupsController : ControllerBase
 	/// <returns>Successfully inserted new group</returns>
 	[TranslateResultToActionResult]
 	[HttpPost]
-	public async Task<Result> CreateGroup([FromForm] CreateGroupDto createGroupDto)
+	[Consumes("multipart/form-data")]
+	public async Task<Result> CreateGroup(IFormCollection formCollection, IFormFile? image)
 	{
+		var json = formCollection["dto"][0];
+		if (json is null)
+		{
+			return Result.Invalid(new ValidationError("dto", "JSON data required in 'dto' field."));
+		}
+		var createGroupDto = JsonSerializer.Deserialize<CreateGroupDto>(json, JsonOptions);
+		if (createGroupDto is null)
+		{
+			return Result.Invalid(new ValidationError("dto", "Invalid JSON data."));
+		}
+		
 		var userEmail = await _authService.GetEmailFromAuthTokenAsync(HttpContext, HttpContext.RequestAborted);
-		var command = new CreateGroupCommand(userEmail, createGroupDto);
+		var command = new CreateGroupCommand(userEmail, createGroupDto, image);
 		var result = await _mediator.Send(command);
 
 		return result;
@@ -49,10 +64,23 @@ public sealed class GroupsController : ControllerBase
 	
     [TranslateResultToActionResult]
     [HttpPut("{groupId}")]
-    public async Task<Result> UpdateGroup([FromRoute] int groupId, [FromForm] UpdateGroupDto updateGroupDto)
+    [Consumes("multipart/form-data")]
+    public async Task<Result> UpdateGroup([FromRoute] int groupId, IFormCollection formCollection, IFormFile? image)
     {
+	    var json = formCollection["dto"][0];
+	    if (json is null)
+	    {
+		    return Result.Invalid(new ValidationError("dto", "JSON data required in 'dto' field."));
+	    }
+	    
+	    var updateGroupDto = JsonSerializer.Deserialize<UpdateGroupDto>(json, JsonOptions);
+	    if (updateGroupDto is null)
+	    {
+		    return Result.Invalid(new ValidationError("dto", "Invalid JSON data."));
+	    }
+	    
 	    var userId = await _authService.GetUserIdFromAuthTokenAsync(HttpContext);
-        var command = new UpdateGroupCommand(userId, groupId, updateGroupDto);
+        var command = new UpdateGroupCommand(userId, groupId, updateGroupDto, image);
         var result = await _mediator.Send(command);
         return result;
     }
