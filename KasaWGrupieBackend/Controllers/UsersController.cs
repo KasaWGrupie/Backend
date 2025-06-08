@@ -13,7 +13,7 @@ namespace KasaWGrupie.API.Controllers;
 
 [Route("users")]
 [ApiController]
-
+[FirebaseAuthorize]
 public class UsersController(
 	IAuthService authService,
 	IMediator mediator
@@ -143,10 +143,10 @@ public class UsersController(
 	[TranslateResultToActionResult]
 	public async Task<Result<ICollection<RecievedFriendRequestDisplayDto>>> GetRecievedFriendRequests(int userId)
 	{
-		//if (userId != await authService.GetUserIdFromAuthTokenAsync(HttpContext))
-		//{
-		//	return Result.Forbidden("Cannot get friend requests of another user.");
-		//}
+		if (userId != await authService.GetUserIdFromAuthTokenAsync(HttpContext))
+		{
+			return Result.Forbidden("Cannot get friend requests of another user.");
+		}
 		var command = new GetFriendRequestsCommand(userId);
 		var result = await mediator.Send(command);
 		return result;
@@ -156,10 +156,10 @@ public class UsersController(
 	[TranslateResultToActionResult]
 	public async Task<Result<ICollection<SentFriendRequestDisplayDto>>> GetSentFriendRequests(int userId)
 	{
-		//if (userId != await authService.GetUserIdFromAuthTokenAsync(HttpContext))
-		//{
-		//	return Result.Forbidden("Cannot get friend requests of another user.");
-		//}
+		if (userId != await authService.GetUserIdFromAuthTokenAsync(HttpContext))
+		{
+			return Result.Forbidden("Cannot get friend requests of another user.");
+		}
 		var command = new GetSentFriendRequestsCommand(userId);
 		var result = await mediator.Send(command);
 		return result;
