@@ -6,6 +6,7 @@ using KasaWGrupie.API.DTOs.Groups;
 using KasaWGrupie.API.Requests.Groups.Commands;
 using KasaWGrupie.Core.Entities;
 using KasaWGrupie.Persistence.Specifications.Groups;
+using KasaWGrupie.Persistence.Specifications.MoneyRequests;
 using MediatR;
 
 namespace KasaWGrupie.API.Requests.Groups.Handlers;
@@ -31,9 +32,16 @@ public class GetExpensesHandler : IRequestHandler<GetExpensesCommand, Result<ICo
             return Result.Invalid(validationResult.Errors.Select(x => new ValidationError(x.PropertyName, x.ErrorMessage)));
         }
 
-        if (await _groupRepository.GetByIdAsync(request.GroupId, cancellationToken) == null)
+        var groupSpecification = new GetGroupByIdWithMembersSpecification(request.GroupId);
+        var group = await _groupRepository.FirstOrDefaultAsync(groupSpecification, cancellationToken);
+        if (group == null)
         {
             return Result.NotFound("Group not found");
+        }
+
+        if (group.Members.All(it => it.Id != request.UserId))
+        {
+            return Result.Forbidden("You must be a member of the group to retrieve its expenses.");
         }
         
         var specification = new ExpensesByGroupIdSpecification(request.GroupId);

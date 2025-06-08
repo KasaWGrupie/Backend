@@ -5,5 +5,6 @@ using MediatR;
 namespace KasaWGrupie.API.Requests.MoneyTransfers.Commands;
 
 public sealed record CreateMoneyTransferCommand(
+    int UserId,
     CreateMoneyTransferDto CreateMoneyTransferDto
     ) : IRequest<Result>;

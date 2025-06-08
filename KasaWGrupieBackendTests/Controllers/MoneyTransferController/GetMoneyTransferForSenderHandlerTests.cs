@@ -9,7 +9,7 @@ using KasaWGrupie.Core.Enums;
 using KasaWGrupie.Tests.Factories;
 using Moq;
 
-namespace KasaWGrupieTests;
+namespace KasaWGrupie.Tests;
 
 [TestClass]
 public class GetMoneyTransferForSenderHandlerTests

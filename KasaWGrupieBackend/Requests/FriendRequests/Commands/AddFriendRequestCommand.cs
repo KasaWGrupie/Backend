@@ -5,4 +5,6 @@ using Ardalis.Result;
 namespace KasaWGrupie.API.Requests.FriendRequests.Commands;
 
 public sealed record AddFriendRequestCommand(
-	AddFriendRequestDto AddFriendRequestDto) : IRequest<Result>;
+    int UserId,
+    AddFriendRequestDto AddFriendRequestDto
+    ) : IRequest<Result>;

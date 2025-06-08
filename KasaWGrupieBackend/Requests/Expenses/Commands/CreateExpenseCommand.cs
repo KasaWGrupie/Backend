@@ -5,5 +5,6 @@ using MediatR;
 namespace KasaWGrupie.API.Requests.Expenses.Commands;
 
 public record CreateExpenseCommand(
+    int UserId,
     CreateExpenseDto CreateExpenseDto
     ) : IRequest<Result>;
