@@ -56,7 +56,57 @@ public sealed class GroupsController : ControllerBase
         var result = await _mediator.Send(command);
         return result;
     }
+    
+    [TranslateResultToActionResult]
+    [HttpPut("{groupId:int}/status")]
+    public async Task<Result> ChangeStatus(
+  [FromRoute] int groupId,
+  [FromBody] ChangeGroupStatusDto dto)
+    {
+      // merge route + body into one DTO:
+        var dtoWithId = dto with { GroupId = groupId };
+        var cmd = new ChangeGroupStatusCommand(dtoWithId);
+        return await _mediator.Send(cmd);
+    }
+  
+  
+    [TranslateResultToActionResult]
+    [HttpGet("{groupId:int}")]
+    public async Task<Result<GroupDto>> GetGroupById([FromRoute] int groupId)
+    {
+        var cmd = new GetGroupByIdCommand(groupId);
+        return await _mediator.Send(cmd);
+    }
+    
+    [TranslateResultToActionResult]
+    [HttpGet("{groupId:int}/balances")]
+    public async Task<Result<GetGroupBalancesDto>> GetBalances(
+[FromRoute] int groupId)
+    {
+        var cmd = new GetGroupBalancesCommand(groupId);
+        return await _mediator.Send(cmd);
+    }
 
 
+
+
+
+    [TranslateResultToActionResult]
+    [HttpGet("{groupId:int}/joinRequests")]
+    public async Task<Result<GetGroupJoinRequestsDto>> GetJoinRequests(
+  [FromRoute] int groupId)
+  => await _mediator.Send(new GetGroupJoinRequestsCommand(groupId));
+
+
+    [TranslateResultToActionResult]
+    [HttpPut("{groupId:int}/joinRequests/{requestId:int}")]
+    public async Task<Result> ChangeJoinRequestStatus(
+  [FromRoute] int groupId,
+  [FromRoute] int requestId,
+  [FromBody] ChangeJoinRequestStatusDto dto)
+    {
+        var cmd = new ChangeJoinRequestStatusCommand(groupId, requestId, dto.Status);
+        return await _mediator.Send(cmd);
+    }
 
 }

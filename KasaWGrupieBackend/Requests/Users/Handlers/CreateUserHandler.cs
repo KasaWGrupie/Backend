@@ -38,9 +38,9 @@ public class CreateUserHandler : IRequestHandler<CreateUserCommand, Result>
 		}
 		
 		var imageUrl = string.Empty;
-		if (request.CreateUserDto.ProfilePicture != null)
+		if (request.ProfilePicture != null)
 		{
-			var uploadResult = await _imageService.UploadImageAsync(request.CreateUserDto.ProfilePicture, cancellationToken);
+			var uploadResult = await _imageService.UploadImageAsync(request.ProfilePicture, cancellationToken);
 			if (uploadResult.IsSuccess)
 			{
 				imageUrl = uploadResult.Url;

@@ -43,11 +43,10 @@ public class CreateUserHandlerTests
 		// Arrange
 		var createGroupDto = new CreateUserDto(
 			"User1",
-			"user1@example.com",
-			null
+			"user1@example.com"
 		);
 
-		var command = new CreateUserCommand(createGroupDto);
+		var command = new CreateUserCommand(createGroupDto, null);
 
 		// Mockujemy odpowiedzi
 		_validatorMock.Setup(v => v.ValidateAsync(It.IsAny<CreateUserDto>(), It.IsAny<CancellationToken>()))

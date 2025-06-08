@@ -1,3 +1,4 @@
+using System.Text.Json;
 using Ardalis.Result;
 using Ardalis.Result.AspNetCore;
 using KasaWGrupie.API.DTOs.Users;
@@ -24,13 +25,26 @@ public class UsersController(
 	/// <returns>Successfully inserted new User</returns>
 	[HttpPost]
 	[TranslateResultToActionResult]
-	public async Task<Result> CreateUser([FromForm] CreateUserDto createUserDto)
+	[Consumes("multipart/form-data")]
+	public async Task<Result> CreateUser(IFormCollection formCollection, IFormFile? profilePicture)
 	{
+		var json = formCollection["dto"][0];
+		if (json is null)
+		{
+			return Result.Invalid(new ValidationError(nameof(formCollection), "Invalid JSON data."));
+		}
+		var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
+		var createUserDto = JsonSerializer.Deserialize<CreateUserDto>(json, options);
+		if (createUserDto == null)
+		{
+			return Result.Invalid(new ValidationError("dto", "Invalid JSON data."));
+		}
+		
 		var authEmail = await authService.GetEmailFromAuthTokenAsync(HttpContext, HttpContext.RequestAborted);
 		if (!string.Equals(authEmail, createUserDto.Email))
 			return Result.Forbidden("User email does not match.");
-
-		var command = new CreateUserCommand(createUserDto);
+		
+		var command = new CreateUserCommand(createUserDto, profilePicture);
 		var result = await mediator.Send(command);
 
 		return result;

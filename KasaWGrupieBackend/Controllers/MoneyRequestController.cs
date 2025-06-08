@@ -22,7 +22,7 @@ public class MoneyRequestController(
     /// <returns>Money transfer created successfully</returns>
     [HttpPost]
     [TranslateResultToActionResult]
-    public async Task<Result> CreateMoneyRequest([FromForm] CreateMoneyRequestDto createMoneyRequestDto)
+    public async Task<Result> CreateMoneyRequest([FromBody] CreateMoneyRequestDto createMoneyRequestDto)
     {
         var userId = await authService.GetUserIdFromAuthTokenAsync(HttpContext);
         var command = new CreateMoneyRequestCommand(userId, createMoneyRequestDto);
