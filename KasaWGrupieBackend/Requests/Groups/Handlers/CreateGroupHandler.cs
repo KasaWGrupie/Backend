@@ -36,27 +36,25 @@ public class CreateGroupHandler : IRequestHandler<CreateGroupCommand, Result>
 			return Result.Invalid(validationResult.Errors.Select(e => new ValidationError(e.PropertyName, e.ErrorMessage)));
 		}
 
-		if (!string.Equals(request.UserEmail, request.CreateGroupDto.AdminEmail, StringComparison.OrdinalIgnoreCase))
+		if (request.UserId != request.CreateGroupDto.AdminId)
 		{
 			return Result.Forbidden("You are not allowed to create groups for other users. You must be the admin of the group to create it.");
 		}
-		
+
 		var members = new List<User>();
 
-		foreach (var memberEmail in request.CreateGroupDto.Members)
+		foreach (var memberId in request.CreateGroupDto.Members)
 		{
-			var userSpecification = new UserByEmailSpecification(memberEmail);
-			var member = await _userRepository.FirstOrDefaultAsync(userSpecification, cancellationToken);
+			var member = await _userRepository.GetByIdAsync(memberId, cancellationToken);
 			if (member == null)
 			{
-				return Result.Invalid(new ValidationError("Members", $"User with email {memberEmail} does not exist."));
+				return Result.Invalid(new ValidationError("Members", $"User with email {memberId} does not exist."));
 			}
 
 			members.Add(member);
 		}
 
-		var adminSpec = new UserByEmailSpecification(request.CreateGroupDto.AdminEmail);
-		var admin = await _userRepository.FirstOrDefaultAsync(adminSpec, cancellationToken);
+		var admin = await _userRepository.GetByIdAsync(request.CreateGroupDto.AdminId, cancellationToken);
 
 		if (admin == null)
 		{
