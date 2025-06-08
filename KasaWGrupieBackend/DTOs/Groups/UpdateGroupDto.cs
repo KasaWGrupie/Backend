@@ -2,6 +2,5 @@
 
 public sealed record UpdateGroupDto(
     string? Name,
-    string? Description,
-    IFormFile? Image
+    string? Description
     );

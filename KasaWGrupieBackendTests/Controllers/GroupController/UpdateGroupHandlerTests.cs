@@ -65,7 +65,7 @@ namespace KasaWGrupie.Tests
                 Status = GroupStatus.Active
             };
 
-            var dto = new UpdateGroupDto("New Name", "New Description", null);
+            var dto = new UpdateGroupDto("New Name", "New Description");
             var command = new UpdateGroupCommand(admin.Id, 1, dto);
 
             // Arrange: mock group fetch by ID
@@ -98,7 +98,7 @@ namespace KasaWGrupie.Tests
         [TestMethod]
         public async Task Handle_ShouldReturnNotFound_WhenGroupDoesNotExist()
         {
-            var dto = new UpdateGroupDto("Name", "Desc", null);
+            var dto = new UpdateGroupDto("Name", "Desc");
             var command = new UpdateGroupCommand(1, 2, dto);
 
             _groupRepositoryMock.Setup(r => r.FirstOrDefaultAsync(It.IsAny<ISpecification<Group>>(), It.IsAny<CancellationToken>()))
@@ -131,7 +131,7 @@ namespace KasaWGrupie.Tests
                 Status = GroupStatus.Active
             };
         
-            var dto = new UpdateGroupDto("New Name", "New Description", null);
+            var dto = new UpdateGroupDto("New Name", "New Description");
             var command = new UpdateGroupCommand(differentUser.Id, group.Id, dto);
         
             _groupRepositoryMock

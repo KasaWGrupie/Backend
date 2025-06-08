@@ -18,11 +18,6 @@ public class UpdateGroupDtoValidator : AbstractValidator<UpdateGroupDto>
             .When(x => x.Description != null);
 
 
-        RuleFor(x => x.Image)
-            .Must(BeAValidImage)
-            .WithMessage("Invalid image format. Allowed formats: jpg, jpeg, png.")
-            .When(x => x.Image != null);
-
     }
 
     private bool BeAValidImage(IFormFile? file)

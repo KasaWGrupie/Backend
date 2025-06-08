@@ -49,15 +49,6 @@ public class UpdateGroupHandler : IRequestHandler<UpdateGroupCommand, Result>
         
 
 
-        // Image
-        string? imageUrl = null;
-        if (dto.Image != null)
-        {
-            var uploadResult = await _imageService.UploadImageAsync(dto.Image, cancellationToken);
-            if (uploadResult.IsSuccess)
-                imageUrl = uploadResult.Url;
-        }
-
         // Final update
         if (dto.Name != null)
             group.Name = dto.Name;
@@ -65,8 +56,6 @@ public class UpdateGroupHandler : IRequestHandler<UpdateGroupCommand, Result>
         if (dto.Description != null)
             group.Description = dto.Description;
 
-        if (imageUrl != null)
-            group.PictureUrl = imageUrl;
 
 
         await _groupRepository.UpdateAsync(group, cancellationToken);
