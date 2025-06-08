@@ -94,7 +94,7 @@ public class UsersController(
 	[HttpPut("profilePicture/{id}")]
 	[TranslateResultToActionResult]
 	[Consumes("multipart/form-data")]
-	public async Task<Result> UpdateUserProfilePicture(int id, [FromForm] IFormFile? profilePicture)
+	public async Task<Result> UpdateUserProfilePicture(int id, IFormFile? profilePicture)
 	{
 		if (id != await authService.GetUserIdFromAuthTokenAsync(HttpContext))
 		{
