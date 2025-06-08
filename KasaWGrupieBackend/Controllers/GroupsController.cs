@@ -22,6 +22,7 @@ public sealed class GroupsController : ControllerBase
 		_authService = authService;
 	}
 
+
 	private static readonly JsonSerializerOptions JsonOptions = new() { PropertyNameCaseInsensitive = true };
 
 	/// <summary>
@@ -61,6 +62,7 @@ public sealed class GroupsController : ControllerBase
 
 		return result;
 	}
+
 
 	[TranslateResultToActionResult]
 	[HttpPut("{groupId}")]
@@ -143,6 +145,32 @@ public sealed class GroupsController : ControllerBase
 		return await _mediator.Send(cmd);
 	}
 
+
+
+    // Add user
+    [TranslateResultToActionResult]
+    [HttpPut("{groupId:int}/members/{memberId:int}")]
+    public async Task<Result> AddUser(
+      [FromRoute] int groupId,
+      [FromRoute] int memberId)
+    {
+        var cmd = new AddUserToGroupCommand(groupId, memberId);
+        return await _mediator.Send(cmd);
+    }
+
+    // Remove user
+    [TranslateResultToActionResult]
+    [HttpDelete("{groupId:int}/members/{memberId:int}")]
+    public async Task<Result> RemoveUser(
+      [FromRoute] int groupId,
+      [FromRoute] int memberId)
+    {
+        var cmd = new RemoveUserFromGroupCommand(groupId, memberId);
+        return await _mediator.Send(cmd);
+    }
+
+
+
 	[TranslateResultToActionResult]
 	[HttpGet("{groupId}/inviteCode")]
 	public async Task<Result<InviteCodeDto>> GetGroupInviteCode(int groupId)
@@ -151,4 +179,5 @@ public sealed class GroupsController : ControllerBase
 		var result = await _mediator.Send(command);
 		return result;
 	}
+
 }
