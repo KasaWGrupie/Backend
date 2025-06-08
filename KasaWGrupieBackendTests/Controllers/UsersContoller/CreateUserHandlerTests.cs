@@ -19,7 +19,7 @@ public class CreateUserHandlerTests
 #pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
 	private Mock<IRepositoryBase<User>> _userRepositoryMock;
 	private Mock<IImageService> _imageServiceMock;
-	private Mock<IValidator<CreateUserDto>> _validatorMock;
+	private Mock<IValidator<CreateUserCommand>> _validatorMock;
 	private CreateUserHandler _handler;
 #pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
 
@@ -28,7 +28,7 @@ public class CreateUserHandlerTests
 	{
 		_userRepositoryMock = new Mock<IRepositoryBase<User>>();
 		_imageServiceMock = new Mock<IImageService>();
-		_validatorMock = new Mock<IValidator<CreateUserDto>>();
+		_validatorMock = new Mock<IValidator<CreateUserCommand>>();
 
 		_handler = new CreateUserHandler(
 			_userRepositoryMock.Object,
@@ -49,7 +49,7 @@ public class CreateUserHandlerTests
 		var command = new CreateUserCommand(createGroupDto, null);
 
 		// Mockujemy odpowiedzi
-		_validatorMock.Setup(v => v.ValidateAsync(It.IsAny<CreateUserDto>(), It.IsAny<CancellationToken>()))
+		_validatorMock.Setup(v => v.ValidateAsync(It.IsAny<CreateUserCommand>(), It.IsAny<CancellationToken>()))
 			.ReturnsAsync(new FluentValidation.Results.ValidationResult());
 
 		_imageServiceMock.Setup(service => service.UploadImageAsync(It.IsAny<IFormFile>(), It.IsAny<CancellationToken>()))

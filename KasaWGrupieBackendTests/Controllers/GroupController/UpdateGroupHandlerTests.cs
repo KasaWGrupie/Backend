@@ -65,7 +65,9 @@ namespace KasaWGrupie.Tests
                 Status = GroupStatus.Active
             };
 
+
             var dto = new UpdateGroupDto("New Name", "New Description");
+
             var command = new UpdateGroupCommand(admin.Id, 1, dto, null);
             var currency = new Currency { Name = "USD" };
             // Arrange: mock group fetch by ID
@@ -107,6 +109,7 @@ namespace KasaWGrupie.Tests
         [TestMethod]
         public async Task Handle_ShouldReturnNotFound_WhenGroupDoesNotExist()
         {
+
             var dto = new UpdateGroupDto("Name", "Desc");
             var command = new UpdateGroupCommand(1, 2, dto, null);
 
@@ -139,6 +142,7 @@ namespace KasaWGrupie.Tests
                 Members = new List<User> { groupAdmin },
                 Status = GroupStatus.Active
             };
+
 
             var dto = new UpdateGroupDto("New Name", "New Description");
             var command = new UpdateGroupCommand(differentUser.Id, group.Id, dto, null);

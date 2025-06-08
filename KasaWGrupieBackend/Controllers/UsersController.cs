@@ -19,6 +19,8 @@ public class UsersController(
 	IMediator mediator
 ) : ControllerBase
 {
+	private static readonly JsonSerializerOptions JsonOptions = new() { PropertyNameCaseInsensitive = true };
+	
 	/// <summary>
 	/// Add new User
 	/// </summary>
@@ -31,19 +33,18 @@ public class UsersController(
 		var json = formCollection["dto"][0];
 		if (json is null)
 		{
-			return Result.Invalid(new ValidationError(nameof(formCollection), "Invalid JSON data."));
+			return Result.Invalid(new ValidationError("dto", "JSON data required in 'dto' field."));
 		}
-		var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
-		var createUserDto = JsonSerializer.Deserialize<CreateUserDto>(json, options);
-		if (createUserDto == null)
+		var createUserDto = JsonSerializer.Deserialize<CreateUserDto>(json, JsonOptions);
+		if (createUserDto is null)
 		{
 			return Result.Invalid(new ValidationError("dto", "Invalid JSON data."));
 		}
-		
+
 		var authEmail = await authService.GetEmailFromAuthTokenAsync(HttpContext, HttpContext.RequestAborted);
 		if (!string.Equals(authEmail, createUserDto.Email))
 			return Result.Forbidden("User email does not match.");
-		
+
 		var command = new CreateUserCommand(createUserDto, profilePicture);
 		var result = await mediator.Send(command);
 
@@ -92,13 +93,14 @@ public class UsersController(
 
 	[HttpPut("profilePicture/{id}")]
 	[TranslateResultToActionResult]
-	public async Task<Result> UpdateUserProfilePicture(int id, [FromForm] UpdateUserProfilePictureDto updateUserProfilePictureDto)
+	[Consumes("multipart/form-data")]
+	public async Task<Result> UpdateUserProfilePicture(int id, IFormFile? profilePicture)
 	{
 		if (id != await authService.GetUserIdFromAuthTokenAsync(HttpContext))
 		{
 			return Result.Forbidden("Cannot update another user's profile picture.");
 		}
-		var command = new UpdateUserProfilePictureCommand(id, updateUserProfilePictureDto);
+		var command = new UpdateUserProfilePictureCommand(id, profilePicture);
 		return await mediator.Send(command);
 	}
 
@@ -139,15 +141,28 @@ public class UsersController(
 		return result;
 	}
 
-	[HttpGet("{userId}/friendRequests")]
+	[HttpGet("{userId}/receivedFriendRequests")]
 	[TranslateResultToActionResult]
-	public async Task<Result<ICollection<FriendRequestDisplayDto>>> GetFriendRequests(int userId)
+	public async Task<Result<ICollection<RecievedFriendRequestDisplayDto>>> GetRecievedFriendRequests(int userId)
 	{
 		if (userId != await authService.GetUserIdFromAuthTokenAsync(HttpContext))
 		{
 			return Result.Forbidden("Cannot get friend requests of another user.");
 		}
 		var command = new GetFriendRequestsCommand(userId);
+		var result = await mediator.Send(command);
+		return result;
+	}
+
+	[HttpGet("{userId}/sentFriendRequests")]
+	[TranslateResultToActionResult]
+	public async Task<Result<ICollection<SentFriendRequestDisplayDto>>> GetSentFriendRequests(int userId)
+	{
+		if (userId != await authService.GetUserIdFromAuthTokenAsync(HttpContext))
+		{
+			return Result.Forbidden("Cannot get friend requests of another user.");
+		}
+		var command = new GetSentFriendRequestsCommand(userId);
 		var result = await mediator.Send(command);
 		return result;
 	}

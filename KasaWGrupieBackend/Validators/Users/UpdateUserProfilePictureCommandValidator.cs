@@ -10,10 +10,7 @@ public class UpdateUserProfilePictureCommandValidator : AbstractValidator<Update
 		RuleFor(command => command.Id)
 			.GreaterThan(0).WithMessage("User ID must be greater than 0.");
 
-		RuleFor(command => command.UpdateUserProfilePictureDto)
-			.NotNull().WithMessage("Profile picture data cannot be null.");
-
-		RuleFor(command => command.UpdateUserProfilePictureDto.ProfilePicture)
+		RuleFor(command => command.ProfilePicture)
 			.Must(BeValidImage)
 			.WithMessage("The file must be a valid image.");
 	}

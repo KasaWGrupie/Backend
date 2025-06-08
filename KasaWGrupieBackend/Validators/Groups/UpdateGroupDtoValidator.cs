@@ -17,7 +17,7 @@ public class UpdateGroupDtoValidator : AbstractValidator<UpdateGroupDto>
             .WithMessage($"Group description cannot exceed {ValidatorConstants.CreateGroupDtoConstants.DescriptionMaxLength} characters.")
             .When(x => x.Description != null);
 
-        
     }
 
 }
+

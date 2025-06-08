@@ -8,16 +8,16 @@ using FluentValidation;
 
 namespace KasaWGrupie.API.Requests.FriendRequests.Handlers;
 
-public class GetFriendRequestsHandler : IRequestHandler<GetFriendRequestsCommand, Result<ICollection<RecievedFriendRequestDisplayDto>>>
+public class GetSentFriendRequestsHandler : IRequestHandler<GetSentFriendRequestsCommand, Result<ICollection<SentFriendRequestDisplayDto>>>
 {
 	private readonly IRepositoryBase<User> _userRepository;
-	private readonly IValidator<GetFriendRequestsCommand> _validator;
-	public GetFriendRequestsHandler(IRepositoryBase<User> userRepository, IValidator<GetFriendRequestsCommand> validator)
+	private readonly IValidator<GetSentFriendRequestsCommand> _validator;
+	public GetSentFriendRequestsHandler(IRepositoryBase<User> userRepository, IValidator<GetSentFriendRequestsCommand> validator)
 	{
 		_validator = validator;
 		_userRepository = userRepository;
 	}
-	public async Task<Result<ICollection<RecievedFriendRequestDisplayDto>>> Handle(GetFriendRequestsCommand request, CancellationToken cancellationToken)
+	public async Task<Result<ICollection<SentFriendRequestDisplayDto>>> Handle(GetSentFriendRequestsCommand request, CancellationToken cancellationToken)
 	{
 		var validationResult = await _validator.ValidateAsync(request, cancellationToken);
 		if (!validationResult.IsValid)
@@ -25,7 +25,7 @@ public class GetFriendRequestsHandler : IRequestHandler<GetFriendRequestsCommand
 			return Result.Invalid(validationResult.Errors.Select(e => new ValidationError(e.PropertyName, e.ErrorMessage)));
 		}
 
-		var specificaton = new GetUserByIdWithUnconfirmedFriendRequestsWithSenderSpecification(request.UserId);
+		var specificaton = new GetUserByIdWithUnconfirmedFriendRequestsWithReceiverSpecification(request.UserId);
 
 		var user = await _userRepository.FirstOrDefaultAsync(specificaton, cancellationToken);
 
@@ -34,16 +34,16 @@ public class GetFriendRequestsHandler : IRequestHandler<GetFriendRequestsCommand
 			return Result.NotFound("User with given id does not exist");
 		}
 
-		var friendRequests = user.RecievedFriendRequests
-			.Select(r => new RecievedFriendRequestDisplayDto(
+		var friendRequests = user.SentFriendRequests
+			.Select(r => new SentFriendRequestDisplayDto(
 				r.Id,
 				r.SenderId,
 				r.ReceiverId,
-				r.Sender.Name,
-				r.Sender.ProfilePictureUrl
+				r.Receiver.Name,
+				r.Receiver.ProfilePictureUrl
 			))
 			.ToList();
 
-		return Result.Success<ICollection<RecievedFriendRequestDisplayDto>>(friendRequests);
+		return Result.Success<ICollection<SentFriendRequestDisplayDto>>(friendRequests);
 	}
 }
