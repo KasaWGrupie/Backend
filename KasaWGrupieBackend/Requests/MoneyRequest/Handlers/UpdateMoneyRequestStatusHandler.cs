@@ -41,6 +41,24 @@ public class UpdateMoneyRequestStatusHandler : IRequestHandler<UpdateMoneyReques
             return Result.Invalid(new ValidationError("Status", "Invalid status value"));
         }
         
+        if (request.UserId != payRequest.SenderId && request.UserId != payRequest.ReceiverId)
+        {
+            return Result.Forbidden("You are not allowed to change this request's status.");
+        }
+        if (status is PayRequestStatus.Cancelled && request.UserId != payRequest.SenderId)
+        {
+            return Result.Forbidden("Only sender can cancel the request.");
+        }
+        if (status is PayRequestStatus.Rejected or PayRequestStatus.Paid && request.UserId != payRequest.ReceiverId)
+        {
+            return Result.Forbidden($"Only receiver can set the request's status to {status}");
+        }
+
+        if (payRequest.PayRequestStatus != PayRequestStatus.Pending && status != PayRequestStatus.Pending)
+        {
+            return Result.Invalid(new ValidationError("Status", $"This request is already closed with status {payRequest.PayRequestStatus}."));
+        }
+        
         payRequest.PayRequestStatus = status;
         if (status != PayRequestStatus.Pending)
         {

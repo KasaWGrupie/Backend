@@ -34,6 +34,11 @@ public class CreateMoneyTransferHandler : IRequestHandler<CreateMoneyTransferCom
         {
             return Result.Invalid(validationResult.Errors.Select(e => new ValidationError(e.PropertyName, e.ErrorMessage)));
         }
+
+        if (request.UserId != dto.SenderId)
+        {
+            return Result.Forbidden("You are not allowed to create money transfers for other users.");
+        }
         
         var sender = await _userRepository.GetByIdAsync(dto.SenderId, cancellationToken);
         if (sender == null)

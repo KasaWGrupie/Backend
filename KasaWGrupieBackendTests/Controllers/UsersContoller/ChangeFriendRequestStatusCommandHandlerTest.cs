@@ -43,7 +43,9 @@ public class ChangeFriendRequestStatusCommandHandlerTests
 		{
 			Id = 10,
 			Sender = _sender,
+			SenderId = _sender.Id,
 			Receiver = _receiver,
+			ReceiverId = _receiver.Id,
 			Status = FriendRequestStatus.Unconfirmed
 		};
 	}
@@ -52,7 +54,7 @@ public class ChangeFriendRequestStatusCommandHandlerTests
 	public async Task ReturnsInvalid_WhenValidationFails()
 	{
 		// Arrange
-		var command = new ChangeFriendRequestStatusCommand(10, new ChangeFriendRequestStatusDto { Status = "Confirmed" });
+		var command = new ChangeFriendRequestStatusCommand(2, 10, new ChangeFriendRequestStatusDto { Status = "Confirmed" });
 		_validatorMock.Setup(v => v.ValidateAsync(command, It.IsAny<CancellationToken>()))
 			.ReturnsAsync(new ValidationResult(new[] { new ValidationFailure("Status", "Required") }));
 
@@ -67,7 +69,7 @@ public class ChangeFriendRequestStatusCommandHandlerTests
 	public async Task ReturnsNotFound_WhenFriendRequestDoesNotExist()
 	{
 		// Arrange
-		var command = new ChangeFriendRequestStatusCommand(10, new ChangeFriendRequestStatusDto { Status = "Confirmed" });
+		var command = new ChangeFriendRequestStatusCommand(2, 10, new ChangeFriendRequestStatusDto { Status = "Confirmed" });
 		_validatorMock.Setup(v => v.ValidateAsync(command, It.IsAny<CancellationToken>()))
 			.ReturnsAsync(new ValidationResult());
 
@@ -86,7 +88,7 @@ public class ChangeFriendRequestStatusCommandHandlerTests
 	{
 		// Arrange
 		_friendRequest.Status = FriendRequestStatus.Rejected;
-		var command = new ChangeFriendRequestStatusCommand(10, new ChangeFriendRequestStatusDto { Status = "Confirmed" });
+		var command = new ChangeFriendRequestStatusCommand(2, 10, new ChangeFriendRequestStatusDto { Status = "Confirmed" });
 
 		_validatorMock.Setup(v => v.ValidateAsync(command, It.IsAny<CancellationToken>()))
 			.ReturnsAsync(new ValidationResult());
@@ -106,7 +108,7 @@ public class ChangeFriendRequestStatusCommandHandlerTests
 	public async Task ReturnsInvalid_WhenRejectingConfirmedRequest()
 	{
 		_friendRequest.Status = FriendRequestStatus.Confirmed;
-		var command = new ChangeFriendRequestStatusCommand(10, new ChangeFriendRequestStatusDto { Status = "Rejected" });
+		var command = new ChangeFriendRequestStatusCommand(2, 10, new ChangeFriendRequestStatusDto { Status = "Rejected" });
 
 		_validatorMock.Setup(v => v.ValidateAsync(command, It.IsAny<CancellationToken>()))
 			.ReturnsAsync(new ValidationResult());
@@ -125,7 +127,7 @@ public class ChangeFriendRequestStatusCommandHandlerTests
 	[TestMethod]
 	public async Task UpdatesStatusAndAddsFriends_WhenConfirmed()
 	{
-		var command = new ChangeFriendRequestStatusCommand(10, new ChangeFriendRequestStatusDto { Status = "Confirmed" });
+		var command = new ChangeFriendRequestStatusCommand(2, 10, new ChangeFriendRequestStatusDto { Status = "Confirmed" });
 
 		_validatorMock.Setup(v => v.ValidateAsync(command, It.IsAny<CancellationToken>()))
 			.ReturnsAsync(new ValidationResult());
@@ -151,7 +153,7 @@ public class ChangeFriendRequestStatusCommandHandlerTests
 	[TestMethod]
 	public async Task UpdatesStatus_WhenRejected()
 	{
-		var command = new ChangeFriendRequestStatusCommand(10, new ChangeFriendRequestStatusDto { Status = "Rejected" });
+		var command = new ChangeFriendRequestStatusCommand(2, 10, new ChangeFriendRequestStatusDto { Status = "Rejected" });
 
 		_validatorMock.Setup(v => v.ValidateAsync(command, It.IsAny<CancellationToken>()))
 			.ReturnsAsync(new ValidationResult());
@@ -168,5 +170,24 @@ public class ChangeFriendRequestStatusCommandHandlerTests
 		// Assert
 		Assert.IsTrue(result.IsSuccess);
 		Assert.AreEqual(FriendRequestStatus.Rejected, _friendRequest.Status);
+	}
+	
+	[TestMethod]
+	public async Task ReturnsForbidden_WhenUserIsNotReceiver()
+	{
+		// Arrange
+		var command = new ChangeFriendRequestStatusCommand(1, 10, new ChangeFriendRequestStatusDto { Status = "Confirmed" });
+	
+		_validatorMock.Setup(v => v.ValidateAsync(command, It.IsAny<CancellationToken>()))
+			.ReturnsAsync(new ValidationResult());
+	
+		_friendRequestRepoMock.Setup(r => r.FirstOrDefaultAsync(It.IsAny<ISpecification<FriendRequest>>(), It.IsAny<CancellationToken>()))
+			.ReturnsAsync(_friendRequest);
+	
+		// Act
+		var result = await _handler.Handle(command, CancellationToken.None);
+	
+		// Assert
+		Assert.AreEqual(ResultStatus.Forbidden, result.Status);
 	}
 }
