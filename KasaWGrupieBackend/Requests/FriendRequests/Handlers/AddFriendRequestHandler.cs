@@ -6,7 +6,6 @@ using FluentValidation;
 using KasaWGrupie.Core.Entities;
 using KasaWGrupie.Core.Enums;
 using KasaWGrupie.API.DTOs.FriendRequest;
-using KasaWGrupie.Persistence.Specifications.Users;
 
 namespace KasaWGrupie.API.Requests.FriendRequests.Handlers;
 
@@ -24,12 +23,17 @@ public class AddFriendRequestHandler : IRequestHandler<AddFriendRequestCommand, 
 	}
 	public async Task<Result> Handle(AddFriendRequestCommand request, CancellationToken cancellationToken)
 	{
-		var validationResult = await _validator.ValidateAsync(request.AddFriendRequestDto);
+		var validationResult = await _validator.ValidateAsync(request.AddFriendRequestDto, cancellationToken);
 		if (!validationResult.IsValid)
 		{
 			return Result.Invalid(validationResult.Errors.Select(e => new ValidationError(e.PropertyName, e.ErrorMessage)));
 		}
 
+		if (request.UserId != request.AddFriendRequestDto.SenderId)
+		{
+			return Result.Forbidden("You are not allowed to create a friend request for other users.");
+		}
+		
 		var sender = await _userRepository.GetByIdAsync(request.AddFriendRequestDto.SenderId, cancellationToken);
 		var receiver = await _userRepository.GetByIdAsync(request.AddFriendRequestDto.ReceiverId, cancellationToken);
 		if (sender == null || receiver == null)

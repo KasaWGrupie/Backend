@@ -14,8 +14,8 @@ public class CreateUserHandler : IRequestHandler<CreateUserCommand, Result>
 {
 	private readonly IRepositoryBase<User> _userRepository;
 	private readonly IImageService _imageService;
-	private readonly IValidator<CreateUserDto> _validator;
-	public CreateUserHandler(IRepositoryBase<User> userRepository, IImageService imageService, IValidator<CreateUserDto> validator)
+	private readonly IValidator<CreateUserCommand> _validator;
+	public CreateUserHandler(IRepositoryBase<User> userRepository, IImageService imageService, IValidator<CreateUserCommand> validator)
 	{
 		_userRepository = userRepository;
 		_imageService = imageService;
@@ -23,7 +23,7 @@ public class CreateUserHandler : IRequestHandler<CreateUserCommand, Result>
 	}
 	public async Task<Result> Handle(CreateUserCommand request, CancellationToken cancellationToken)
 	{
-		var validationResult = await _validator.ValidateAsync(request.CreateUserDto, cancellationToken);
+		var validationResult = await _validator.ValidateAsync(request, cancellationToken);
 
 		if (!validationResult.IsValid)
 		{
@@ -38,9 +38,9 @@ public class CreateUserHandler : IRequestHandler<CreateUserCommand, Result>
 		}
 		
 		var imageUrl = string.Empty;
-		if (request.CreateUserDto.ProfilePicture != null)
+		if (request.ProfilePicture != null)
 		{
-			var uploadResult = await _imageService.UploadImageAsync(request.CreateUserDto.ProfilePicture, cancellationToken);
+			var uploadResult = await _imageService.UploadImageAsync(request.ProfilePicture, cancellationToken);
 			if (uploadResult.IsSuccess)
 			{
 				imageUrl = uploadResult.Url;

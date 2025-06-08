@@ -1,21 +1,28 @@
-﻿using Ardalis.Result;
+﻿using System.Text.Json;
+using Ardalis.Result;
 using Microsoft.AspNetCore.Mvc;
 using MediatR;
 using Ardalis.Result.AspNetCore;
 using KasaWGrupie.API.Requests.Groups.Commands;
 using KasaWGrupie.API.DTOs.Groups;
+using KasaWGrupie.Infrastructure.AuthService;
 
 namespace KasaWGrupie.API.Controllers;
 
 [Route("groups")]
 [ApiController]
+[FirebaseAuthorize]
 public sealed class GroupsController : ControllerBase
 {
 	private readonly IMediator _mediator;
-	public GroupsController(IMediator mediator)
+	private readonly IAuthService _authService;
+	public GroupsController(IMediator mediator, IAuthService authService)
 	{
 		_mediator = mediator;
+		_authService = authService;
 	}
+	
+	private static readonly JsonSerializerOptions JsonOptions = new() { PropertyNameCaseInsensitive = true };
 
 	/// <summary>
 	/// Add new group
@@ -23,9 +30,22 @@ public sealed class GroupsController : ControllerBase
 	/// <returns>Successfully inserted new group</returns>
 	[TranslateResultToActionResult]
 	[HttpPost]
-	public async Task<Result> CreateGroup([FromForm] CreateGroupDto createGroupDto)
+	[Consumes("multipart/form-data")]
+	public async Task<Result> CreateGroup(IFormCollection formCollection, IFormFile? image)
 	{
-		var command = new CreateGroupCommand(createGroupDto);
+		var json = formCollection["dto"][0];
+		if (json is null)
+		{
+			return Result.Invalid(new ValidationError("dto", "JSON data required in 'dto' field."));
+		}
+		var createGroupDto = JsonSerializer.Deserialize<CreateGroupDto>(json, JsonOptions);
+		if (createGroupDto is null)
+		{
+			return Result.Invalid(new ValidationError("dto", "Invalid JSON data."));
+		}
+		
+		var userEmail = await _authService.GetEmailFromAuthTokenAsync(HttpContext, HttpContext.RequestAborted);
+		var command = new CreateGroupCommand(userEmail, createGroupDto, image);
 		var result = await _mediator.Send(command);
 
 		return result;
@@ -35,25 +55,64 @@ public sealed class GroupsController : ControllerBase
 	[HttpGet("{groupId:int}/expenses")]
 	public async Task<Result<ICollection<GetExpensesDto>>> GetExpenses([FromRoute] int groupId)
 	{
-		var command = new GetExpensesCommand(groupId);
+		var userId = await _authService.GetUserIdFromAuthTokenAsync(HttpContext);
+		var command = new GetExpensesCommand(userId, groupId);
 		var result = await _mediator.Send(command);
 		
 		return result;
 	}
-
-    
-
-
-
-
+	
     [TranslateResultToActionResult]
     [HttpPut("{groupId}")]
-    public async Task<Result> UpdateGroup(int groupId, [FromForm] UpdateGroupDto updateGroupDto)
+    [Consumes("multipart/form-data")]
+    public async Task<Result> UpdateGroup([FromRoute] int groupId, IFormCollection formCollection, IFormFile? image)
     {
-        var dto = updateGroupDto with { GroupId = groupId };
-        var command = new UpdateGroupCommand(dto);
+	    var json = formCollection["dto"][0];
+	    if (json is null)
+	    {
+		    return Result.Invalid(new ValidationError("dto", "JSON data required in 'dto' field."));
+	    }
+	    
+	    var updateGroupDto = JsonSerializer.Deserialize<UpdateGroupDto>(json, JsonOptions);
+	    if (updateGroupDto is null)
+	    {
+		    return Result.Invalid(new ValidationError("dto", "Invalid JSON data."));
+	    }
+	    
+	    var userId = await _authService.GetUserIdFromAuthTokenAsync(HttpContext);
+        var command = new UpdateGroupCommand(userId, groupId, updateGroupDto, image);
         var result = await _mediator.Send(command);
         return result;
+    }
+    
+    [TranslateResultToActionResult]
+    [HttpPut("{groupId:int}/status")]
+    public async Task<Result> ChangeStatus(
+  [FromRoute] int groupId,
+  [FromBody] ChangeGroupStatusDto dto)
+    {
+      // merge route + body into one DTO:
+        var dtoWithId = dto with { GroupId = groupId };
+        var cmd = new ChangeGroupStatusCommand(dtoWithId);
+        return await _mediator.Send(cmd);
+    }
+  
+  
+    [TranslateResultToActionResult]
+    [HttpGet("{groupId:int}")]
+    public async Task<Result<GroupDto>> GetGroupById([FromRoute] int groupId)
+    {
+        var cmd = new GetGroupByIdCommand(groupId);
+        return await _mediator.Send(cmd);
+    }
+    
+    [TranslateResultToActionResult]
+    [HttpGet("{groupId:int}/balances")]
+    public async Task<Result<GetGroupBalancesDto>> GetBalances(
+[FromRoute] int groupId)
+    {
+        var cmd = new GetGroupBalancesCommand(groupId);
+        return await _mediator.Send(cmd);
     }
 
 	[TranslateResultToActionResult]
@@ -64,6 +123,27 @@ public sealed class GroupsController : ControllerBase
 		var result = await _mediator.Send(command);
 		return result;
 	}
+
+
+
+
+    [TranslateResultToActionResult]
+    [HttpGet("{groupId:int}/joinRequests")]
+    public async Task<Result<GetGroupJoinRequestsDto>> GetJoinRequests(
+  [FromRoute] int groupId)
+  => await _mediator.Send(new GetGroupJoinRequestsCommand(groupId));
+
+
+    [TranslateResultToActionResult]
+    [HttpPut("{groupId:int}/joinRequests/{requestId:int}")]
+    public async Task<Result> ChangeJoinRequestStatus(
+  [FromRoute] int groupId,
+  [FromRoute] int requestId,
+  [FromBody] ChangeJoinRequestStatusDto dto)
+    {
+        var cmd = new ChangeJoinRequestStatusCommand(groupId, requestId, dto.Status);
+        return await _mediator.Send(cmd);
+    }
 
 	[TranslateResultToActionResult]
 	[HttpGet("{groupId}/inviteCode")]

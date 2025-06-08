@@ -42,6 +42,11 @@ public class UpdateExpenseHandler : IRequestHandler<UpdateExpenseCommand, Result
 		{
 			return Result.Invalid(new ValidationError("ExpenseId", "Expense not found"));
 		}
+
+		if (request.UserId != expense.PayingPersonId)
+		{
+			return Result.Forbidden("Only the paying person can update the expense.");
+		}
 		
 		User? payingPerson = null;
 		if (dto.PaidBy is {} paidBy)

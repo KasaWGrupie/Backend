@@ -1,7 +1,6 @@
 ﻿using MediatR;
 using Ardalis.Result;
 using KasaWGrupie.API.Requests.Groups.Commands;
-using KasaWGrupie.Core.Enums;
 using Ardalis.Specification;
 using FluentValidation;
 using KasaWGrupie.Core.Entities;
@@ -18,8 +17,8 @@ public class UpdateGroupHandler : IRequestHandler<UpdateGroupCommand, Result>
     private readonly IRepositoryBase<User> _userRepository;
     private readonly IRepositoryBase<Currency> _currencyRepository;
     private readonly IImageService _imageService;
-    private readonly IValidator<UpdateGroupDto> _validator;
-    public UpdateGroupHandler(IRepositoryBase<Group> groupRepository, IRepositoryBase<User> userRepository, IRepositoryBase<Currency> currencyRepository, IImageService imageService, IValidator<UpdateGroupDto> validator)
+    private readonly IValidator<UpdateGroupCommand> _validator;
+    public UpdateGroupHandler(IRepositoryBase<Group> groupRepository, IRepositoryBase<User> userRepository, IRepositoryBase<Currency> currencyRepository, IImageService imageService, IValidator<UpdateGroupCommand> validator)
     {
         _groupRepository = groupRepository;
         _userRepository = userRepository;
@@ -33,16 +32,21 @@ public class UpdateGroupHandler : IRequestHandler<UpdateGroupCommand, Result>
         var dto = request.UpdateGroupDto;
 
         // Optional: Adjust validation if validator assumes all fields are required.
-        var validationResult = await _validator.ValidateAsync(dto, cancellationToken);
+        var validationResult = await _validator.ValidateAsync(request, cancellationToken);
         if (!validationResult.IsValid)
         {
             return Result.Invalid(validationResult.Errors.Select(e => new ValidationError(e.PropertyName, e.ErrorMessage)));
         }
 
-        var group = await _groupRepository.GetByIdAsync(dto.GroupId, cancellationToken);
+        var group = await _groupRepository.GetByIdAsync(request.GroupId, cancellationToken);
         if (group == null)
             return Result.NotFound();
 
+        if (request.UserId != group.AdminId)
+        {
+            return Result.Forbidden("Only admin can update the group.");
+        }
+        
         // Admin
         User? admin = null;
         if (!string.IsNullOrWhiteSpace(dto.AdminEmail))
@@ -81,9 +85,9 @@ public class UpdateGroupHandler : IRequestHandler<UpdateGroupCommand, Result>
 
         // Image
         string? imageUrl = null;
-        if (dto.Image != null)
+        if (request.Image != null)
         {
-            var uploadResult = await _imageService.UploadImageAsync(dto.Image, cancellationToken);
+            var uploadResult = await _imageService.UploadImageAsync(request.Image, cancellationToken);
             if (uploadResult.IsSuccess)
                 imageUrl = uploadResult.Url;
         }

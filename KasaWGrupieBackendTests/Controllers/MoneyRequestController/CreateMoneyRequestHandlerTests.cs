@@ -12,7 +12,7 @@ using KasaWGrupie.Infrastructure.BalanceCalculator.HelperAdapters;
 using KasaWGrupie.Tests.Factories;
 using Moq;
 
-namespace KasaWGrupieTests;
+namespace KasaWGrupie.Tests;
 
 [TestClass]
 public class CreateMoneyRequestHandlerTests
@@ -74,7 +74,7 @@ public class CreateMoneyRequestHandlerTests
             new List<int> { group.Id }
         );
 
-		var command = new CreateMoneyRequestCommand(dto);
+		var command = new CreateMoneyRequestCommand(sender.Id, dto);
 
 		_validatorMock.Setup(v => v.ValidateAsync(It.IsAny<CreateMoneyRequestDto>(), It.IsAny<CancellationToken>()))
 			.ReturnsAsync(new FluentValidation.Results.ValidationResult());
@@ -118,7 +118,7 @@ public class CreateMoneyRequestHandlerTests
             "USD",
             new List<int> { 1 }
             );
-        var command = new CreateMoneyRequestCommand(dto);
+        var command = new CreateMoneyRequestCommand(1, dto);
 
 		var validationFailure = new FluentValidation.Results.ValidationFailure("PropertyName", "Error message");
 		_validatorMock.Setup(v => v.ValidateAsync(It.IsAny<CreateMoneyRequestDto>(), It.IsAny<CancellationToken>()))
@@ -143,7 +143,7 @@ public class CreateMoneyRequestHandlerTests
             "USD",
             new List<int> { 1 }
             );
-        var command = new CreateMoneyRequestCommand(dto);
+        var command = new CreateMoneyRequestCommand(1, dto);
 
 		_validatorMock.Setup(v => v.ValidateAsync(It.IsAny<CreateMoneyRequestDto>(), It.IsAny<CancellationToken>()))
 			.ReturnsAsync(new FluentValidation.Results.ValidationResult());
@@ -170,7 +170,7 @@ public class CreateMoneyRequestHandlerTests
             "USD",
             new List<int> { 1 }
             );
-        var command = new CreateMoneyRequestCommand(dto);
+        var command = new CreateMoneyRequestCommand(sender.Id, dto);
 
 		_validatorMock.Setup(v => v.ValidateAsync(It.IsAny<CreateMoneyRequestDto>(), It.IsAny<CancellationToken>()))
 			.ReturnsAsync(new FluentValidation.Results.ValidationResult());
@@ -201,7 +201,7 @@ public class CreateMoneyRequestHandlerTests
             "USD",
             new List<int> { 1 }
             );
-        var command = new CreateMoneyRequestCommand(dto);
+        var command = new CreateMoneyRequestCommand(sender.Id, dto);
 
 		_validatorMock.Setup(v => v.ValidateAsync(It.IsAny<CreateMoneyRequestDto>(), It.IsAny<CancellationToken>()))
 			.ReturnsAsync(new FluentValidation.Results.ValidationResult());
@@ -245,7 +245,7 @@ public class CreateMoneyRequestHandlerTests
             "USD",
             new List<int> { group.Id }
             );
-        var command = new CreateMoneyRequestCommand(dto);
+        var command = new CreateMoneyRequestCommand(1, dto);
 
 		_validatorMock.Setup(v => v.ValidateAsync(It.IsAny<CreateMoneyRequestDto>(), It.IsAny<CancellationToken>()))
 			.ReturnsAsync(new FluentValidation.Results.ValidationResult());
@@ -283,6 +283,7 @@ public class CreateMoneyRequestHandlerTests
 	        PictureUrl = "pic.jpg",
 	        Currency = currency,
 	        Admin = sender,
+	        AdminId = sender.Id,
 	        Members = new List<User> { sender, receiver },
 	        Status = GroupStatus.Active,
         };
@@ -348,7 +349,7 @@ public class CreateMoneyRequestHandlerTests
             new List<int> { group.Id }
         );
 
-        var command = new CreateMoneyRequestCommand(dto);
+        var command = new CreateMoneyRequestCommand(sender.Id, dto);
 
         // Mock balance calculation result
         var balanceRecords = new List<BalanceRecord>
@@ -389,8 +390,8 @@ public class CreateMoneyRequestHandlerTests
         _payRequestRepositoryMock.Verify(repo => repo.AddAsync(
                 It.Is<PayRequest>(pr =>
                     pr.Amount == 20M && // Verify the calculated amount
-                    pr.SenderId == sender.Id &&
-                    pr.ReceiverId == receiver.Id),
+                    pr.Sender == sender &&
+                    pr.Receiver == receiver),
                 It.IsAny<CancellationToken>()),
             Times.Once);
 
@@ -400,5 +401,31 @@ public class CreateMoneyRequestHandlerTests
                 It.Is<List<IExpenseBalance>>(e => e.Count == group.Expenses.Count),
                 It.Is<List<IMoneyTransferBalance>>(t => t.Count == group.MoneyTransfers.Count)),
             Times.Once);
-    }
+	}
+	
+	
+	[TestMethod]
+	public async Task Handle_ShouldReturnForbidden_WhenCommandIdNotSenderId()
+	{
+		// Arrange
+		var sender = UserFactory.Create();
+		var dto = new CreateMoneyRequestDto(
+			sender.Id,
+			2,
+			"USD",
+			new List<int> { 1 }
+		);
+		var command = new CreateMoneyRequestCommand(5, dto);
+	
+		_validatorMock.Setup(v => v.ValidateAsync(It.IsAny<CreateMoneyRequestDto>(), It.IsAny<CancellationToken>()))
+			.ReturnsAsync(new FluentValidation.Results.ValidationResult());
+			
+		// Act
+		var result = await _handler.Handle(command, CancellationToken.None);
+	
+		// Assert
+		result.IsSuccess.Should().BeFalse();
+		result.Status.Should().Be(ResultStatus.Forbidden);
+	}
+	
 }

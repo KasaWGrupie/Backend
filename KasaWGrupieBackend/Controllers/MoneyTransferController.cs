@@ -2,6 +2,7 @@ using Ardalis.Result;
 using Ardalis.Result.AspNetCore;
 using KasaWGrupie.API.DTOs.MoneyTransfer;
 using KasaWGrupie.API.Requests.MoneyTransfers.Commands;
+using KasaWGrupie.Infrastructure.AuthService;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -9,7 +10,9 @@ namespace KasaWGrupie.API.Controllers;
 
 [Route("moneyTransfer")]
 [ApiController]
+[FirebaseAuthorize]
 public class MoneyTransferController(
+    IAuthService authService,
     IMediator mediator
 ) : ControllerBase
 {
@@ -20,9 +23,10 @@ public class MoneyTransferController(
     /// <returns>Successfully inserted new Money Transfer</returns>
     [HttpPost]
     [TranslateResultToActionResult]
-    public async Task<Result> CreateMoneyTransfer([FromForm] CreateMoneyTransferDto createMoneyTransferDto)
+    public async Task<Result> CreateMoneyTransfer([FromBody] CreateMoneyTransferDto createMoneyTransferDto)
     {
-        var command = new CreateMoneyTransferCommand(createMoneyTransferDto);
+        var userId = await authService.GetUserIdFromAuthTokenAsync(HttpContext);
+        var command = new CreateMoneyTransferCommand(userId, createMoneyTransferDto);
         var result = await mediator.Send(command);
         
         return result;
@@ -36,7 +40,8 @@ public class MoneyTransferController(
     [TranslateResultToActionResult]
     public async Task<Result> UpdateMoneyTransfer([FromRoute] int transferId, [FromBody] UpdateMoneyTransferDto updateMoneyTransferDto)
     {
-        var command = new UpdateMoneyTransferCommand(transferId, updateMoneyTransferDto);
+        var userId = await authService.GetUserIdFromAuthTokenAsync(HttpContext);
+        var command = new UpdateMoneyTransferCommand(userId, transferId, updateMoneyTransferDto);
         var result = await mediator.Send(command);
         
         return result;
@@ -52,6 +57,11 @@ public class MoneyTransferController(
         [FromQuery] int senderId,
         [FromQuery] string? status = null)
     {
+        if (senderId != await authService.GetUserIdFromAuthTokenAsync(HttpContext))
+        {
+            return Result.Forbidden("Cannot get transfers sent by another user.");
+        }
+        
         var command = new GetMoneyTransferForSenderCommand(senderId, status);
         var result = await mediator.Send(command);
 
@@ -67,6 +77,11 @@ public class MoneyTransferController(
         [FromQuery] int recipientId,
         [FromQuery] string? status = null)
     {
+        if (recipientId != await authService.GetUserIdFromAuthTokenAsync(HttpContext))
+        {
+            return Result.Forbidden("Cannot get transfers received by another user.");
+        }
+        
         var command = new GetMoneyTransferForRecipientCommand(recipientId, status);
         var result = await mediator.Send(command);
 

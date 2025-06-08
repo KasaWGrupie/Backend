@@ -43,6 +43,11 @@ public class CreateMoneyRequestHandler : IRequestHandler<CreateMoneyRequestComma
         {
             return Result.Invalid(validationResult.Errors.Select(e => new ValidationError(e.PropertyName, e.ErrorMessage)));
         }
+
+        if (request.UserId != dto.SenderId)
+        {
+            return Result.Forbidden("You are not allowed to create money requests for other users.");
+        }
         
         var sender = await _userRepository.GetByIdAsync(dto.SenderId, cancellationToken);
         if (sender == null)
@@ -119,11 +124,11 @@ public class CreateMoneyRequestHandler : IRequestHandler<CreateMoneyRequestComma
             {
                 if (record.FromUserId == sender.Id && record.ToUserId == receiver.Id)
                 {
-                    groupAmount += record.Amount;
+                    groupAmount -= record.Amount;
                 }
                 else if (record.FromUserId == receiver.Id && record.ToUserId == sender.Id)
                 {
-                    groupAmount -= record.Amount;
+                    groupAmount += record.Amount;
                 }
             }
         
