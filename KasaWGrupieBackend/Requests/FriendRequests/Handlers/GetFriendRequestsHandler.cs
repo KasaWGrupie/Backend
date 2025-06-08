@@ -34,7 +34,7 @@ public class GetFriendRequestsHandler : IRequestHandler<GetFriendRequestsCommand
 			return Result.NotFound("User with given id does not exist");
 		}
 
-		var friendRequests = user.SentFriendRequests
+		var friendRequests = user.RecievedFriendRequests
 			.Select(r => new RecievedFriendRequestDisplayDto(
 				r.Id,
 				r.SenderId,
