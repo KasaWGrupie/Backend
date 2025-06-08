@@ -115,7 +115,7 @@ public class GetGroupInviteCodeHandlerTests
 		// Assert
 		Assert.AreEqual(ResultStatus.Ok, result.Status);
 		Assert.IsFalse(string.IsNullOrWhiteSpace(result.Value.Code));
-		Assert.AreEqual(8, result.Value.Code.Length);
+		Assert.AreEqual(12, result.Value.Code.Length);
 		_groupRepositoryMock.Verify(r => r.UpdateAsync(group, It.IsAny<CancellationToken>()), Times.Once);
 		_groupRepositoryMock.Verify(r => r.SaveChangesAsync(It.IsAny<CancellationToken>()), Times.Once);
 	}

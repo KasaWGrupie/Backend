@@ -35,7 +35,19 @@ public class GetGroupInviteCodeHandler : IRequestHandler<GetGroupInviteCodeComma
 
 		if (string.IsNullOrEmpty(group.InviteCode))
 		{
-			group.InviteCode = Guid.NewGuid().ToString("N").Substring(0, 12);
+			string newCode;
+			bool codeExists;
+
+			do
+			{
+				newCode = Guid.NewGuid().ToString("N").Substring(0, 12);
+				var spec = new GroupByInviteCodeSpec(newCode);
+				var existingGroup = await _groupRepository.FirstOrDefaultAsync(spec, cancellationToken);
+				codeExists = existingGroup != null;
+			}
+			while (codeExists);
+
+			group.InviteCode = newCode;
 			await _groupRepository.UpdateAsync(group, cancellationToken);
 			await _groupRepository.SaveChangesAsync(cancellationToken);
 		}
