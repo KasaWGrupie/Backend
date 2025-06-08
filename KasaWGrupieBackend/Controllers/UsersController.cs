@@ -168,4 +168,13 @@ public class UsersController(
     {
         return await mediator.Send(new GetUserBalancesCommand(userId));
     }
+
+    [TranslateResultToActionResult]
+    [HttpGet("{userId:int}/balances/{otherUserId:int}")]
+    public async Task<Result<GetUserToUserBalancesDto>> GetBetweenUsers(
+   [FromRoute] int userId,
+   [FromRoute] int otherUserId)
+    {
+        return await mediator.Send(new GetUserBalancesWithUserCommand(userId, otherUserId));
+    }
 }
