@@ -8,7 +8,7 @@ using FluentValidation;
 
 namespace KasaWGrupie.API.Requests.FriendRequests.Handlers;
 
-public class GetFriendRequestsHandler : IRequestHandler<GetFriendRequestsCommand, Result<ICollection<FriendRequestDisplayDto>>>
+public class GetFriendRequestsHandler : IRequestHandler<GetFriendRequestsCommand, Result<ICollection<RecievedFriendRequestDisplayDto>>>
 {
 	private readonly IRepositoryBase<User> _userRepository;
 	private readonly IValidator<GetFriendRequestsCommand> _validator;
@@ -17,7 +17,7 @@ public class GetFriendRequestsHandler : IRequestHandler<GetFriendRequestsCommand
 		_validator = validator;
 		_userRepository = userRepository;
 	}
-	public async Task<Result<ICollection<FriendRequestDisplayDto>>> Handle(GetFriendRequestsCommand request, CancellationToken cancellationToken)
+	public async Task<Result<ICollection<RecievedFriendRequestDisplayDto>>> Handle(GetFriendRequestsCommand request, CancellationToken cancellationToken)
 	{
 		var validationResult = await _validator.ValidateAsync(request, cancellationToken);
 		if (!validationResult.IsValid)
@@ -25,7 +25,7 @@ public class GetFriendRequestsHandler : IRequestHandler<GetFriendRequestsCommand
 			return Result.Invalid(validationResult.Errors.Select(e => new ValidationError(e.PropertyName, e.ErrorMessage)));
 		}
 
-		var specificaton = new GetUserByIdWithUnconfirmedFriendRequestsWithReceiverSpecification(request.UserId);
+		var specificaton = new GetUserByIdWithUnconfirmedFriendRequestsWithSenderSpecification(request.UserId);
 
 		var user = await _userRepository.FirstOrDefaultAsync(specificaton, cancellationToken);
 
@@ -35,7 +35,7 @@ public class GetFriendRequestsHandler : IRequestHandler<GetFriendRequestsCommand
 		}
 
 		var friendRequests = user.SentFriendRequests
-			.Select(r => new FriendRequestDisplayDto(
+			.Select(r => new RecievedFriendRequestDisplayDto(
 				r.Id,
 				r.SenderId,
 				r.ReceiverId,
@@ -44,6 +44,6 @@ public class GetFriendRequestsHandler : IRequestHandler<GetFriendRequestsCommand
 			))
 			.ToList();
 
-		return Result.Success<ICollection<FriendRequestDisplayDto>>(friendRequests);
+		return Result.Success<ICollection<RecievedFriendRequestDisplayDto>>(friendRequests);
 	}
 }

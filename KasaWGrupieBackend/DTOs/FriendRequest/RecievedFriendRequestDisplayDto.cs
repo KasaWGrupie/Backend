@@ -1,6 +1,6 @@
 ﻿namespace KasaWGrupie.API.DTOs.FriendRequest;
 
-public sealed record FriendRequestDisplayDto(
+public sealed record RecievedFriendRequestDisplayDto(
 	int Id,
 	int SenderId,
 	int ReceiverId,

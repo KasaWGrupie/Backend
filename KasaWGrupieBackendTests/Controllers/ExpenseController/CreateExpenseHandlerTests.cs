@@ -1,4 +1,5 @@
-﻿using Moq;
+﻿using Ardalis.Result;
+using Moq;
 using KasaWGrupie.Core.Entities;
 using FluentAssertions;
 using KasaWGrupie.Tests.Factories;
@@ -49,9 +50,9 @@ public class CreateExpenseHandlerTests
 	{
 		// Arrange
 		var payer = UserFactory.Create();
-		var admin = UserFactory.Create(email: "admin@example.com");
-		var member1 = UserFactory.Create(email: "user1@example.com");
-		var member2 = UserFactory.Create(email: "user2@example.com");
+		var admin = UserFactory.Create(id: 2, email: "admin@example.com");
+		var member1 = UserFactory.Create(id: 3, email: "user1@example.com");
+		var member2 = UserFactory.Create(id: 4, email: "user2@example.com");
 
 		var group = new Group
 		{
@@ -80,7 +81,7 @@ public class CreateExpenseHandlerTests
 			ExpenseSplitType.ByPercent.ToString()
 		);
 
-		var command = new CreateExpenseCommand(createExpenseDto);
+		var command = new CreateExpenseCommand(payer.Id, createExpenseDto);
 		
 		
 		_userRepositoryMock.Setup(repo => repo.GetByIdAsync(payer.Id, It.IsAny<CancellationToken>()))
@@ -112,8 +113,8 @@ public class CreateExpenseHandlerTests
 	{
 		// Arrange
 		var payer = UserFactory.Create();
-		var admin = UserFactory.Create(email: "admin@example.com");
-		var member2 = UserFactory.Create(email: "user2@example.com");
+		var admin = UserFactory.Create(id: 2, email: "admin@example.com");
+		var member2 = UserFactory.Create(id: 3, email: "user2@example.com");
 
 		var group = new Group
 		{
@@ -142,7 +143,7 @@ public class CreateExpenseHandlerTests
 			ExpenseSplitType.ByPercent.ToString()
 		);
 
-		var command = new CreateExpenseCommand(createExpenseDto);
+		var command = new CreateExpenseCommand(payer.Id, createExpenseDto);
 
 		
 		_userRepositoryMock.Setup(repo => repo.GetByIdAsync(payer.Id, It.IsAny<CancellationToken>()))
@@ -166,9 +167,9 @@ public class CreateExpenseHandlerTests
 	public async Task Handler_ShouldReturnInvalid_WhenPayingPersonDoesNotExist()
 	{
 		// Arrange
-		var admin = UserFactory.Create(email: "admin@example.com");
-		var member1 = UserFactory.Create(email: "user1@example.com");
-		var member2 = UserFactory.Create(email: "user2@example.com");
+		var admin = UserFactory.Create(id: 1, email: "admin@example.com");
+		var member1 = UserFactory.Create(id: 2, email: "user1@example.com");
+		var member2 = UserFactory.Create(id: 3, email: "user2@example.com");
 
 		var group = new Group
 		{
@@ -197,7 +198,7 @@ public class CreateExpenseHandlerTests
 			ExpenseSplitType.ByPercent.ToString()
 		);
 
-		var command = new CreateExpenseCommand(createExpenseDto);
+		var command = new CreateExpenseCommand(15, createExpenseDto);
 
 		
 		_userRepositoryMock.Setup(repo => repo.GetByIdAsync(member1.Id, It.IsAny<CancellationToken>()))
@@ -216,6 +217,65 @@ public class CreateExpenseHandlerTests
 
 		// Assert
 		result.IsSuccess.Should().BeFalse();
+	}
+	
+	[TestMethod]
+	public async Task Handler_ShouldReturnInvalid_WhenPayerIdDoesNotMatchCommandUserId()
+	{
+		// Arrange
+		var payer = UserFactory.Create();
+		var admin = UserFactory.Create(id: 2, email: "admin@example.com");
+		var member1 = UserFactory.Create(id: 3, email: "user1@example.com");
+		var member2 = UserFactory.Create(id: 4, email: "user2@example.com");
+	
+		var group = new Group
+		{
+			Id = 1,
+			Name = "Group 1",
+			Description = "Group 1 description",
+			PictureUrl = "pic.jpg",
+			Currency = new Currency { Name = "USD" },
+			Admin = admin,
+			Members = { admin, payer, member1, member2 },
+			Status = GroupStatus.Active
+		};
+	
+		var createExpenseDto = new CreateExpenseDto(
+			group.Id,
+			payer.Id,
+			"expense",
+			"expense.png",
+			"expense-description",
+			new decimal(100),
+			DateTime.Now,
+			[
+				new ExpenseParticipantDto(member1.Id, member1.Name, 50),
+				new ExpenseParticipantDto(member2.Id, member2.Name, 50)
+			],
+			ExpenseSplitType.ByPercent.ToString()
+		);
+	
+		var command = new CreateExpenseCommand(member1.Id, createExpenseDto);
+	
+		_userRepositoryMock.Setup(repo => repo.GetByIdAsync(payer.Id, It.IsAny<CancellationToken>()))
+			.ReturnsAsync(payer);
+		_userRepositoryMock.Setup(repo => repo.GetByIdAsync(member1.Id, It.IsAny<CancellationToken>()))
+			.ReturnsAsync(member1);
+		_userRepositoryMock.Setup(repo => repo.GetByIdAsync(member2.Id, It.IsAny<CancellationToken>()))
+			.ReturnsAsync(member2);
+	
+		_groupRepositoryMock.Setup(repo => repo.GetByIdAsync(group.Id, It.IsAny<CancellationToken>()))
+			.ReturnsAsync(group);
+	
+		_validatorMock.Setup(v => v.ValidateAsync(It.IsAny<CreateExpenseDto>(), It.IsAny<CancellationToken>()))
+			.ReturnsAsync(new FluentValidation.Results.ValidationResult());
+	
+		// Act
+		var result = await _handler.Handle(command, CancellationToken.None);
+	
+		// Assert
+		result.IsSuccess.Should().BeFalse();
+		result.Status.Should().Be(ResultStatus.Forbidden);
 	}
 	
 }

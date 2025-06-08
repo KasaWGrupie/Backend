@@ -13,7 +13,7 @@ using KasaWGrupie.Infrastructure.CurrencyConverter;
 using KasaWGrupie.Tests.Factories;
 using Moq;
 
-namespace KasaWGrupieTests;
+namespace KasaWGrupie.Tests;
 
 [TestClass]
 public class CreateMoneyRequestHandlerTests
@@ -79,7 +79,7 @@ public class CreateMoneyRequestHandlerTests
 			new List<int> { group.Id }
 		);
 
-		var command = new CreateMoneyRequestCommand(dto);
+		var command = new CreateMoneyRequestCommand(sender.Id, dto);
 
 		_validatorMock.Setup(v => v.ValidateAsync(It.IsAny<CreateMoneyRequestDto>(), It.IsAny<CancellationToken>()))
 			.ReturnsAsync(new FluentValidation.Results.ValidationResult());
@@ -120,17 +120,17 @@ public class CreateMoneyRequestHandlerTests
 			Times.Once);
 	}
 
-	[TestMethod]
-	public async Task Handle_ShouldReturnInvalid_WhenValidationFails()
-	{
-		// Arrange
-		var dto = new CreateMoneyRequestDto(
-			1,
-			2,
-			"USD",
-			new List<int> { 1 }
-			);
-		var command = new CreateMoneyRequestCommand(dto);
+    [TestMethod]
+    public async Task Handle_ShouldReturnInvalid_WhenValidationFails()
+    {
+        // Arrange
+        var dto = new CreateMoneyRequestDto(
+            1,
+            2,
+            "USD",
+            new List<int> { 1 }
+            );
+        var command = new CreateMoneyRequestCommand(1, dto);
 
 		var validationFailure = new FluentValidation.Results.ValidationFailure("PropertyName", "Error message");
 		_validatorMock.Setup(v => v.ValidateAsync(It.IsAny<CreateMoneyRequestDto>(), It.IsAny<CancellationToken>()))
@@ -145,17 +145,17 @@ public class CreateMoneyRequestHandlerTests
 		_payRequestRepositoryMock.Verify(repo => repo.AddAsync(It.IsAny<PayRequest>(), It.IsAny<CancellationToken>()), Times.Never);
 	}
 
-	[TestMethod]
-	public async Task Handle_ShouldReturnNotFound_WhenSenderNotFound()
-	{
-		// Arrange
-		var dto = new CreateMoneyRequestDto(
-			1,
-			2,
-			"USD",
-			new List<int> { 1 }
-			);
-		var command = new CreateMoneyRequestCommand(dto);
+    [TestMethod]
+    public async Task Handle_ShouldReturnNotFound_WhenSenderNotFound()
+    {
+        // Arrange
+        var dto = new CreateMoneyRequestDto(
+            1, 
+            2,
+            "USD",
+            new List<int> { 1 }
+            );
+        var command = new CreateMoneyRequestCommand(1, dto);
 
 		_validatorMock.Setup(v => v.ValidateAsync(It.IsAny<CreateMoneyRequestDto>(), It.IsAny<CancellationToken>()))
 			.ReturnsAsync(new FluentValidation.Results.ValidationResult());
@@ -171,18 +171,18 @@ public class CreateMoneyRequestHandlerTests
 		result.Status.Should().Be(ResultStatus.NotFound);
 	}
 
-	[TestMethod]
-	public async Task Handle_ShouldReturnNotFound_WhenReceiverNotFound()
-	{
-		// Arrange
-		var sender = UserFactory.Create();
-		var dto = new CreateMoneyRequestDto(
-			sender.Id,
-			2,
-			"USD",
-			new List<int> { 1 }
-			);
-		var command = new CreateMoneyRequestCommand(dto);
+    [TestMethod]
+    public async Task Handle_ShouldReturnNotFound_WhenReceiverNotFound()
+    {
+        // Arrange
+        var sender = UserFactory.Create();
+        var dto = new CreateMoneyRequestDto(
+            sender.Id,
+            2,
+            "USD",
+            new List<int> { 1 }
+            );
+        var command = new CreateMoneyRequestCommand(sender.Id, dto);
 
 		_validatorMock.Setup(v => v.ValidateAsync(It.IsAny<CreateMoneyRequestDto>(), It.IsAny<CancellationToken>()))
 			.ReturnsAsync(new FluentValidation.Results.ValidationResult());
@@ -207,13 +207,13 @@ public class CreateMoneyRequestHandlerTests
 		var sender = UserFactory.Create();
 		var receiver = UserFactory.Create(id: 2, email: "receiver@example.com");
 
-		var dto = new CreateMoneyRequestDto(
-			sender.Id,
-			receiver.Id,
-			"USD",
-			new List<int> { 1 }
-			);
-		var command = new CreateMoneyRequestCommand(dto);
+        var dto = new CreateMoneyRequestDto(
+            sender.Id,
+            receiver.Id,
+            "USD",
+            new List<int> { 1 }
+            );
+        var command = new CreateMoneyRequestCommand(sender.Id, dto);
 
 		_validatorMock.Setup(v => v.ValidateAsync(It.IsAny<CreateMoneyRequestDto>(), It.IsAny<CancellationToken>()))
 			.ReturnsAsync(new FluentValidation.Results.ValidationResult());
@@ -251,13 +251,13 @@ public class CreateMoneyRequestHandlerTests
 			Status = GroupStatus.Active
 		};
 
-		var dto = new CreateMoneyRequestDto(
-			1,
-			2,
-			"USD",
-			new List<int> { group.Id }
-			);
-		var command = new CreateMoneyRequestCommand(dto);
+        var dto = new CreateMoneyRequestDto(
+            1,
+            2,
+            "USD",
+            new List<int> { group.Id }
+            );
+        var command = new CreateMoneyRequestCommand(1, dto);
 
 		_validatorMock.Setup(v => v.ValidateAsync(It.IsAny<CreateMoneyRequestDto>(), It.IsAny<CancellationToken>()))
 			.ReturnsAsync(new FluentValidation.Results.ValidationResult());
@@ -286,18 +286,19 @@ public class CreateMoneyRequestHandlerTests
 		var receiver = UserFactory.Create(id: 2, email: "receiver@example.com");
 		var currency = new Currency { Id = 1, Name = "USD" };
 
-
-		var group = new Group
-		{
-			Id = 1,
-			Name = "Group 1",
-			Description = "Group 1 description",
-			PictureUrl = "pic.jpg",
-			Currency = currency,
-			Admin = sender,
-			Members = new List<User> { sender, receiver },
-			Status = GroupStatus.Active,
-		};
+        
+        var group = new Group
+        {
+	        Id = 1,
+	        Name = "Group 1",
+	        Description = "Group 1 description",
+	        PictureUrl = "pic.jpg",
+	        Currency = currency,
+	        Admin = sender,
+	        AdminId = sender.Id,
+	        Members = new List<User> { sender, receiver },
+	        Status = GroupStatus.Active,
+        };
 
 		var expense = new Expense
 		{
@@ -360,7 +361,7 @@ public class CreateMoneyRequestHandlerTests
 			new List<int> { group.Id }
 		);
 
-		var command = new CreateMoneyRequestCommand(dto);
+        var command = new CreateMoneyRequestCommand(sender.Id, dto);
 
 		// Mock balance calculation result
 		var balanceRecords = new List<BalanceRecord>
@@ -399,21 +400,47 @@ public class CreateMoneyRequestHandlerTests
 		// Act
 		var result = await _handler.Handle(command, CancellationToken.None);
 
-		// Assert
-		result.IsSuccess.Should().BeTrue();
-		_payRequestRepositoryMock.Verify(repo => repo.AddAsync(
-				It.Is<PayRequest>(pr =>
-					pr.Amount == 20M && // Verify the calculated amount
-					pr.SenderId == sender.Id &&
-					pr.ReceiverId == receiver.Id),
-				It.IsAny<CancellationToken>()),
-			Times.Once);
+        // Assert
+        result.IsSuccess.Should().BeTrue();
+        _payRequestRepositoryMock.Verify(repo => repo.AddAsync(
+                It.Is<PayRequest>(pr =>
+                    pr.Amount == 20M && // Verify the calculated amount
+                    pr.Sender == sender &&
+                    pr.Receiver == receiver),
+                It.IsAny<CancellationToken>()),
+            Times.Once);
 
-		// Verify that balance calculator was called with correct data
-		_balanceCalculatorMock.Verify(
-			bc => bc.CalculateBalanceInGroup(
-				It.Is<List<IExpenseBalance>>(e => e.Count == group.Expenses.Count),
-				It.Is<List<IMoneyTransferBalance>>(t => t.Count == group.MoneyTransfers.Count)),
-			Times.Once);
+        // Verify that balance calculator was called with correct data
+        _balanceCalculatorMock.Verify(
+            bc => bc.CalculateBalanceInGroup(
+                It.Is<List<IExpenseBalance>>(e => e.Count == group.Expenses.Count),
+                It.Is<List<IMoneyTransferBalance>>(t => t.Count == group.MoneyTransfers.Count)),
+            Times.Once);
 	}
+	
+	
+	[TestMethod]
+	public async Task Handle_ShouldReturnForbidden_WhenCommandIdNotSenderId()
+	{
+		// Arrange
+		var sender = UserFactory.Create();
+		var dto = new CreateMoneyRequestDto(
+			sender.Id,
+			2,
+			"USD",
+			new List<int> { 1 }
+		);
+		var command = new CreateMoneyRequestCommand(5, dto);
+	
+		_validatorMock.Setup(v => v.ValidateAsync(It.IsAny<CreateMoneyRequestDto>(), It.IsAny<CancellationToken>()))
+			.ReturnsAsync(new FluentValidation.Results.ValidationResult());
+			
+		// Act
+		var result = await _handler.Handle(command, CancellationToken.None);
+	
+		// Assert
+		result.IsSuccess.Should().BeFalse();
+		result.Status.Should().Be(ResultStatus.Forbidden);
+	}
+	
 }

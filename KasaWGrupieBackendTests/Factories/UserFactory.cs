@@ -12,6 +12,7 @@ namespace KasaWGrupie.Tests.Factories
 		{
 			return new User
 			{
+				Id = id,
 				Name = name,
 				Email = email,
 				ProfilePictureUrl = profilePictureUrl,

@@ -36,37 +36,42 @@ public class CreateMoneyRequestHandler : IRequestHandler<CreateMoneyRequestComma
 		_currencyConverter = currencyConverter;
 	}
 
-	public async Task<Result> Handle(CreateMoneyRequestCommand request, CancellationToken cancellationToken)
-	{
-		var dto = request.CreateMoneyRequestDto;
-		var validationResult = await _validator.ValidateAsync(dto, cancellationToken);
+    public async Task<Result> Handle(CreateMoneyRequestCommand request, CancellationToken cancellationToken)
+    {
+        var dto = request.CreateMoneyRequestDto;
+        var validationResult = await _validator.ValidateAsync(dto, cancellationToken);
+        
+        if (!validationResult.IsValid)
+        {
+            return Result.Invalid(validationResult.Errors.Select(e => new ValidationError(e.PropertyName, e.ErrorMessage)));
+        }
 
-		if (!validationResult.IsValid)
-		{
-			return Result.Invalid(validationResult.Errors.Select(e => new ValidationError(e.PropertyName, e.ErrorMessage)));
-		}
-
-		var sender = await _userRepository.GetByIdAsync(dto.SenderId, cancellationToken);
-		if (sender == null)
-		{
-			return Result.NotFound("Sender user not found");
-		}
-
-		var receiver = await _userRepository.GetByIdAsync(dto.ReceiverId, cancellationToken);
-		if (receiver == null)
-		{
-			return Result.NotFound("Receiver user not found");
-		}
-
-		var groups = new List<Group>();
-		foreach (var groupId in dto.Groups)
-		{
-			var specification = new GetGroupByIdWithMembersExpensesAndTransfersSpecification(groupId);
-			var group = await _groupRepository.FirstOrDefaultAsync(specification, cancellationToken);
-			if (group == null)
-			{
-				return Result.NotFound("Group not found");
-			}
+        if (request.UserId != dto.SenderId)
+        {
+            return Result.Forbidden("You are not allowed to create money requests for other users.");
+        }
+        
+        var sender = await _userRepository.GetByIdAsync(dto.SenderId, cancellationToken);
+        if (sender == null)
+        {
+            return Result.NotFound("Sender user not found");
+        }
+        
+        var receiver = await _userRepository.GetByIdAsync(dto.ReceiverId, cancellationToken);
+        if (receiver == null)
+        {
+            return Result.NotFound("Receiver user not found");
+        }
+        
+        var groups = new List<Group>();
+        foreach (var groupId in dto.Groups)
+        {
+            var specification = new GetGroupByIdWithMembersExpensesAndTransfersSpecification(groupId);
+            var group = await _groupRepository.FirstOrDefaultAsync(specification, cancellationToken);
+            if (group == null)
+            {
+                return Result.NotFound("Group not found");
+            }
 
 			if (!group.Members.Contains(sender))
 			{

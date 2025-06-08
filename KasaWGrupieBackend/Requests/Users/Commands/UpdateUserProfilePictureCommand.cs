@@ -5,5 +5,5 @@ using Ardalis.Result;
 namespace KasaWGrupie.API.Requests.Users.Commands;
 public sealed record UpdateUserProfilePictureCommand(
 	int Id,
-	UpdateUserProfilePictureDto UpdateUserProfilePictureDto
+	IFormFile? ProfilePicture
 ) : IRequest<Result>;

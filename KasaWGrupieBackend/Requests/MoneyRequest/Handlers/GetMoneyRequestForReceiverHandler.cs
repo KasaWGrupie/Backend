@@ -48,7 +48,7 @@ public class GetMoneyRequestForReceiverHandler : IRequestHandler<GetMoneyRequest
         
         var dtos = requests.Select(pr => new GetMoneyRequestDto(
             pr.Id,
-            pr.ReceiverId,
+            pr.SenderId,
             pr.ReceiverId,
             pr.Amount,
             pr.Currency.Name,

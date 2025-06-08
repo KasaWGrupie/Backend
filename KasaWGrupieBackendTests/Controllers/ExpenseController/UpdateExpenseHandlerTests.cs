@@ -1,4 +1,5 @@
-﻿using Moq;
+﻿using Ardalis.Result;
+using Moq;
 using KasaWGrupie.Core.Entities;
 using FluentAssertions;
 using KasaWGrupie.Tests.Factories;
@@ -46,9 +47,9 @@ public class UpdateExpenseHandlerTests
 	{
 		// Arrange
 		var payer = UserFactory.Create();
-		var admin = UserFactory.Create(email: "admin@example.com");
-		var member1 = UserFactory.Create(email: "user1@example.com");
-		var member2 = UserFactory.Create(email: "user2@example.com");
+		var admin = UserFactory.Create(id: 2, email: "admin@example.com");
+		var member1 = UserFactory.Create(id: 3, email: "user1@example.com");
+		var member2 = UserFactory.Create(id: 4, email: "user2@example.com");
 
 		var group = new Group
 		{
@@ -58,6 +59,7 @@ public class UpdateExpenseHandlerTests
 			PictureUrl = "pic.jpg",
 			Currency = new Currency { Name = "USD" },
 			Admin = admin,
+			AdminId = admin.Id,
 			Members = { admin, payer, member1, member2 },
 			Status = GroupStatus.Active
 		};
@@ -68,6 +70,7 @@ public class UpdateExpenseHandlerTests
 			Amount = 100,
 			Group = group,
 			PayingPerson = payer,
+			PayingPersonId = payer.Id,
 			Name = "old expense",
 			Description = "old expense description",
 			PictureUrl = "old_expense.png"
@@ -82,7 +85,8 @@ public class UpdateExpenseHandlerTests
 			{
 				ExpenseSplit = expenseSplit,
 				Amount = 0,
-				OwingPerson = member1 
+				OwingPerson = member1,
+				OwingPersonId = member1.Id
 			}
 		};
 		
@@ -101,7 +105,7 @@ public class UpdateExpenseHandlerTests
 			ExpenseSplitType.ByPercent.ToString()
 		);
 
-		var command = new UpdateExpenseCommand(updateExpenseDto);
+		var command = new UpdateExpenseCommand(payer.Id, updateExpenseDto);
 		
 		
 		_userRepositoryMock.Setup(repo => repo.GetByIdAsync(payer.Id, It.IsAny<CancellationToken>()))
@@ -194,7 +198,7 @@ public class UpdateExpenseHandlerTests
 			ExpenseSplitType.ByPercent.ToString()
 		);
 
-		var command = new UpdateExpenseCommand(updateExpenseDto);
+		var command = new UpdateExpenseCommand(payer.Id, updateExpenseDto);
 		
 		
 		_userRepositoryMock.Setup(repo => repo.GetByIdAsync(payer.Id, It.IsAny<CancellationToken>()))
@@ -214,5 +218,81 @@ public class UpdateExpenseHandlerTests
 		// Assert
 		result.IsSuccess.Should().BeFalse();
 	}
+
+	[TestMethod]
+	public async Task Handler_ShouldReturnForbidden_WhenUserIsNotPayer()
+	{
+		// Arrange
+		var payer = UserFactory.Create();
+		var nonPayer = UserFactory.Create(email: "nonpayer@example.com");
+		var admin = UserFactory.Create(email: "admin@example.com");
+		var member1 = UserFactory.Create(email: "user1@example.com");
+	
+		var group = new Group
+		{
+			Id = 1,
+			Name = "Group 1",
+			Description = "Group 1 description",
+			PictureUrl = "pic.jpg",
+			Currency = new Currency { Name = "USD" },
+			Admin = admin,
+			Members = { admin, payer, member1, nonPayer },
+			Status = GroupStatus.Active
+		};
+	
+		var expense = new Expense
+		{
+			Id = 1,
+			Amount = 100,
+			Group = group,
+			PayingPerson = payer,
+			Name = "old expense",
+			Description = "old expense description",
+			PictureUrl = "old_expense.png"
+		};
+		var expenseSplit = expense.ExpenseSplit = new ExpenseSplit
+		{
+			Expense = expense,
+			Type = ExpenseSplitType.Equally
+		};
+		expenseSplit.SplitRecords = new List<ExpenseSplitRecord> {
+			new()
+			{
+				ExpenseSplit = expenseSplit,
+				Amount = 0,
+				OwingPerson = member1 
+			}
+		};
+	
+		var updateExpenseDto = new UpdateExpenseDto(
+			expense.Id,
+			null,
+			"updated expense",
+			"new_expense.png",
+			"new-expense-description",
+			new decimal(200),
+			DateTime.Now,
+			[new ExpenseParticipantDto(member1.Id, member1.Name, 100)],
+			ExpenseSplitType.ByPercent.ToString()
+		);
+	
+		var command = new UpdateExpenseCommand(nonPayer.Id, updateExpenseDto);
+	
+		_userRepositoryMock.Setup(repo => repo.GetByIdAsync(nonPayer.Id, It.IsAny<CancellationToken>()))
+			.ReturnsAsync(nonPayer);
+		_expenseRepositoryMock.Setup(repo => repo.GetByIdAsync(expense.Id, It.IsAny<CancellationToken>()))
+			.ReturnsAsync(expense);
+		_validatorMock.Setup(v => v.ValidateAsync(It.IsAny<UpdateExpenseDto>(), It.IsAny<CancellationToken>()))
+			.ReturnsAsync(new FluentValidation.Results.ValidationResult());
+	
+		// Act
+		var result = await _handler.Handle(command, CancellationToken.None);
+	
+		// Assert
+		result.IsSuccess.Should().BeFalse();
+		result.Status.Should().Be(ResultStatus.Forbidden);
+	}
+	
+	
 	
 }

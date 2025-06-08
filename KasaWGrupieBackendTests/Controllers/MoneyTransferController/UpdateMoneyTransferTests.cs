@@ -1,4 +1,5 @@
-﻿using Moq;
+﻿using Ardalis.Result;
+using Moq;
 using KasaWGrupie.Core.Entities;
 using FluentAssertions;
 using KasaWGrupie.Tests.Factories;
@@ -41,7 +42,7 @@ public class UpdateMoneyTransferTests
 	{
 		// Arrange
 		var sender = UserFactory.Create();
-		var recipient = UserFactory.Create(email: "user2@example.com");
+		var recipient = UserFactory.Create(id: 2, email: "user2@example.com");
 
 		var group = new Group
 		{
@@ -51,6 +52,7 @@ public class UpdateMoneyTransferTests
 			PictureUrl = "pic.jpg",
 			Currency = new Currency { Name = "USD" },
 			Admin = sender,
+			AdminId = sender.Id,
 			Members = { sender, recipient },
 			Status = GroupStatus.Active
 		};
@@ -61,7 +63,9 @@ public class UpdateMoneyTransferTests
 			Group = group,
 			Amount = 5,
 			Recipient = recipient,
+			RecipientId = recipient.Id,
 			Sender = sender,
+			SenderId = sender.Id,
 			Status = MoneyTransferStatus.Pending,
 		};
 
@@ -69,7 +73,7 @@ public class UpdateMoneyTransferTests
 			MoneyTransferStatus.Confirmed.ToString()
 		);
 		
-		var command = new UpdateMoneyTransferCommand(moneyTransfer.Id, updateMoneyTransferDto);
+		var command = new UpdateMoneyTransferCommand(sender.Id, moneyTransfer.Id, updateMoneyTransferDto);
 		
 		
 		_userRepositoryMock.Setup(repo => repo.GetByIdAsync(sender.Id, It.IsAny<CancellationToken>()))
@@ -102,7 +106,7 @@ public class UpdateMoneyTransferTests
 			MoneyTransferStatus.Confirmed.ToString().ToLower()
 		);
 		
-		var command = new UpdateMoneyTransferCommand(5, updateMoneyTransferDto);
+		var command = new UpdateMoneyTransferCommand(5, 5, updateMoneyTransferDto);
 		
 		
 		_validatorMock.Setup(v => v.ValidateAsync(It.IsAny<UpdateMoneyTransferDto>(), It.IsAny<CancellationToken>()))
@@ -120,7 +124,7 @@ public class UpdateMoneyTransferTests
 	{
 		// Arrange
 		var sender = UserFactory.Create();
-		var recipient = UserFactory.Create(email: "user2@example.com");
+		var recipient = UserFactory.Create(id: 2, email: "user2@example.com");
 
 		var group = new Group
 		{
@@ -130,6 +134,7 @@ public class UpdateMoneyTransferTests
 			PictureUrl = "pic.jpg",
 			Currency = new Currency { Name = "USD" },
 			Admin = sender,
+			AdminId = sender.Id,
 			Members = { sender, recipient },
 			Status = GroupStatus.Active
 		};
@@ -140,7 +145,9 @@ public class UpdateMoneyTransferTests
 			Group = group,
 			Amount = 5,
 			Recipient = recipient,
+			RecipientId = recipient.Id,
 			Sender = sender,
+			SenderId = sender.Id,
 			Status = MoneyTransferStatus.Pending,
 		};
 
@@ -148,7 +155,7 @@ public class UpdateMoneyTransferTests
 			"fakeStatus"
 		);
 		
-		var command = new UpdateMoneyTransferCommand(moneyTransfer.Id, updateMoneyTransferDto);
+		var command = new UpdateMoneyTransferCommand(sender.Id, moneyTransfer.Id, updateMoneyTransferDto);
 		
 		
 		_userRepositoryMock.Setup(repo => repo.GetByIdAsync(sender.Id, It.IsAny<CancellationToken>()))
@@ -172,4 +179,55 @@ public class UpdateMoneyTransferTests
 		result.IsSuccess.Should().BeFalse();
 	}
 
+[TestMethod]
+	public async Task Handle_ShouldReturnForbidden_WhenUserIdIsNotSenderId()
+	{
+		// Arrange
+		var sender = UserFactory.Create();
+		var recipient = UserFactory.Create(id: 2, email: "user2@example.com");
+
+		var group = new Group
+		{
+			Id = 1,
+			Name = "Group 1",
+			Description = "Group 1 description",
+			PictureUrl = "pic.jpg",
+			Currency = new Currency { Name = "USD" },
+			Admin = sender,
+			AdminId = sender.Id,
+			Members = { sender, recipient },
+			Status = GroupStatus.Active
+		};
+
+		var moneyTransfer = new MoneyTransfer
+		{
+			Id = 1,
+			Group = group,
+			Amount = 5,
+			Recipient = recipient,
+			RecipientId = recipient.Id,
+			Sender = sender,
+			SenderId = sender.Id,
+			Status = MoneyTransferStatus.Pending,
+		};
+
+		var updateMoneyTransferDto = new UpdateMoneyTransferDto(
+			MoneyTransferStatus.Confirmed.ToString()
+		);
+
+		var command = new UpdateMoneyTransferCommand(recipient.Id, moneyTransfer.Id, updateMoneyTransferDto);
+
+		_moneyTransferRepositoryMock.Setup(repo => repo.GetByIdAsync(moneyTransfer.Id, It.IsAny<CancellationToken>()))
+			.ReturnsAsync(moneyTransfer);
+
+		_validatorMock.Setup(v => v.ValidateAsync(It.IsAny<UpdateMoneyTransferDto>(), It.IsAny<CancellationToken>()))
+			.ReturnsAsync(new FluentValidation.Results.ValidationResult());
+
+		// Act
+		var result = await _handler.Handle(command, CancellationToken.None);
+
+		// Assert
+		result.IsSuccess.Should().BeFalse();
+		result.Status.Should().Be(ResultStatus.Forbidden);
+	}
 }

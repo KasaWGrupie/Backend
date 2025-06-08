@@ -26,7 +26,7 @@ namespace KasaWGrupie.Tests
         private Mock<IRepositoryBase<User>> _userRepositoryMock;
         private Mock<IRepositoryBase<Currency>> _currencyRepositoryMock;
         private Mock<IImageService> _imageServiceMock;
-        private Mock<IValidator<UpdateGroupDto>> _validatorMock;
+        private Mock<IValidator<UpdateGroupCommand>> _validatorMock;
         private UpdateGroupHandler _handler;
 
         [TestInitialize]
@@ -36,7 +36,7 @@ namespace KasaWGrupie.Tests
             _userRepositoryMock = new Mock<IRepositoryBase<User>>();
             _currencyRepositoryMock = new Mock<IRepositoryBase<Currency>>();
             _imageServiceMock = new Mock<IImageService>();
-            _validatorMock = new Mock<IValidator<UpdateGroupDto>>();
+            _validatorMock = new Mock<IValidator<UpdateGroupCommand>>();
 
             _handler = new UpdateGroupHandler(
                 _groupRepositoryMock.Object,
@@ -60,12 +60,13 @@ namespace KasaWGrupie.Tests
                 PictureUrl = "old.jpg",
                 Currency = new Currency { Name = "USD" },
                 Admin = admin,
+                AdminId = admin.Id,
                 Members = new List<User> { admin },
                 Status = GroupStatus.Active
             };
 
-            var dto = new UpdateGroupDto(1, "New Name", "New Description", null, null,  null, null);
-            var command = new UpdateGroupCommand(dto);
+            var dto = new UpdateGroupDto("New Name", "New Description", null,  null, null);
+            var command = new UpdateGroupCommand(admin.Id, 1, dto, null);
             var currency = new Currency { Name = "USD" };
             // Arrange: mock group fetch by ID
             _groupRepositoryMock
@@ -85,7 +86,7 @@ namespace KasaWGrupie.Tests
 
             // Arrange: mock validator
             _validatorMock
-                .Setup(v => v.ValidateAsync(It.IsAny<UpdateGroupDto>(), It.IsAny<CancellationToken>()))
+                .Setup(v => v.ValidateAsync(It.IsAny<UpdateGroupCommand>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(new FluentValidation.Results.ValidationResult());
 
             // Arrange: mock image service
@@ -106,13 +107,13 @@ namespace KasaWGrupie.Tests
         [TestMethod]
         public async Task Handle_ShouldReturnNotFound_WhenGroupDoesNotExist()
         {
-            var dto = new UpdateGroupDto(2, "Name", "Desc", null, null, null, null);
-            var command = new UpdateGroupCommand(dto);
+            var dto = new UpdateGroupDto("Name", "Desc", null, null, null);
+            var command = new UpdateGroupCommand(1, 2, dto, null);
 
             _groupRepositoryMock.Setup(r => r.FirstOrDefaultAsync(It.IsAny<ISpecification<Group>>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync((Group?)null);
 
-            _validatorMock.Setup(v => v.ValidateAsync(It.IsAny<UpdateGroupDto>(), It.IsAny<CancellationToken>()))
+            _validatorMock.Setup(v => v.ValidateAsync(It.IsAny<UpdateGroupCommand>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(new FluentValidation.Results.ValidationResult());
 
             var result = await _handler.Handle(command, CancellationToken.None);
@@ -120,6 +121,42 @@ namespace KasaWGrupie.Tests
             result.Status.Should().Be(ResultStatus.NotFound);
         }
 
+        [TestMethod]
+        public async Task Handle_ShouldReturnForbidden_WhenAdminDoesNotMatch()
+        {
+            // Arrange
+            var groupAdmin = UserFactory.Create(id: 1, email: "admin@example.com");
+            var differentUser = UserFactory.Create(id: 2, email: "other@example.com");
+
+            var group = new Group
+            {
+                Id = 1,
+                Name = "Test Group",
+                Description = "Test Description",
+                PictureUrl = "pic.jpg",
+                Currency = new Currency { Name = "USD" },
+                Admin = groupAdmin,
+                Members = new List<User> { groupAdmin },
+                Status = GroupStatus.Active
+            };
+        
+            var dto = new UpdateGroupDto("New Name", "New Description", null, null, null);
+            var command = new UpdateGroupCommand(differentUser.Id, group.Id, dto, null);
+        
+            _groupRepositoryMock
+                .Setup(repo => repo.GetByIdAsync(group.Id, It.IsAny<CancellationToken>()))
+                .ReturnsAsync(group);
+        
+            _validatorMock
+                .Setup(v => v.ValidateAsync(It.IsAny<UpdateGroupCommand>(), It.IsAny<CancellationToken>()))
+                .ReturnsAsync(new FluentValidation.Results.ValidationResult());
+        
+            // Act
+            var result = await _handler.Handle(command, CancellationToken.None);
+        
+            // Assert
+            result.Status.Should().Be(ResultStatus.Forbidden);
+        }
     
     }
 }

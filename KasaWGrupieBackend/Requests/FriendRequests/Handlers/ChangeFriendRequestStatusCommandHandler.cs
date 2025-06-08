@@ -38,6 +38,11 @@ public class ChangeFriendRequestStatusCommandHandler : IRequestHandler<ChangeFri
 			return Result.NotFound();
 		}
 
+		if (request.UserId != friendRequest.ReceiverId)
+		{
+			return Result.Forbidden("Only request receiver can change friend request status.");
+		}
+
 		var status = Enum.Parse<FriendRequestStatus>(request.ChangeFriendRequestStatusDto.Status);
 
 		if (status == FriendRequestStatus.Confirmed && friendRequest.Status == FriendRequestStatus.Rejected)
