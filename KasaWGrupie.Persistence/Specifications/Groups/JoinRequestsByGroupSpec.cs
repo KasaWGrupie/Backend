@@ -10,7 +10,6 @@ public class JoinRequestsByGroupSpec
     public JoinRequestsByGroupSpec(int groupId)
     {
         Query
-          .Where(j => j.GroupId == groupId)
-          .Include(j => j.RequestingUserId);
+          .Where(j => j.GroupId == groupId);
     }
 }

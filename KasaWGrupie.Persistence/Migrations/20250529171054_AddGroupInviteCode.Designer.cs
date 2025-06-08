@@ -3,6 +3,7 @@ using System;
 using KasaWGrupie.Persistence.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace KasaWGrupie.Persistence.Migrations
 {
     [DbContext(typeof(KasaWGrupieDbContext))]
-    partial class KasaWGrupieDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250529171054_AddGroupInviteCode")]
+    partial class AddGroupInviteCode
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -21,120 +24,6 @@ namespace KasaWGrupie.Persistence.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
-
-            modelBuilder.Entity("ExchangeRate", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("FromCurrencyId")
-                        .HasColumnType("integer");
-
-                    b.Property<decimal>("Rate")
-                        .HasPrecision(18, 6)
-                        .HasColumnType("numeric(18,6)");
-
-                    b.Property<int>("ToCurrencyId")
-                        .HasColumnType("integer");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ToCurrencyId");
-
-                    b.HasIndex("FromCurrencyId", "ToCurrencyId")
-                        .IsUnique();
-
-                    b.ToTable("ExchangeRates");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            FromCurrencyId = 1,
-                            Rate = 0.22m,
-                            ToCurrencyId = 2
-                        },
-                        new
-                        {
-                            Id = 2,
-                            FromCurrencyId = 1,
-                            Rate = 0.25m,
-                            ToCurrencyId = 3
-                        },
-                        new
-                        {
-                            Id = 3,
-                            FromCurrencyId = 1,
-                            Rate = 0.19m,
-                            ToCurrencyId = 4
-                        },
-                        new
-                        {
-                            Id = 4,
-                            FromCurrencyId = 2,
-                            Rate = 4.55m,
-                            ToCurrencyId = 1
-                        },
-                        new
-                        {
-                            Id = 5,
-                            FromCurrencyId = 2,
-                            Rate = 1.12m,
-                            ToCurrencyId = 3
-                        },
-                        new
-                        {
-                            Id = 6,
-                            FromCurrencyId = 2,
-                            Rate = 0.85m,
-                            ToCurrencyId = 4
-                        },
-                        new
-                        {
-                            Id = 7,
-                            FromCurrencyId = 3,
-                            Rate = 4.00m,
-                            ToCurrencyId = 1
-                        },
-                        new
-                        {
-                            Id = 8,
-                            FromCurrencyId = 3,
-                            Rate = 0.89m,
-                            ToCurrencyId = 2
-                        },
-                        new
-                        {
-                            Id = 9,
-                            FromCurrencyId = 3,
-                            Rate = 0.76m,
-                            ToCurrencyId = 4
-                        },
-                        new
-                        {
-                            Id = 10,
-                            FromCurrencyId = 4,
-                            Rate = 5.10m,
-                            ToCurrencyId = 1
-                        },
-                        new
-                        {
-                            Id = 11,
-                            FromCurrencyId = 4,
-                            Rate = 1.17m,
-                            ToCurrencyId = 2
-                        },
-                        new
-                        {
-                            Id = 12,
-                            FromCurrencyId = 4,
-                            Rate = 1.32m,
-                            ToCurrencyId = 3
-                        });
-                });
 
             modelBuilder.Entity("GroupPayRequest", b =>
                 {
@@ -212,28 +101,6 @@ namespace KasaWGrupie.Persistence.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Currencies");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            Name = "PLN"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            Name = "EUR"
-                        },
-                        new
-                        {
-                            Id = 3,
-                            Name = "USD"
-                        },
-                        new
-                        {
-                            Id = 4,
-                            Name = "GBP"
-                        });
                 });
 
             modelBuilder.Entity("KasaWGrupie.Core.Entities.Expense", b =>
@@ -547,25 +414,6 @@ namespace KasaWGrupie.Persistence.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("UserFriends", (string)null);
-                });
-
-            modelBuilder.Entity("ExchangeRate", b =>
-                {
-                    b.HasOne("KasaWGrupie.Core.Entities.Currency", "FromCurrency")
-                        .WithMany()
-                        .HasForeignKey("FromCurrencyId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("KasaWGrupie.Core.Entities.Currency", "ToCurrency")
-                        .WithMany()
-                        .HasForeignKey("ToCurrencyId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("FromCurrency");
-
-                    b.Navigation("ToCurrency");
                 });
 
             modelBuilder.Entity("GroupPayRequest", b =>

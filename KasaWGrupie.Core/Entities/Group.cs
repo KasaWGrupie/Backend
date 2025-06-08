@@ -16,4 +16,5 @@ public class Group : EntityBase
 	public ICollection<Expense> Expenses { get; set; } = [];
 	public ICollection<MoneyTransfer> MoneyTransfers { get; set; } = [];
 	public ICollection<JoinRequest> JoinRequests { get; set; } = [];
+	public string InviteCode { get; set; } = string.Empty;
 }

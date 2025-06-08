@@ -9,6 +9,7 @@ using KasaWGrupie.API.DTOs.Expense;
 using KasaWGrupie.API.Requests.Expenses.Commands;
 using KasaWGrupie.API.Requests.Expenses.Handlers;
 using KasaWGrupie.Core.Enums;
+using KasaWGrupie.Infrastructure.ImageService;
 
 namespace KasaWGrupie.Tests;
 
@@ -41,7 +42,9 @@ public class CreateExpenseHandlerTests
 			_expenseSplitRecordRepositoryMock.Object,
 			_groupRepositoryMock.Object,
 			_userRepositoryMock.Object,
-			_validatorMock.Object
+			_validatorMock.Object,
+			Mock.Of<IImageService>() // Assuming IImageService is not used in this test
+
 		);
 	}
 
@@ -70,7 +73,6 @@ public class CreateExpenseHandlerTests
 			group.Id,
 			payer.Id,
 			"expense",
-			"expense.png",
 			"expense-description",
 			new decimal(100),
 			DateTime.Now,
@@ -81,9 +83,9 @@ public class CreateExpenseHandlerTests
 			ExpenseSplitType.ByPercent.ToString()
 		);
 
-		var command = new CreateExpenseCommand(payer.Id, createExpenseDto);
-		
-		
+		var command = new CreateExpenseCommand(payer.Id, createExpenseDto, null);
+
+
 		_userRepositoryMock.Setup(repo => repo.GetByIdAsync(payer.Id, It.IsAny<CancellationToken>()))
 			.ReturnsAsync(payer);
 		_userRepositoryMock.Setup(repo => repo.GetByIdAsync(member1.Id, It.IsAny<CancellationToken>()))
@@ -132,7 +134,6 @@ public class CreateExpenseHandlerTests
 			group.Id,
 			payer.Id,
 			"expense",
-			"expense.png",
 			"expense-description",
 			new decimal(100),
 			DateTime.Now,
@@ -143,9 +144,9 @@ public class CreateExpenseHandlerTests
 			ExpenseSplitType.ByPercent.ToString()
 		);
 
-		var command = new CreateExpenseCommand(payer.Id, createExpenseDto);
+		var command = new CreateExpenseCommand(payer.Id, createExpenseDto, null);
 
-		
+
 		_userRepositoryMock.Setup(repo => repo.GetByIdAsync(payer.Id, It.IsAny<CancellationToken>()))
 			.ReturnsAsync(payer);
 		_userRepositoryMock.Setup(repo => repo.GetByIdAsync(member2.Id, It.IsAny<CancellationToken>()))
@@ -187,7 +188,6 @@ public class CreateExpenseHandlerTests
 			group.Id,
 			15,
 			"expense",
-			"expense.png",
 			"expense-description",
 			new decimal(100),
 			DateTime.Now,
@@ -198,9 +198,9 @@ public class CreateExpenseHandlerTests
 			ExpenseSplitType.ByPercent.ToString()
 		);
 
-		var command = new CreateExpenseCommand(15, createExpenseDto);
+		var command = new CreateExpenseCommand(15, createExpenseDto, null);
 
-		
+
 		_userRepositoryMock.Setup(repo => repo.GetByIdAsync(member1.Id, It.IsAny<CancellationToken>()))
 			.ReturnsAsync(member1);
 		_userRepositoryMock.Setup(repo => repo.GetByIdAsync(member2.Id, It.IsAny<CancellationToken>()))
@@ -218,7 +218,7 @@ public class CreateExpenseHandlerTests
 		// Assert
 		result.IsSuccess.Should().BeFalse();
 	}
-	
+
 	[TestMethod]
 	public async Task Handler_ShouldReturnInvalid_WhenPayerIdDoesNotMatchCommandUserId()
 	{
@@ -227,7 +227,7 @@ public class CreateExpenseHandlerTests
 		var admin = UserFactory.Create(id: 2, email: "admin@example.com");
 		var member1 = UserFactory.Create(id: 3, email: "user1@example.com");
 		var member2 = UserFactory.Create(id: 4, email: "user2@example.com");
-	
+
 		var group = new Group
 		{
 			Id = 1,
@@ -239,12 +239,11 @@ public class CreateExpenseHandlerTests
 			Members = { admin, payer, member1, member2 },
 			Status = GroupStatus.Active
 		};
-	
+
 		var createExpenseDto = new CreateExpenseDto(
 			group.Id,
 			payer.Id,
 			"expense",
-			"expense.png",
 			"expense-description",
 			new decimal(100),
 			DateTime.Now,
@@ -254,28 +253,28 @@ public class CreateExpenseHandlerTests
 			],
 			ExpenseSplitType.ByPercent.ToString()
 		);
-	
-		var command = new CreateExpenseCommand(member1.Id, createExpenseDto);
-	
+
+		var command = new CreateExpenseCommand(member1.Id, createExpenseDto, null);
+
 		_userRepositoryMock.Setup(repo => repo.GetByIdAsync(payer.Id, It.IsAny<CancellationToken>()))
 			.ReturnsAsync(payer);
 		_userRepositoryMock.Setup(repo => repo.GetByIdAsync(member1.Id, It.IsAny<CancellationToken>()))
 			.ReturnsAsync(member1);
 		_userRepositoryMock.Setup(repo => repo.GetByIdAsync(member2.Id, It.IsAny<CancellationToken>()))
 			.ReturnsAsync(member2);
-	
+
 		_groupRepositoryMock.Setup(repo => repo.GetByIdAsync(group.Id, It.IsAny<CancellationToken>()))
 			.ReturnsAsync(group);
-	
+
 		_validatorMock.Setup(v => v.ValidateAsync(It.IsAny<CreateExpenseDto>(), It.IsAny<CancellationToken>()))
 			.ReturnsAsync(new FluentValidation.Results.ValidationResult());
-	
+
 		// Act
 		var result = await _handler.Handle(command, CancellationToken.None);
-	
+
 		// Assert
 		result.IsSuccess.Should().BeFalse();
 		result.Status.Should().Be(ResultStatus.Forbidden);
 	}
-	
+
 }

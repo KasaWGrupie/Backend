@@ -2,8 +2,5 @@
 
 public sealed record UpdateGroupDto(
     string? Name,
-    string? Description,
-    string? Currency,
-    string? AdminEmail,
-    ICollection<string>? Members
+    string? Description
     );

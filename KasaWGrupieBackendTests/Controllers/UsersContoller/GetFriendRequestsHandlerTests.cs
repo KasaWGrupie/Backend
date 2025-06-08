@@ -41,7 +41,7 @@ public class GetFriendRequestsHandlerTests
 			Name = "Alice",
 			Email = "alice@example.com",
 			ProfilePictureUrl = "pic",
-			SentFriendRequests = new List<FriendRequest>
+			RecievedFriendRequests = new List<FriendRequest>
 			{
 				new FriendRequest
 				{
