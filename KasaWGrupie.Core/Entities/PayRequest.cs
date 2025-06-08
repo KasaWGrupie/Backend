@@ -8,9 +8,12 @@ public class PayRequest : EntityBase
 	public required User Sender { get; set; }
 	public int ReceiverId { get; set; }
 	public required User Receiver { get; set; }
-	public decimal Amount { get; set; } //TODO: zastanowić się, czy to pole ma sens
+	public decimal Amount { get; set; }
 	public ICollection<Group> GroupsToSettle { get; set; } = [];
-	public PayRequstStatus payRequstStatus { get; set; }
+	public PayRequestStatus PayRequestStatus { get; set; }
+	public DateTime? EndDate { get; set; }
+	public int CurrencyId { get; set; }
+	public required Currency Currency { get; set; }
 
 	//TODO: Może dodać pole message?
 }

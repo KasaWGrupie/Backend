@@ -5,5 +5,6 @@ using MediatR;
 namespace KasaWGrupie.API.Requests.Users.Commands;
 
 public record CreateUserCommand(
-    CreateUserDto CreateUserDto
+    CreateUserDto CreateUserDto,
+    IFormFile? ProfilePicture
     ) : IRequest<Result>;

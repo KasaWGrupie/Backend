@@ -12,12 +12,15 @@ public static class ConfigurationConstants
 
 	public static class ExpenseConstants
 	{
+		public const int NameMaxLength = 100;
 		public const int PictureUrlMaxLength = 200;
+		public const int DescriptionMaxLength = 500;
 	}
 	public static class GroupConstants
 	{
 		public const int NameMaxLength = 100;
 		public const int PictureUrlMaxLength = 200;
 		public const int DescriptionMaxLength = 500;
+		public const int InviteCodeMaxLength = 50;
 	}
 }

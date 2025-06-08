@@ -9,6 +9,10 @@
 	</PropertyGroup>
 
 	<ItemGroup>
+	  <Compile Remove="Controllers\ControllersGenerated.cs" />
+	</ItemGroup>
+
+	<ItemGroup>
 		<Content Remove="KwGApi.json" />
 	</ItemGroup>
 

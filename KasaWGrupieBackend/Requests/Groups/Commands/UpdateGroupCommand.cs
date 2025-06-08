@@ -5,5 +5,8 @@ using KasaWGrupie.API.DTOs.Groups;
 namespace KasaWGrupie.API.Requests.Groups.Commands;
 
 public sealed record UpdateGroupCommand(
-    UpdateGroupDto UpdateGroupDto
+    int UserId,
+    int GroupId,
+    UpdateGroupDto UpdateGroupDto,
+    IFormFile? Image
     ) : IRequest<Result>;

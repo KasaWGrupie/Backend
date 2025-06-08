@@ -1,0 +1,49 @@
+﻿using Ardalis.Specification;
+using KasaWGrupie.Core.Entities;
+using MediatR;
+using KasaWGrupie.API.Requests.FriendRequests.Commands;
+using Ardalis.Result;
+using KasaWGrupie.API.DTOs.FriendRequest;
+using FluentValidation;
+
+namespace KasaWGrupie.API.Requests.FriendRequests.Handlers;
+
+public class GetFriendRequestsHandler : IRequestHandler<GetFriendRequestsCommand, Result<ICollection<RecievedFriendRequestDisplayDto>>>
+{
+	private readonly IRepositoryBase<User> _userRepository;
+	private readonly IValidator<GetFriendRequestsCommand> _validator;
+	public GetFriendRequestsHandler(IRepositoryBase<User> userRepository, IValidator<GetFriendRequestsCommand> validator)
+	{
+		_validator = validator;
+		_userRepository = userRepository;
+	}
+	public async Task<Result<ICollection<RecievedFriendRequestDisplayDto>>> Handle(GetFriendRequestsCommand request, CancellationToken cancellationToken)
+	{
+		var validationResult = await _validator.ValidateAsync(request, cancellationToken);
+		if (!validationResult.IsValid)
+		{
+			return Result.Invalid(validationResult.Errors.Select(e => new ValidationError(e.PropertyName, e.ErrorMessage)));
+		}
+
+		var specificaton = new GetUserByIdWithUnconfirmedFriendRequestsWithSenderSpecification(request.UserId);
+
+		var user = await _userRepository.FirstOrDefaultAsync(specificaton, cancellationToken);
+
+		if (user == null)
+		{
+			return Result.NotFound("User with given id does not exist");
+		}
+
+		var friendRequests = user.RecievedFriendRequests
+			.Select(r => new RecievedFriendRequestDisplayDto(
+				r.Id,
+				r.SenderId,
+				r.ReceiverId,
+				r.Sender.Name,
+				r.Sender.ProfilePictureUrl
+			))
+			.ToList();
+
+		return Result.Success<ICollection<RecievedFriendRequestDisplayDto>>(friendRequests);
+	}
+}

@@ -11,6 +11,8 @@ using Google.Apis.Auth.OAuth2;
 using KasaWGrupie.Infrastructure.AuthService;
 using Google.Cloud.Storage.V1;
 using Microsoft.Extensions.Options;
+using KasaWGrupie.Infrastructure.BalanceCalculator;
+
 
 
 namespace KasaWGrupie.API;
@@ -50,6 +52,9 @@ public static class DependencyInjection
             return StorageClient.Create(cred);
         });
         services.AddTransient<IImageService, GcsImageService>();
+        services.AddHttpContextAccessor();
+		    services.AddTransient<IGroupBalanceCalculator, BalanceCalculator>();
+
 
 		return services;
 	}

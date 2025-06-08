@@ -26,6 +26,9 @@ public class MoneyTransferConfiguration : IEntityTypeConfiguration<MoneyTransfer
 		builder.Property(mt => mt.Status)
 			.IsRequired();
 
+		builder.Property(mt => mt.EndDate)
+			.IsRequired(false);
+
 		builder.HasOne(mt => mt.Recipient)
 			.WithMany()
 			.HasForeignKey(mt => mt.RecipientId)
