@@ -9,7 +9,10 @@ using FluentValidation;
 using FluentValidation.AspNetCore;
 using Google.Apis.Auth.OAuth2;
 using KasaWGrupie.Infrastructure.AuthService;
+using Google.Cloud.Storage.V1;
+using Microsoft.Extensions.Options;
 using KasaWGrupie.Infrastructure.BalanceCalculator;
+
 
 
 namespace KasaWGrupie.API;
@@ -31,10 +34,27 @@ public static class DependencyInjection
 	public static IServiceCollection RegisterInfrastructureServices(this IServiceCollection services, IConfiguration configuration)
 	{
 		services.ConfigureMediatR();
+
+		services.AddTransient<IAuthService, AuthService>();
+        services.Configure<GcsImageOptions>(opts =>
+        {
+            opts.BucketName = configuration["GCP_BUCKET_NAME"];
+            opts.CredentialsPath = configuration["GCP_CREDENTIALS_PATH"];
+        });
+
+        // 2) Create & register a single StorageClient for the whole app:
+        services.AddSingleton(sp =>
+        {
+            var opts = sp.GetRequiredService<IOptions<GcsImageOptions>>().Value!;
+            GoogleCredential cred = string.IsNullOrWhiteSpace(opts.CredentialsPath)
+                ? GoogleCredential.GetApplicationDefault()
+                : GoogleCredential.FromFile(opts.CredentialsPath);
+            return StorageClient.Create(cred);
+        });
+        services.AddTransient<IImageService, GcsImageService>();
         services.AddHttpContextAccessor();
-        services.AddTransient<IAuthService, AuthService>();
-		services.AddTransient<IImageService, DummyImageService>();
-		services.AddTransient<IGroupBalanceCalculator, BalanceCalculator>();
+		    services.AddTransient<IGroupBalanceCalculator, BalanceCalculator>();
+
 
 		return services;
 	}

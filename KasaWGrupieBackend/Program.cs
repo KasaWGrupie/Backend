@@ -28,9 +28,11 @@ public class Program
 		builder.Services.AddEndpointsApiExplorer();
 		builder.Services.AddSwaggerGen();
 
-		var app = builder.Build();
 
-		if (app.Environment.IsDevelopment())
+        var app = builder.Build();
+
+
+        if (app.Environment.IsDevelopment())
 		{
 			using var scope = app.Services.CreateScope();
 			scope.ServiceProvider.ApplyMigrations();

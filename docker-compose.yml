@@ -7,6 +7,8 @@ services:
       dockerfile: KasaWGrupieBackend/Dockerfile
     env_file:
         - .env
+    volumes:
+      - ./gcs_key:/app/gcs_key:ro
     depends_on: 
         - kasawgrupie.database
   kasawgrupie.database:
@@ -20,3 +22,15 @@ services:
         - ./.containers/kasawgrupie-db:/var/lib/postgresql/data
     ports:
         - 5432:5432
+
+  tests:
+    image: mcr.microsoft.com/dotnet/sdk:8.0
+    container_name: kasawgrupie.tests
+    volumes:
+      - ./:/src
+    env_file:
+      - .env
+    working_dir: /src/KasaWGrupieBackendTests
+    command: bash -c "dotnet restore && dotnet test --no-build --verbosity normal"
+    depends_on:
+      - kasawgrupie.database
