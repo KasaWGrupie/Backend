@@ -11,9 +11,11 @@
 	<ItemGroup>
 		<PackageReference Include="FluentAssertions" Version="8.2.0" />
 		<PackageReference Include="Microsoft.AspNetCore.Http" Version="2.3.0" />
+		<PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" Version="8.0.15" />
 		<PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.12.0" />
 		<PackageReference Include="Moq" Version="4.20.72" />
 		<PackageReference Include="MSTest" Version="3.6.4" />
+		<PackageReference Include="NUnit" Version="4.3.2" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -25,10 +27,24 @@
 	</ItemGroup>
 
 	<ItemGroup>
+		<None Include="TestData\receipt-sample.jpg">
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</None>
+	</ItemGroup>
+
+	<ItemGroup>
+	<None Include="..\.env">
+		<Link>.env</Link>
+		<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+	</None>
+</ItemGroup>
+
+		<ItemGroup>
 		<None Include="..\gcs_key\key.json">
 			<Link>gcs_key\key.json</Link>
 			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 		</None>
 	</ItemGroup>
+
 
 </Project>
