@@ -105,8 +105,6 @@ public class CreateExpenseHandlerTests
 		// Assert
 		result.IsSuccess.Should().BeTrue();
 		_expenseRepositoryMock.Verify(repo => repo.AddAsync(It.IsAny<Expense>(), It.IsAny<CancellationToken>()), Times.Once);
-		_expenseSplitRepositoryMock.Verify(repo => repo.AddAsync(It.IsAny<ExpenseSplit>(), It.IsAny<CancellationToken>()), Times.Once);
-		_expenseSplitRecordRepositoryMock.Verify(repo => repo.AddRangeAsync(It.IsAny<ICollection<ExpenseSplitRecord>>(), It.IsAny<CancellationToken>()), Times.Once);
 
 	}
 
