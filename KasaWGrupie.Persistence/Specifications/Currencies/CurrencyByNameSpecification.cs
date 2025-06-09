@@ -7,6 +7,6 @@ public class CurrencyByNameSpecification : Specification<Currency>
 {
 	public CurrencyByNameSpecification(string name)
 	{
-		Query.Where(c => c.Name == name);
+		Query.Where(c => c.Name.ToLower() == name.ToLower());
 	}
 }

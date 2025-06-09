@@ -76,9 +76,7 @@ public class CreateGroupHandler : IRequestHandler<CreateGroupCommand, Result>
 
 		if (currency == null)
 		{
-			currency = new Currency { Name = request.CreateGroupDto.Currency };
-			await _currencyRepository.AddAsync(currency, cancellationToken);
-			await _currencyRepository.SaveChangesAsync(cancellationToken);
+			return Result.Invalid(new ValidationError("Currency", "Currency does not exist."));
 		}
 
 		var group = new Group

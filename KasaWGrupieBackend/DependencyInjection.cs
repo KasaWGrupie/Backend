@@ -13,6 +13,7 @@ using KasaWGrupie.Infrastructure.ReceiptProcessor;
 using Google.Cloud.Storage.V1;
 using Microsoft.Extensions.Options;
 using KasaWGrupie.Infrastructure.BalanceCalculator;
+using KasaWGrupie.Infrastructure.CurrencyConverter;
 
 
 
@@ -56,6 +57,9 @@ public static class DependencyInjection
         });
         services.AddTransient<IImageService, GcsImageService>();
         services.AddHttpContextAccessor();
+
+
+		services.AddTransient<ICurrencyConverter, CurrencyConverterService>();
 		    services.AddTransient<IGroupBalanceCalculator, BalanceCalculator>();
 
 
