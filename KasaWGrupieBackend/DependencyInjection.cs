@@ -9,6 +9,7 @@ using FluentValidation;
 using FluentValidation.AspNetCore;
 using Google.Apis.Auth.OAuth2;
 using KasaWGrupie.Infrastructure.AuthService;
+using KasaWGrupie.Infrastructure.ReceiptProcessor;
 using Google.Cloud.Storage.V1;
 using Microsoft.Extensions.Options;
 using KasaWGrupie.Infrastructure.BalanceCalculator;
@@ -36,6 +37,8 @@ public static class DependencyInjection
 		services.ConfigureMediatR();
 
 		services.AddTransient<IAuthService, AuthService>();
+        services.Configure<DocumentIntelligenceOptions>(configuration.GetSection("AzureDocumentIntelligence"));
+        services.AddSingleton<IReceiptProcessor, AzureReceiptProcessor>();
         services.Configure<GcsImageOptions>(opts =>
         {
             opts.BucketName = configuration["GCP_BUCKET_NAME"];
@@ -57,6 +60,7 @@ public static class DependencyInjection
 
 
 		return services;
+
 	}
 
 	public static IServiceCollection ConfigureValidators(this IServiceCollection services)
