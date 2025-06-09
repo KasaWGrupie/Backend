@@ -126,8 +126,6 @@ public class CreateExpenseHandler : IRequestHandler<CreateExpenseCommand, Result
 		expense.ExpenseSplit = expenseSplit;
 
 		await _expenseRepository.AddAsync(expense, cancellationToken);
-		await _expenseSplitRepository.AddAsync(expenseSplit, cancellationToken);
-		await _expenseSplitRecordRepository.AddRangeAsync(expenseSplit.SplitRecords, cancellationToken);
 
 		await _expenseRepository.SaveChangesAsync(cancellationToken);
 		await _expenseSplitRepository.SaveChangesAsync(cancellationToken);
